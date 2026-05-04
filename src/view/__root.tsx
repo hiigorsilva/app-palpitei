@@ -1,6 +1,7 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Toaster } from 'sonner'
+import { Container } from '@/components/container'
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -16,10 +17,10 @@ export const Route = createRootRoute({
 
 function RootLayout() {
   return (
-    <>
+    <Container>
       <Outlet />
       <Toaster richColors theme="light" position="top-right" />
       <TanStackRouterDevtools />
-    </>
+    </Container>
   )
 }
