@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './view/__root'
+import { Route as publicLayoutRouteImport } from './view/(public)/layout'
 import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
+import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
 
+const publicLayoutRoute = publicLayoutRouteImport.update({
+  id: '/(public)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const privateLayoutRoute = privateLayoutRouteImport.update({
   id: '/(private)',
   getParentRoute: () => rootRouteImport,
@@ -21,32 +27,54 @@ const privateIndexRoute = privateIndexRouteImport.update({
   path: '/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
+const publicLoginIndexRoute = publicLoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => publicLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof privateIndexRoute
+  '/login/': typeof publicLoginIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
+  '/login': typeof publicLoginIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(private)': typeof privateLayoutRouteWithChildren
+  '/(public)': typeof publicLayoutRouteWithChildren
   '/(private)/': typeof privateIndexRoute
+  '/(public)/login/': typeof publicLoginIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/login/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/(private)' | '/(private)/'
+  to: '/' | '/login'
+  id:
+    | '__root__'
+    | '/(private)'
+    | '/(public)'
+    | '/(private)/'
+    | '/(public)/login/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   privateLayoutRoute: typeof privateLayoutRouteWithChildren
+  publicLayoutRoute: typeof publicLayoutRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(public)': {
+      id: '/(public)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof publicLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(private)': {
       id: '/(private)'
       path: ''
@@ -60,6 +88,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof privateIndexRouteImport
       parentRoute: typeof privateLayoutRoute
+    }
+    '/(public)/login/': {
+      id: '/(public)/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof publicLoginIndexRouteImport
+      parentRoute: typeof publicLayoutRoute
     }
   }
 }
@@ -76,8 +111,21 @@ const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(
   privateLayoutRouteChildren,
 )
 
+interface publicLayoutRouteChildren {
+  publicLoginIndexRoute: typeof publicLoginIndexRoute
+}
+
+const publicLayoutRouteChildren: publicLayoutRouteChildren = {
+  publicLoginIndexRoute: publicLoginIndexRoute,
+}
+
+const publicLayoutRouteWithChildren = publicLayoutRoute._addFileChildren(
+  publicLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   privateLayoutRoute: privateLayoutRouteWithChildren,
+  publicLayoutRoute: publicLayoutRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
