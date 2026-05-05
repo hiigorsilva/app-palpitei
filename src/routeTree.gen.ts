@@ -13,6 +13,7 @@ import { Route as publicLayoutRouteImport } from './view/(public)/layout'
 import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
+import { Route as publicJogosIndexRouteImport } from './view/(public)/jogos/index'
 
 const publicLayoutRoute = publicLayoutRouteImport.update({
   id: '/(public)',
@@ -32,13 +33,20 @@ const publicLoginIndexRoute = publicLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => publicLayoutRoute,
 } as any)
+const publicJogosIndexRoute = publicJogosIndexRouteImport.update({
+  id: '/jogos/',
+  path: '/jogos/',
+  getParentRoute: () => publicLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof privateIndexRoute
+  '/jogos/': typeof publicJogosIndexRoute
   '/login/': typeof publicLoginIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
+  '/jogos': typeof publicJogosIndexRoute
   '/login': typeof publicLoginIndexRoute
 }
 export interface FileRoutesById {
@@ -46,18 +54,20 @@ export interface FileRoutesById {
   '/(private)': typeof privateLayoutRouteWithChildren
   '/(public)': typeof publicLayoutRouteWithChildren
   '/(private)/': typeof privateIndexRoute
+  '/(public)/jogos/': typeof publicJogosIndexRoute
   '/(public)/login/': typeof publicLoginIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login/'
+  fullPaths: '/' | '/jogos/' | '/login/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
+  to: '/' | '/jogos' | '/login'
   id:
     | '__root__'
     | '/(private)'
     | '/(public)'
     | '/(private)/'
+    | '/(public)/jogos/'
     | '/(public)/login/'
   fileRoutesById: FileRoutesById
 }
@@ -96,6 +106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicLoginIndexRouteImport
       parentRoute: typeof publicLayoutRoute
     }
+    '/(public)/jogos/': {
+      id: '/(public)/jogos/'
+      path: '/jogos'
+      fullPath: '/jogos/'
+      preLoaderRoute: typeof publicJogosIndexRouteImport
+      parentRoute: typeof publicLayoutRoute
+    }
   }
 }
 
@@ -112,10 +129,12 @@ const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(
 )
 
 interface publicLayoutRouteChildren {
+  publicJogosIndexRoute: typeof publicJogosIndexRoute
   publicLoginIndexRoute: typeof publicLoginIndexRoute
 }
 
 const publicLayoutRouteChildren: publicLayoutRouteChildren = {
+  publicJogosIndexRoute: publicJogosIndexRoute,
   publicLoginIndexRoute: publicLoginIndexRoute,
 }
 
