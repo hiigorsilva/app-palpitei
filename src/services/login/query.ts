@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/api'
+import { createUser } from './api'
 import type { IUser } from './type'
 
 export type CreateUserInput = { name: string }
@@ -13,14 +13,4 @@ export function useCreateLogin() {
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
   })
-}
-
-export async function createUser(data: CreateUserInput) {
-  try {
-    const res = await api.post<IUser>('/users', data)
-    return res.data
-  } catch (error) {
-    console.error('Error creating user:', error)
-    throw error
-  }
 }

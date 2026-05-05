@@ -13,7 +13,7 @@ import { Route as publicLayoutRouteImport } from './view/(public)/layout'
 import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
-import { Route as publicJogosIndexRouteImport } from './view/(public)/jogos/index'
+import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
 
 const publicLayoutRoute = publicLayoutRouteImport.update({
   id: '/(public)',
@@ -33,20 +33,20 @@ const publicLoginIndexRoute = publicLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => publicLayoutRoute,
 } as any)
-const publicJogosIndexRoute = publicJogosIndexRouteImport.update({
+const privateJogosIndexRoute = privateJogosIndexRouteImport.update({
   id: '/jogos/',
   path: '/jogos/',
-  getParentRoute: () => publicLayoutRoute,
+  getParentRoute: () => privateLayoutRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof privateIndexRoute
-  '/jogos/': typeof publicJogosIndexRoute
+  '/jogos/': typeof privateJogosIndexRoute
   '/login/': typeof publicLoginIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
-  '/jogos': typeof publicJogosIndexRoute
+  '/jogos': typeof privateJogosIndexRoute
   '/login': typeof publicLoginIndexRoute
 }
 export interface FileRoutesById {
@@ -54,7 +54,7 @@ export interface FileRoutesById {
   '/(private)': typeof privateLayoutRouteWithChildren
   '/(public)': typeof publicLayoutRouteWithChildren
   '/(private)/': typeof privateIndexRoute
-  '/(public)/jogos/': typeof publicJogosIndexRoute
+  '/(private)/jogos/': typeof privateJogosIndexRoute
   '/(public)/login/': typeof publicLoginIndexRoute
 }
 export interface FileRouteTypes {
@@ -67,7 +67,7 @@ export interface FileRouteTypes {
     | '/(private)'
     | '/(public)'
     | '/(private)/'
-    | '/(public)/jogos/'
+    | '/(private)/jogos/'
     | '/(public)/login/'
   fileRoutesById: FileRoutesById
 }
@@ -106,22 +106,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicLoginIndexRouteImport
       parentRoute: typeof publicLayoutRoute
     }
-    '/(public)/jogos/': {
-      id: '/(public)/jogos/'
+    '/(private)/jogos/': {
+      id: '/(private)/jogos/'
       path: '/jogos'
       fullPath: '/jogos/'
-      preLoaderRoute: typeof publicJogosIndexRouteImport
-      parentRoute: typeof publicLayoutRoute
+      preLoaderRoute: typeof privateJogosIndexRouteImport
+      parentRoute: typeof privateLayoutRoute
     }
   }
 }
 
 interface privateLayoutRouteChildren {
   privateIndexRoute: typeof privateIndexRoute
+  privateJogosIndexRoute: typeof privateJogosIndexRoute
 }
 
 const privateLayoutRouteChildren: privateLayoutRouteChildren = {
   privateIndexRoute: privateIndexRoute,
+  privateJogosIndexRoute: privateJogosIndexRoute,
 }
 
 const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(
@@ -129,12 +131,10 @@ const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(
 )
 
 interface publicLayoutRouteChildren {
-  publicJogosIndexRoute: typeof publicJogosIndexRoute
   publicLoginIndexRoute: typeof publicLoginIndexRoute
 }
 
 const publicLayoutRouteChildren: publicLayoutRouteChildren = {
-  publicJogosIndexRoute: publicJogosIndexRoute,
   publicLoginIndexRoute: publicLoginIndexRoute,
 }
 

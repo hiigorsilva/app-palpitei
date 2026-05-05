@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
+import { listGames } from './api'
 import type { IGame } from './type'
 
 export type IGameFilters = {
@@ -12,14 +12,4 @@ export function useListGames(filters?: IGameFilters) {
     queryKey: ['games', filters],
     queryFn: () => listGames(filters),
   })
-}
-
-export async function listGames(filters?: IGameFilters) {
-  try {
-    const res = await api.get<IGame[]>('/games', { params: filters })
-    return res.data
-  } catch (error) {
-    console.error('Error listing games:', error)
-    throw error
-  }
 }

@@ -22,6 +22,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { setStorageAuth } from '@/helpers/auth'
 import { ErrorResponseApi } from '@/helpers/error'
 import { useCreateLogin } from '@/services/login/query'
 
@@ -51,6 +52,7 @@ function LoginPage() {
     try {
       const user = await createLogin(data)
       if (user.id) {
+        setStorageAuth(user)
         form.reset({ name: '' })
         toast.success('Login realizado com sucesso!')
       }

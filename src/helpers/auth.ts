@@ -1,8 +1,9 @@
-const STORAGE_KEY = '@auth'
+const STORAGE_KEY = '@palpitei:auth'
 
 type AuthData = {
-  username: string
-  password: string
+  id: string
+  name: string
+  created_at: string
 }
 
 export function getStorageAuth(): AuthData | null {
