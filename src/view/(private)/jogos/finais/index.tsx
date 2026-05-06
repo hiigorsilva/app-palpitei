@@ -96,7 +96,7 @@ export function TeamDisplayRow({ game, team }: Props) {
           {team === 'a' ? game.team_a : game.team_b}
         </p>
         <div className="w-14 flex justify-center items-center text-sm text-foreground rounded border bg-muted-foreground/10">
-          {team === 'a' ? (game.gols_a ?? '3') : (game.gols_b ?? '1')}
+          {team === 'a' ? (game.gols_a ?? '-') : (game.gols_b ?? '-')}
         </div>
       </div>
     </div>
