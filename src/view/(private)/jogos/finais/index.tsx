@@ -64,8 +64,8 @@ function TournamentFinalGames() {
 
   return (
     <Container>
-      <section className="min-h-dvh h-fit w-full overflow-x-auto py-8">
-        <div className="flex min-w-max items-start justify-between gap-8">
+      <section className="min-h-dvh h-fit w-full overflow-x-auto py-8 px-1">
+        <div className="flex min-w-max items-start justify-start gap-8">
           {fases.map((fase, index) => (
             <GridFaseCard
               key={fase.fase}
@@ -74,6 +74,7 @@ function TournamentFinalGames() {
               bracketRows={bracketRows}
               roundIndex={index}
               isVisible={fase.isVisible}
+              hasNextFase={index < fases.length - 1}
             />
           ))}
         </div>
