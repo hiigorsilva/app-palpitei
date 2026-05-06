@@ -92,7 +92,7 @@ export function TeamDisplayRow({ game, team }: Props) {
     <div className="flex flex-col gap-1">
       <div className="w-full flex justify-between items-center gap-1">
         <div className="w-16 h-6 relative rounded border bg-muted-foreground/10"></div>
-        <p className="w-full text-sm text-foreground">
+        <p className="min-w-0 w-full truncate text-sm text-foreground">
           {team === 'a' ? game.team_a : game.team_b}
         </p>
         <div className="w-14 flex justify-center items-center text-sm text-foreground rounded border bg-muted-foreground/10">

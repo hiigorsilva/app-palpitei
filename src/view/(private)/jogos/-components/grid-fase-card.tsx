@@ -58,14 +58,14 @@ export function GridFaseCard({
   if (!isVisible) return null
 
   return (
-    <div className="max-w-48 w-full shrink-0">
+    <div className="w-48 shrink-0">
       {games.length > 0 && (
         <>
           <h2 className="mb-4 text-sm font-semibold text-foreground">
             {getFaseTitle(fase)}
           </h2>
           <ul
-            className="relative w-full grid gap-3"
+            className="relative grid w-48 grid-cols-[minmax(0,12rem)] gap-3"
             style={{
               gridTemplateRows: `repeat(${bracketRows}, minmax(6.75rem, max-content))`,
             }}
@@ -74,7 +74,7 @@ export function GridFaseCard({
               <li
                 key={pair.key}
                 aria-hidden="true"
-                className="pointer-events-none relative z-0 col-start-1 w-full"
+                className="pointer-events-none relative z-0 col-start-1 w-48"
                 style={{
                   gridRow: `${pair.startRow} / span ${rowSpan * 2}`,
                 }}
@@ -90,12 +90,12 @@ export function GridFaseCard({
             {games.map((game, index) => (
               <li
                 key={game.id}
-                className="relative z-10 col-start-1 w-full self-center"
+                className="relative z-10 col-start-1 w-48 self-center"
                 style={{
                   gridRow: `${index * rowSpan + 1} / span ${rowSpan}`,
                 }}
               >
-                <Card className="w-full gap-2 p-3">
+                <Card className="w-48 min-w-0 gap-2 p-3">
                   <h3 className="text-xs text-muted-foreground">
                     {formatDateWithoutYear(game.data_hora)}
                   </h3>
