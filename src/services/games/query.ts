@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { listGames } from './api'
+import {
+  listFase16AvosGames,
+  listFaseFinalGames,
+  listFaseOitavasGames,
+  listFaseQuartasGames,
+  listFaseSemiGames,
+  listGames,
+} from './api'
 import type { IGame } from './type'
 
 export type IGameFilters = {
@@ -11,5 +18,40 @@ export function useListGames(filters?: IGameFilters) {
   return useQuery<IGame[], Error>({
     queryKey: ['games', filters],
     queryFn: () => listGames(filters),
+  })
+}
+
+export function useListFase16AvosGames() {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', { fase: '16_AVOS' }],
+    queryFn: () => listFase16AvosGames(),
+  })
+}
+
+export function useListFaseOitavasGames() {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', { fase: 'OITAVAS' }],
+    queryFn: () => listFaseOitavasGames(),
+  })
+}
+
+export function useListFaseQuartasGames() {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', { fase: 'QUARTAS' }],
+    queryFn: () => listFaseQuartasGames(),
+  })
+}
+
+export function useListFaseSemiGames() {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', { fase: 'SEMI' }],
+    queryFn: () => listFaseSemiGames(),
+  })
+}
+
+export function useListFaseFinalGames() {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', { fase: 'FINAL' }],
+    queryFn: () => listFaseFinalGames(),
   })
 }

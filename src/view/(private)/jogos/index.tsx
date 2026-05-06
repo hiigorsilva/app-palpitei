@@ -17,7 +17,7 @@ function GamesPage() {
         <TabsList variant="line">
           <TabsTrigger value="all-games">Todos os Jogos</TabsTrigger>
           <TabsTrigger value="group">Fase de Grupos</TabsTrigger>
-          <TabsTrigger value="32_avos">32 Avos</TabsTrigger>
+          <TabsTrigger value="16_avos">16 Avos</TabsTrigger>
           <TabsTrigger value="oitavas">Oitavas de Final</TabsTrigger>
           <TabsTrigger value="quartas">Quartas de Final</TabsTrigger>
           <TabsTrigger value="semifinais">Semifinais</TabsTrigger>
@@ -30,7 +30,7 @@ function GamesPage() {
         <TabsContent value="group">
           <GroupGamesTab />
         </TabsContent>
-        <TabsContent value="32_avos">
+        <TabsContent value="16_avos">
           <ThirtyTwoAvosGamesTab />
         </TabsContent>
         <TabsContent value="oitavas">
