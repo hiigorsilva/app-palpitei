@@ -60,6 +60,18 @@ export async function listFaseSemiGames() {
   }
 }
 
+export async function listFaseTerceiroGames() {
+  try {
+    const res = await api.get<IGame[]>('/games', {
+      params: { fase: 'TERCEIRO', status: 'FUTURO' },
+    })
+    return res.data
+  } catch (error) {
+    console.error('Error listing terceiro games:', error)
+    throw error
+  }
+}
+
 export async function listFaseFinalGames() {
   try {
     const res = await api.get<IGame[]>('/games', {

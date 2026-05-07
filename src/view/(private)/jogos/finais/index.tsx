@@ -6,6 +6,7 @@ import {
   useListFaseOitavasGames,
   useListFaseQuartasGames,
   useListFaseSemiGames,
+  useListFaseTerceiroGames,
 } from '@/services/games/query'
 import type { IGame } from '@/services/games/type'
 import { GridFaseCard } from '../-components/grid-fase-card'
@@ -19,6 +20,7 @@ function TournamentFinalGames() {
   const { data: gamesOitavas } = useListFaseOitavasGames()
   const { data: gamesQuartas } = useListFaseQuartasGames()
   const { data: gamesSemi } = useListFaseSemiGames()
+  const { data: gamesTerceiro } = useListFaseTerceiroGames()
   const { data: gamesFinal } = useListFaseFinalGames()
 
   const games = {
@@ -26,6 +28,7 @@ function TournamentFinalGames() {
     fase_oitavas: gamesOitavas ?? [],
     fase_quartas: gamesQuartas ?? [],
     fase_semi: gamesSemi ?? [],
+    fase_terceiro: gamesTerceiro ?? [],
     fase_final: gamesFinal ?? [],
   }
 
@@ -53,6 +56,7 @@ function TournamentFinalGames() {
     {
       fase: 'FINAL' as const,
       games: games.fase_final,
+      complementaryGames: games.fase_terceiro,
       isVisible: Boolean(gamesFinal),
     },
   ]
@@ -71,6 +75,7 @@ function TournamentFinalGames() {
               key={fase.fase}
               fase={fase.fase}
               games={fase.games}
+              complementaryGames={fase.complementaryGames}
               bracketRows={bracketRows}
               roundIndex={index}
               isVisible={fase.isVisible}

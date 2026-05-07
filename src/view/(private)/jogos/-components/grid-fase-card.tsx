@@ -5,7 +5,8 @@ import { TeamDisplayRow } from '../finais'
 
 type GridFaseCardProps = {
   games: IGame[]
-  fase: '16_AVOS' | 'OITAVAS' | 'QUARTAS' | 'SEMI' | 'FINAL'
+  complementaryGames?: IGame[]
+  fase: '16_AVOS' | 'OITAVAS' | 'QUARTAS' | 'SEMI' | 'FINAL' | 'TERCEIRO'
   bracketRows: number
   roundIndex: number
   isVisible: boolean
@@ -13,6 +14,7 @@ type GridFaseCardProps = {
 }
 export function GridFaseCard({
   games,
+  complementaryGames = [],
   fase,
   bracketRows,
   roundIndex,
@@ -31,6 +33,8 @@ export function GridFaseCard({
         return 'Semi'
       case 'FINAL':
         return 'Final'
+      case 'TERCEIRO':
+        return 'Terceiro Lugar'
       default:
         return ''
     }
@@ -57,6 +61,18 @@ export function GridFaseCard({
 
   if (!isVisible) return null
 
+  function renderGameCard(game: IGame) {
+    return (
+      <Card className="w-48 min-w-0 gap-2 p-3">
+        <h3 className="text-xs text-muted-foreground">
+          {formatDateWithoutYear(game.data_hora)}
+        </h3>
+        <TeamDisplayRow game={game} team="a" />
+        <TeamDisplayRow game={game} team="b" />
+      </Card>
+    )
+  }
+
   return (
     <div className="w-48 shrink-0">
       {games.length > 0 && (
@@ -70,6 +86,24 @@ export function GridFaseCard({
               gridTemplateRows: `repeat(${bracketRows}, minmax(6.75rem, max-content))`,
             }}
           >
+            {complementaryGames.length > 0 && (
+              <li
+                aria-label="Terceiro Lugar"
+                className="absolute left-0 z-20 w-48"
+                style={{
+                  top: 'calc(50% + 5rem)',
+                }}
+              >
+                <h3 className="mb-2 text-xs font-semibold text-muted-foreground">
+                  Terceiro Lugar
+                </h3>
+                <div className="space-y-3">
+                  {complementaryGames.map(game => (
+                    <div key={game.id}>{renderGameCard(game)}</div>
+                  ))}
+                </div>
+              </li>
+            )}
             {connectorPairs.map(pair => (
               <li
                 key={pair.key}
@@ -95,13 +129,7 @@ export function GridFaseCard({
                   gridRow: `${index * rowSpan + 1} / span ${rowSpan}`,
                 }}
               >
-                <Card className="w-48 min-w-0 gap-2 p-3">
-                  <h3 className="text-xs text-muted-foreground">
-                    {formatDateWithoutYear(game.data_hora)}
-                  </h3>
-                  <TeamDisplayRow game={game} team="a" />
-                  <TeamDisplayRow game={game} team="b" />
-                </Card>
+                {renderGameCard(game)}
               </li>
             ))}
           </ul>
