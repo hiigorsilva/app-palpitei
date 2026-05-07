@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { Container } from '@/components/container'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -126,9 +126,13 @@ export function GroupGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -169,9 +173,13 @@ export function ThirtyTwoAvosGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -212,9 +220,13 @@ export function OitavasGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -255,9 +267,13 @@ export function QuartasGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -298,9 +314,13 @@ export function SemiGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -341,9 +361,13 @@ export function TerceiroGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>
@@ -384,9 +408,13 @@ export function FinalsGamesTab() {
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <li key={game.id}>
+                  <Link
+                    key={game.id}
+                    to={'/jogos/$gameId'}
+                    params={{ gameId: game.id }}
+                  >
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
+                  </Link>
                 ))}
               </GameItemCardGrid>
             </GameItemGridGroupDateItem>

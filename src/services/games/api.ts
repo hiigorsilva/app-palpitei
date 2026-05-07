@@ -83,3 +83,13 @@ export async function listFaseFinalGames() {
     throw error
   }
 }
+
+export async function listGameById(gameId: string) {
+  try {
+    const res = await api.get<IGame>(`/games/${gameId}`)
+    return res.data
+  } catch (error) {
+    console.error(`Error listing game by ID ${gameId}:`, error)
+    throw error
+  }
+}

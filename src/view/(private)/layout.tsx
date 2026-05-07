@@ -34,6 +34,9 @@ function PrivateLayout() {
             <Button variant="ghost" onClick={route.gamesPage}>
               Calendário de Jogos
             </Button>
+            <Button variant="ghost" onClick={route.gamesPage}>
+              Jogos de Hoje
+            </Button>
             <Button variant="ghost" onClick={route.finalsPage}>
               Chaveamento de Mata-Mata
             </Button>

@@ -6,6 +6,7 @@ import {
   listFaseQuartasGames,
   listFaseSemiGames,
   listFaseTerceiroGames,
+  listGameById,
   listGames,
 } from './api'
 import type { IGame } from './type'
@@ -61,5 +62,12 @@ export function useListFaseFinalGames() {
   return useQuery<IGame[], Error>({
     queryKey: ['games', { fase: 'FINAL' }],
     queryFn: () => listFaseFinalGames(),
+  })
+}
+
+export function useGetGameId(gameId: string) {
+  return useQuery<IGame, Error>({
+    queryKey: ['games', gameId],
+    queryFn: () => listGameById(gameId),
   })
 }
