@@ -10,16 +10,53 @@ import { GameItemCardGrid } from './-components/game-item-card-grid'
 import { GameItemCardTitle } from './-components/game-item-card-title'
 import { GameItemGridGroupDate } from './-components/game-item-grid-group-date'
 import { GameItemGridGroupDateItem } from './-components/game-item-grid-group-date-item'
+
+const DEFAULT_TAB = 'group'
+const GAMES_TABS = [
+  DEFAULT_TAB,
+  '16_avos',
+  'oitavas',
+  'quartas',
+  'semifinais',
+  'terceiro_lugar',
+  'final',
+] as const
+
+type GamesTab = (typeof GAMES_TABS)[number]
+type GamesSearch = {
+  tab?: GamesTab
+}
+
+function isGamesTab(tab: unknown): tab is GamesTab {
+  return typeof tab === 'string' && GAMES_TABS.includes(tab as GamesTab)
+}
+
 export const Route = createFileRoute('/(private)/jogos/')({
+  validateSearch: (search: Record<string, unknown>): GamesSearch => ({
+    tab: isGamesTab(search.tab) ? search.tab : undefined,
+  }),
   component: GamesPage,
 })
 
 function GamesPage() {
+  const navigate = Route.useNavigate()
+  const { tab } = Route.useSearch()
+  const activeTab = tab ?? DEFAULT_TAB
+
+  const handleTabChange = (value: string | number) => {
+    if (!isGamesTab(value)) return
+
+    navigate({
+      replace: true,
+      to: '.',
+      search: value === DEFAULT_TAB ? {} : { tab: value },
+    })
+  }
+
   return (
     <Container>
-      <Tabs defaultValue="all-games">
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList variant="line">
-          <TabsTrigger value="all-games">Todos os Jogos</TabsTrigger>
           <TabsTrigger value="group">Fase de Grupos</TabsTrigger>
           <TabsTrigger value="16_avos">16 Avos</TabsTrigger>
           <TabsTrigger value="oitavas">Oitavas de Final</TabsTrigger>
@@ -28,9 +65,6 @@ function GamesPage() {
           <TabsTrigger value="terceiro_lugar">Terceiro Lugar</TabsTrigger>
           <TabsTrigger value="final">Final</TabsTrigger>
         </TabsList>
-        <TabsContent value="all-games">
-          <AllGamesTab />
-        </TabsContent>
         <TabsContent value="group">
           <GroupGamesTab />
         </TabsContent>
@@ -60,50 +94,6 @@ function GamesPage() {
 export type GamesByDate = {
   date: string
   games: IGame[]
-}
-
-export function AllGamesTab() {
-  const games = useListGames()
-
-  const gamesByDate = useMemo<GamesByDate[]>(() => {
-    if (!games.data) return []
-    const groupedGames = games.data.reduce<Record<string, GamesByDate>>(
-      (groups, game) => {
-        const date = formatDate(game.data_hora) ?? 'Data não informada'
-        if (!groups[date]) {
-          groups[date] = {
-            date,
-            games: [],
-          }
-        }
-        groups[date].games.push(game)
-        return groups
-      },
-      {}
-    )
-    return Object.values(groupedGames)
-  }, [games.data])
-
-  return (
-    <>
-      {gamesByDate.length > 0 && (
-        <GameItemGridGroupDate>
-          {gamesByDate.map(group => (
-            <GameItemGridGroupDateItem key={group.date} group={group}>
-              <GameItemCardTitle group={group} />
-              <GameItemCardGrid>
-                {group.games.map(game => (
-                  <li key={game.id}>
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
-                  </li>
-                ))}
-              </GameItemCardGrid>
-            </GameItemGridGroupDateItem>
-          ))}
-        </GameItemGridGroupDate>
-      )}
-    </>
-  )
 }
 
 export function GroupGamesTab() {
