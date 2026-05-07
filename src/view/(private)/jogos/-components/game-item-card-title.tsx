@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react'
-import { Separator } from '@/components/ui/separator'
+import { Card } from '@/components/ui/card'
 import type { GamesByDate } from '..'
 
 type Props = ComponentProps<'h2'> & {
@@ -7,9 +7,8 @@ type Props = ComponentProps<'h2'> & {
 }
 export function GameItemCardTitle({ group }: Props) {
   return (
-    <>
-      <h2 className="font-semibold text-md text-start">{`Dia ${group.date}`}</h2>
-      <Separator />
-    </>
+    <Card className="h-full min-w-44 w-fit bg-muted p-3 border">
+      <h2 className="font-semibold text-md text-start text-wrap">{`${group.date}`}</h2>
+    </Card>
   )
 }

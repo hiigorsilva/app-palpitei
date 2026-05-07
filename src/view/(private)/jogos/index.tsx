@@ -7,7 +7,10 @@ import { formatDate } from '@/helpers/date'
 import { useListGames } from '@/services/games/query'
 import type { IGame } from '@/services/games/type'
 import { GameItemCard } from './-components/game-item-card'
+import { GameItemCardGrid } from './-components/game-item-card-grid'
 import { GameItemCardTitle } from './-components/game-item-card-title'
+import { GameItemGridGroupDate } from './-components/game-item-grid-group-date'
+import { GameItemGridGroupDateItem } from './-components/game-item-grid-group-date-item'
 export const Route = createFileRoute('/(private)/jogos/')({
   component: GamesPage,
 })
@@ -81,23 +84,24 @@ export function AllGamesTab() {
     )
     return Object.values(groupedGames)
   }, [games.data])
+
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
-            </Card>
+              </GameItemCardGrid>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -131,13 +135,13 @@ export function GroupGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -174,13 +178,13 @@ export function ThirtyTwoAvosGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -217,13 +221,13 @@ export function OitavasGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -260,13 +264,13 @@ export function QuartasGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -303,13 +307,13 @@ export function SemiGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -346,13 +350,13 @@ export function TerceiroGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <li key={game.id}>
                     <GameItemCard className="w-2xs" key={game.id} game={game} />
                   </li>
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>
@@ -389,11 +393,11 @@ export function FinalsGamesTab() {
           {gamesByDate.map(group => (
             <Card key={group.date} className="px-6 gap-4">
               <GameItemCardTitle group={group} />
-              <ul className="w-full grid grid-cols-2 gap-3 place-content-center">
+              <GameItemCardGrid>
                 {group.games.map(game => (
                   <GameItemCard className="w-2xs" key={game.id} game={game} />
                 ))}
-              </ul>
+              </GameItemCardGrid>
             </Card>
           ))}
         </div>

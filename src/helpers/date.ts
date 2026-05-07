@@ -4,7 +4,7 @@ export function formatDate(dateString: string) {
 
   const value = new Date(dateFormatted).toLocaleDateString('pt-BR', {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric',
   })
   return value

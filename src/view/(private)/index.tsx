@@ -12,5 +12,5 @@ export const Route = createFileRoute('/(private)/')({
 })
 
 function HomePage() {
-  return <>Olá</>
+  return <h1>Conteudo</h1>
 }
