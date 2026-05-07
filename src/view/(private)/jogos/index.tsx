@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { Container } from '@/components/container'
-import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/helpers/date'
 import { useListGames } from '@/services/games/query'
@@ -131,9 +130,9 @@ export function GroupGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -142,9 +141,9 @@ export function GroupGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -174,9 +173,9 @@ export function ThirtyTwoAvosGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -185,9 +184,9 @@ export function ThirtyTwoAvosGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -217,9 +216,9 @@ export function OitavasGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -228,9 +227,9 @@ export function OitavasGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -260,9 +259,9 @@ export function QuartasGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -271,9 +270,9 @@ export function QuartasGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -303,9 +302,9 @@ export function SemiGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -314,9 +313,9 @@ export function SemiGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -346,9 +345,9 @@ export function TerceiroGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
@@ -357,9 +356,9 @@ export function TerceiroGamesTab() {
                   </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
@@ -389,18 +388,20 @@ export function FinalsGamesTab() {
   return (
     <>
       {gamesByDate.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <GameItemGridGroupDate>
           {gamesByDate.map(group => (
-            <Card key={group.date} className="px-6 gap-4">
+            <GameItemGridGroupDateItem key={group.date} group={group}>
               <GameItemCardTitle group={group} />
               <GameItemCardGrid>
                 {group.games.map(game => (
-                  <GameItemCard className="w-2xs" key={game.id} game={game} />
+                  <li key={game.id}>
+                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                  </li>
                 ))}
               </GameItemCardGrid>
-            </Card>
+            </GameItemGridGroupDateItem>
           ))}
-        </div>
+        </GameItemGridGroupDate>
       )}
     </>
   )
