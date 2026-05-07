@@ -1,35 +1,21 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { formatDateTime } from '@/helpers/date'
+import type { ComponentProps } from 'react'
+import { Card } from '@/components/ui/card'
+import { formatDateWithoutYear } from '@/helpers/date'
+import { cn } from '@/lib/utils'
 import type { IGame } from '@/services/games/type'
+import { TeamDisplayRow } from '../finais'
 
-type Props = {
+type Props = ComponentProps<typeof Card> & {
   game: IGame
 }
-export function GameItemCard({ game }: Props) {
+export function GameItemCard({ game, className, ...props }: Props) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex justify-center items-center gap-3">
-          <div>{game.team_a}</div>
-          <div className="flex justify-center items-center size-6 border rounded bg-muted-foreground/10 text-foreground text-sm">
-            {game.gols_a ? game.gols_a : '-'}
-          </div>
-          <div>vs</div>
-          <div className="flex justify-center items-center size-6 border rounded bg-muted-foreground/10 text-foreground text-sm">
-            {game.gols_b ? game.gols_b : '-'}
-          </div>
-          <div>{game.team_b}</div>
-        </CardTitle>
-        <CardDescription className="text-center">
-          Fase de {game.fase.toLocaleLowerCase()} -{' '}
-          {formatDateTime(game.data_hora)}
-        </CardDescription>
-      </CardHeader>
+    <Card className={cn('w-48 min-w-0 gap-2 p-3', className)} {...props}>
+      <h3 className="text-xs text-muted-foreground">
+        {formatDateWithoutYear(game.data_hora)}
+      </h3>
+      <TeamDisplayRow game={game} team="a" />
+      <TeamDisplayRow game={game} team="b" />
     </Card>
   )
 }
