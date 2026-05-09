@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import {
+  listDailyGames,
   listFase16AvosGames,
   listFaseFinalGames,
   listFaseOitavasGames,
@@ -14,6 +15,13 @@ import type { IGame } from './type'
 export type IGameFilters = {
   fase?: string
   status?: string
+}
+
+export function useListDailyGames(filters?: IGameFilters) {
+  return useQuery<IGame[], Error>({
+    queryKey: ['games', 'daily'],
+    queryFn: () => listDailyGames(filters),
+  })
 }
 
 export function useListGames(filters?: IGameFilters) {

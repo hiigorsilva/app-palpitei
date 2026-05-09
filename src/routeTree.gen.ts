@@ -14,6 +14,7 @@ import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
 import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
+import { Route as privateGruposIndexRouteImport } from './view/(private)/grupos/index'
 import { Route as privateJogosFinaisIndexRouteImport } from './view/(private)/jogos/finais/index'
 import { Route as privateJogosGameIdIndexRouteImport } from './view/(private)/jogos/$gameId/index'
 
@@ -40,6 +41,11 @@ const privateJogosIndexRoute = privateJogosIndexRouteImport.update({
   path: '/jogos/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
+const privateGruposIndexRoute = privateGruposIndexRouteImport.update({
+  id: '/grupos/',
+  path: '/grupos/',
+  getParentRoute: () => privateLayoutRoute,
+} as any)
 const privateJogosFinaisIndexRoute = privateJogosFinaisIndexRouteImport.update({
   id: '/jogos/finais/',
   path: '/jogos/finais/',
@@ -53,6 +59,7 @@ const privateJogosGameIdIndexRoute = privateJogosGameIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof privateIndexRoute
+  '/grupos/': typeof privateGruposIndexRoute
   '/jogos/': typeof privateJogosIndexRoute
   '/login/': typeof publicLoginIndexRoute
   '/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
+  '/grupos': typeof privateGruposIndexRoute
   '/jogos': typeof privateJogosIndexRoute
   '/login': typeof publicLoginIndexRoute
   '/jogos/$gameId': typeof privateJogosGameIdIndexRoute
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/(private)': typeof privateLayoutRouteWithChildren
   '/(public)': typeof publicLayoutRouteWithChildren
   '/(private)/': typeof privateIndexRoute
+  '/(private)/grupos/': typeof privateGruposIndexRoute
   '/(private)/jogos/': typeof privateJogosIndexRoute
   '/(public)/login/': typeof publicLoginIndexRoute
   '/(private)/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
@@ -77,14 +86,21 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/jogos/' | '/login/' | '/jogos/$gameId/' | '/jogos/finais/'
+  fullPaths:
+    | '/'
+    | '/grupos/'
+    | '/jogos/'
+    | '/login/'
+    | '/jogos/$gameId/'
+    | '/jogos/finais/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/jogos' | '/login' | '/jogos/$gameId' | '/jogos/finais'
+  to: '/' | '/grupos' | '/jogos' | '/login' | '/jogos/$gameId' | '/jogos/finais'
   id:
     | '__root__'
     | '/(private)'
     | '/(public)'
     | '/(private)/'
+    | '/(private)/grupos/'
     | '/(private)/jogos/'
     | '/(public)/login/'
     | '/(private)/jogos/$gameId/'
@@ -133,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateJogosIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
+    '/(private)/grupos/': {
+      id: '/(private)/grupos/'
+      path: '/grupos'
+      fullPath: '/grupos/'
+      preLoaderRoute: typeof privateGruposIndexRouteImport
+      parentRoute: typeof privateLayoutRoute
+    }
     '/(private)/jogos/finais/': {
       id: '/(private)/jogos/finais/'
       path: '/jogos/finais'
@@ -152,6 +175,7 @@ declare module '@tanstack/react-router' {
 
 interface privateLayoutRouteChildren {
   privateIndexRoute: typeof privateIndexRoute
+  privateGruposIndexRoute: typeof privateGruposIndexRoute
   privateJogosIndexRoute: typeof privateJogosIndexRoute
   privateJogosGameIdIndexRoute: typeof privateJogosGameIdIndexRoute
   privateJogosFinaisIndexRoute: typeof privateJogosFinaisIndexRoute
@@ -159,6 +183,7 @@ interface privateLayoutRouteChildren {
 
 const privateLayoutRouteChildren: privateLayoutRouteChildren = {
   privateIndexRoute: privateIndexRoute,
+  privateGruposIndexRoute: privateGruposIndexRoute,
   privateJogosIndexRoute: privateJogosIndexRoute,
   privateJogosGameIdIndexRoute: privateJogosGameIdIndexRoute,
   privateJogosFinaisIndexRoute: privateJogosFinaisIndexRoute,

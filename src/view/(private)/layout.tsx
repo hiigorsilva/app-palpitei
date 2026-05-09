@@ -19,6 +19,7 @@ function PrivateLayout() {
 
   const route = {
     gamesPage: () => navigate({ to: '/jogos' }),
+    groupsPage: () => navigate({ to: '/grupos' }),
     finalsPage: () => navigate({ to: '/jogos/finais' }),
   }
 
@@ -36,6 +37,9 @@ function PrivateLayout() {
             </Button>
             <Button variant="ghost" onClick={route.gamesPage}>
               Jogos de Hoje
+            </Button>
+            <Button variant="ghost" onClick={route.groupsPage}>
+              Seleções e Grupos
             </Button>
             <Button variant="ghost" onClick={route.finalsPage}>
               Chaveamento de Mata-Mata
