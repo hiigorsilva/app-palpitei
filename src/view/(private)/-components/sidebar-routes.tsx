@@ -1,66 +1,33 @@
+import { useNavigate } from '@tanstack/react-router'
 import { LayoutDashboardIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-type SidebarRoutesProps = {
-  route: {
-    resumePage: () => Promise<void>
-    groupsPage: () => Promise<void>
-    gamesPage: () => Promise<void>
-    finalsPage: () => Promise<void>
-  }
-}
+export function SidebarRoutes() {
+  const navigate = useNavigate()
 
-export function SidebarRoutes({ route }: SidebarRoutesProps) {
+  const links = [
+    { label: 'Resumo', onClick: () => navigate({ to: '/' }) },
+    { label: 'Calendário de Jogos', onClick: () => navigate({ to: '/jogos' }) },
+    {
+      label: 'Chaveamento de Mata-Mata',
+      onClick: () => navigate({ to: '/jogos/finais' }),
+    },
+    { label: 'Grupos e Seleções', onClick: () => navigate({ to: '/grupos' }) },
+  ]
+
   return (
     <>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.resumePage}
-      >
-        <LayoutDashboardIcon />
-        Resumo
-      </Button>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.gamesPage}
-      >
-        <LayoutDashboardIcon />
-        Jogos de Hoje
-      </Button>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.gamesPage}
-      >
-        <LayoutDashboardIcon />
-        Calendário de Jogos
-      </Button>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.finalsPage}
-      >
-        <LayoutDashboardIcon />
-        Chaveamento de Mata-Mata
-      </Button>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.finalsPage}
-      >
-        <LayoutDashboardIcon />
-        Bônus
-      </Button>
-      <Button
-        className="justify-start cursor-pointer"
-        variant="ghost"
-        onClick={route.finalsPage}
-      >
-        <LayoutDashboardIcon />
-        Participantes
-      </Button>
+      {links.map(link => (
+        <Button
+          key={link.label}
+          className="justify-start cursor-pointer"
+          variant="ghost"
+          onClick={link.onClick}
+        >
+          <LayoutDashboardIcon />
+          {link.label}
+        </Button>
+      ))}
     </>
   )
 }

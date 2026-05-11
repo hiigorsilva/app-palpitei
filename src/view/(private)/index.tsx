@@ -28,7 +28,7 @@ function HomePage() {
   if (!games.data) return <div>Carregando...</div>
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="min-w-0 w-full flex flex-col">
       <TitleContainer>
         Bem-vindo ao Palpitei - Bolão Copa do Mundo 2026!
       </TitleContainer>
@@ -50,7 +50,7 @@ function HomePage() {
       />
       <DailyMatchesSummary matches={games.data} />
       <Users users={users.data} />
-      <div className="w-full overflow-x-hidden">
+      <div className="min-w-0 w-full">
         <NextGames nextGames={nextGames.data} />
       </div>
     </div>

@@ -15,15 +15,6 @@ export const Route = createFileRoute('/(private)')({
 })
 
 function PrivateLayout() {
-  const navigate = Route.useNavigate()
-
-  const route = {
-    resumePage: () => navigate({ to: '/' }),
-    groupsPage: () => navigate({ to: '/grupos' }),
-    gamesPage: () => navigate({ to: '/jogos' }),
-    finalsPage: () => navigate({ to: '/jogos/finais' }),
-  }
-
   return (
     <SidebarProvider>
       <Sidebar>
@@ -33,11 +24,11 @@ function PrivateLayout() {
         <Separator />
         <SidebarContent className="w-full">
           <SidebarGroup>
-            <SidebarRoutes route={route} />
+            <SidebarRoutes />
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>
-      <main className="w-full flex-auto flex flex-col p-6 bg-yellow-100">
+      <main className="min-w-0 flex-1 flex flex-col p-6 bg-yellow-100">
         <Outlet />
       </main>
     </SidebarProvider>
