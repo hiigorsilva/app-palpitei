@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { DateNow } from '@/helpers/date'
 import {
   listDailyGames,
   listFase16AvosGames,
@@ -9,6 +10,7 @@ import {
   listFaseTerceiroGames,
   listGameById,
   listGames,
+  listNextGames,
 } from './api'
 import type { IGame } from './type'
 
@@ -22,6 +24,21 @@ export function useListDailyGames(filters?: IGameFilters) {
     queryKey: ['games', 'daily'],
     queryFn: () => listDailyGames(filters),
   })
+}
+
+export function useNextGames() {
+  const nextGames = useQuery<IGame[], Error>({
+    queryKey: ['games', 'next'],
+    queryFn: () => listNextGames(),
+  })
+  const data = nextGames.data
+    ?.filter(match => new Date(match.data_hora) > DateNow())
+    .sort(
+      (a, b) =>
+        new Date(a.data_hora).getTime() - new Date(b.data_hora).getTime()
+    )
+    .slice(0, 7)
+  return { ...nextGames, data }
 }
 
 export function useListGames(filters?: IGameFilters) {

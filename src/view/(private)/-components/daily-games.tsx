@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { Match } from '@/components/games-day'
+import { TitleContainer } from '@/components/title-container'
 import type { IGame } from '@/services/games/type'
 
 export function DailyMatchesSummary({ matches }: { matches: IGame[] }) {
-  // Ordenação por data_hora (do mais antigo para o mais recente do dia)
   const sortedMatches = useMemo(() => {
     return [...matches].sort(
       (a, b) =>
@@ -13,7 +13,7 @@ export function DailyMatchesSummary({ matches }: { matches: IGame[] }) {
 
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-bold">Jogos de Hoje</h3>
+      <TitleContainer>Jogos do Dia</TitleContainer>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedMatches.map(match => (

@@ -1,15 +1,14 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { LayoutDashboardIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { TitleContainer } from '@/components/title-container'
 import { Separator } from '@/components/ui/separator'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarProvider,
 } from '@/components/ui/sidebar'
+import { SidebarRoutes } from './-components/sidebar-routes'
 
 export const Route = createFileRoute('/(private)')({
   component: PrivateLayout,
@@ -29,62 +28,14 @@ function PrivateLayout() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <h1 className="text-2xl font-bold">Palpitei</h1>
+          <TitleContainer>Palpitei</TitleContainer>
         </SidebarHeader>
         <Separator />
-        <SidebarContent>
+        <SidebarContent className="w-full">
           <SidebarGroup>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.resumePage}
-            >
-              <LayoutDashboardIcon />
-              Resumo
-            </Button>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.gamesPage}
-            >
-              <LayoutDashboardIcon />
-              Jogos de Hoje
-            </Button>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.gamesPage}
-            >
-              <LayoutDashboardIcon />
-              Calendário de Jogos
-            </Button>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.finalsPage}
-            >
-              <LayoutDashboardIcon />
-              Chaveamento de Mata-Mata
-            </Button>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.finalsPage}
-            >
-              <LayoutDashboardIcon />
-              Bônus
-            </Button>
-            <Button
-              className="justify-start cursor-pointer"
-              variant="ghost"
-              onClick={route.finalsPage}
-            >
-              <LayoutDashboardIcon />
-              Participantes
-            </Button>
+            <SidebarRoutes route={route} />
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter />
       </Sidebar>
       <main className="w-full flex-auto flex flex-col p-6 bg-yellow-100">
         <Outlet />

@@ -2,6 +2,16 @@ import { api } from '@/lib/api'
 import type { IGameFilters } from './query'
 import type { IGame } from './type'
 
+export async function listNextGames() {
+  try {
+    const res = await api.get<IGame[]>('/games/pendentes')
+    return res.data
+  } catch (error) {
+    console.error('Error listing next games:', error)
+    throw error
+  }
+}
+
 export async function listDailyGames(filters?: IGameFilters) {
   try {
     const res = await api.get<IGame[]>('/games/hoje', { params: filters })

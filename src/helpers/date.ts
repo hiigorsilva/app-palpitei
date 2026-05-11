@@ -1,3 +1,5 @@
+export const DateNow = () => new Date()
+
 export function formatDate(dateString: string) {
   const dateFormatted = dateString.trim()
   if (dateFormatted === '') return null

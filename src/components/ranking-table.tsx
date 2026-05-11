@@ -17,8 +17,8 @@ interface RankingTableProps {
 
 export const RankingTable = ({ data, variant = 'full' }: RankingTableProps) => {
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="w-full rounded-md border">
+      <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-muted/50">
             <TableHead className="w-20 text-center">Pos.</TableHead>
