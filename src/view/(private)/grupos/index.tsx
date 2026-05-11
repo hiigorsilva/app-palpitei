@@ -32,7 +32,7 @@ function GruposPage() {
 
   return (
     <section className="flex flex-col gap-6">
-      <TitleContainer>Classificação por Grupos</TitleContainer>
+      <TitleContainer>Grupos e Seleções</TitleContainer>
       <Group.Grid>
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>

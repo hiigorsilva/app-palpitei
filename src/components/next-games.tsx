@@ -2,6 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { CircleDollarSignIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { formatDateWithoutYear } from '@/helpers/date'
+import { getFaseName } from '@/helpers/games'
 import { cn } from '@/lib/utils'
 import type { IGame } from '@/services/games/type'
 import { TitleContainer } from './title-container'
@@ -52,7 +53,8 @@ export function NextGames({ nextGames, className, ...props }: NextGamesProps) {
                 </Tooltip>
               )}
               <span className="block text-xs text-muted-foreground">
-                {formatDateWithoutYear(game.data_hora)} - {game.fase}
+                {formatDateWithoutYear(game.data_hora)} -{' '}
+                {getFaseName(game.fase)}
               </span>
               <div className="flex justify-start items-center gap-2">
                 <span className="block text-sm text-foreground">
