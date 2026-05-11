@@ -8,7 +8,7 @@ export function GameItemGridGroupDate({
   ...props
 }: Props) {
   return (
-    <div className={cn('grid grid-cols-1 gap-8 p-6', className)} {...props}>
+    <div className={cn('grid grid-cols-1 gap-8', className)} {...props}>
       {children}
     </div>
   )

@@ -21,7 +21,7 @@ export function NextGames({ nextGames, className, ...props }: NextGamesProps) {
       <TitleContainer>Próximos Jogos</TitleContainer>
       <ul
         className={cn(
-          'w-full flex flex-nowrap justify-start items-center gap-3 overflow-x-auto',
+          'w-full flex flex-nowrap justify-start items-center gap-3 p-1 overflow-x-auto',
           className
         )}
         {...props}

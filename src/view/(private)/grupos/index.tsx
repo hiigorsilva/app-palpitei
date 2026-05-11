@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { TitleContainer } from '@/components/title-container'
 import { useListGrupos } from '@/services/grupos/query'
 import type { IGrupo } from '@/services/grupos/type'
 import { Group } from './-components/grid-teams'
@@ -23,9 +24,8 @@ function GruposPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-8">Classificação por Grupos</h1>
-
+    <section className="flex flex-col gap-6">
+      <TitleContainer>Classificação por Grupos</TitleContainer>
       <Group.Grid>
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>
@@ -35,6 +35,6 @@ function GruposPage() {
           </Group.Root>
         ))}
       </Group.Grid>
-    </div>
+    </section>
   )
 }

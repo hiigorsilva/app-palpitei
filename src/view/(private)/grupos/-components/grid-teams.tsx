@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react'
+import { TitleContainer } from '@/components/title-container'
+import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 // Root: Controla o Grid
@@ -23,10 +25,11 @@ interface GroupRootProps {
   title: string
 }
 const GroupRoot = ({ children, title }: GroupRootProps) => (
-  <div className="border p-4 rounded-lg shadow-sm bg-card">
-    <h2 className="text-xl font-bold mb-4 border-b pb-2 text-primary">
+  <div className="flex flex-col gap-3 border p-4 rounded-lg shadow-sm bg-card">
+    <TitleContainer className="font-semibold text-xs text-muted-foreground uppercase">
       Grupo {title}
-    </h2>
+    </TitleContainer>
+    <Separator />
     <ul className="space-y-3">{children}</ul>
   </div>
 )
@@ -37,14 +40,13 @@ interface GroupTeamProps {
   logo?: string | null
 }
 const GroupTeam = ({ name, logo }: GroupTeamProps) => (
-  <li className="flex items-center text-sm font-medium hover:bg-muted/50 p-1 rounded transition-colors">
-    {logo && (
-      <img
-        src={logo}
-        alt={name}
-        className="w-6 h-6 mr-3 bg-muted-foreground/10 object-contain shrink-0"
-      />
-    )}
+  <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
+    <img
+      src={logo ?? 'https://loremflickr.com/320/240?random=1'}
+      alt={name}
+      className="w-6 h-6 mr-3 bg-muted-foreground/10 object-contain shrink-0"
+    />
+
     <span className="truncate">{name}</span>
   </li>
 )

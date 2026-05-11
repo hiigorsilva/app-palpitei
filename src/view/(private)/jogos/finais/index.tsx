@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Container } from '@/components/container'
 import {
   useListFase16AvosGames,
   useListFaseFinalGames,
@@ -67,24 +66,22 @@ function TournamentFinalGames() {
   )
 
   return (
-    <Container>
-      <section className="min-h-dvh h-fit w-full overflow-x-auto py-8 px-1">
-        <div className="flex min-w-max items-start justify-start gap-8">
-          {fases.map((fase, index) => (
-            <GridFaseCard
-              key={fase.fase}
-              fase={fase.fase}
-              games={fase.games}
-              complementaryGames={fase.complementaryGames}
-              bracketRows={bracketRows}
-              roundIndex={index}
-              isVisible={fase.isVisible}
-              hasNextFase={index < fases.length - 1}
-            />
-          ))}
-        </div>
-      </section>
-    </Container>
+    <section className="min-h-dvh h-fit w-full overflow-x-auto">
+      <div className="flex min-w-max items-start justify-start gap-8 p-1">
+        {fases.map((fase, index) => (
+          <GridFaseCard
+            key={fase.fase}
+            fase={fase.fase}
+            games={fase.games}
+            complementaryGames={fase.complementaryGames}
+            bracketRows={bracketRows}
+            roundIndex={index}
+            isVisible={fase.isVisible}
+            hasNextFase={index < fases.length - 1}
+          />
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -96,7 +93,7 @@ export function TeamDisplayRow({ game, team }: Props) {
   return (
     <div className="flex flex-col gap-1">
       <div className="w-full flex justify-between items-center gap-1">
-        <div className="w-16 h-6 relative rounded border bg-muted-foreground/10"></div>
+        <div className="aspect-video w-14 relative rounded border bg-muted-foreground/10"></div>
         <p className="min-w-0 w-full truncate text-sm text-foreground">
           {team === 'a' ? game.team_a : game.team_b}
         </p>

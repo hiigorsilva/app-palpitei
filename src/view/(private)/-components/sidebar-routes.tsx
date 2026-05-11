@@ -7,9 +7,9 @@ export function SidebarRoutes() {
 
   const links = [
     { label: 'Resumo', onClick: () => navigate({ to: '/' }) },
-    { label: 'Calendário de Jogos', onClick: () => navigate({ to: '/jogos' }) },
+    { label: 'Calendário', onClick: () => navigate({ to: '/jogos' }) },
     {
-      label: 'Chaveamento de Mata-Mata',
+      label: 'Mata-Mata',
       onClick: () => navigate({ to: '/jogos/finais' }),
     },
     { label: 'Grupos e Seleções', onClick: () => navigate({ to: '/grupos' }) },
@@ -20,7 +20,7 @@ export function SidebarRoutes() {
       {links.map(link => (
         <Button
           key={link.label}
-          className="justify-start cursor-pointer"
+          className="min-h-10 h-fit w-full justify-start py-3 cursor-pointer"
           variant="ghost"
           onClick={link.onClick}
         >

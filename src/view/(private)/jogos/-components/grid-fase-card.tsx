@@ -24,15 +24,15 @@ export function GridFaseCard({
   function getFaseTitle(fase: GridFaseCardProps['fase']) {
     switch (fase) {
       case '16_AVOS':
-        return '16 Avos'
+        return 'Fase 16 Avos'
       case 'OITAVAS':
-        return 'Oitavas'
+        return 'Oitavas de Final'
       case 'QUARTAS':
-        return 'Quartas'
+        return 'Quartas de Final'
       case 'SEMI':
-        return 'Semi'
+        return 'Semi de Final'
       case 'FINAL':
-        return 'Final'
+        return 'Finais'
       case 'TERCEIRO':
         return 'Terceiro Lugar'
       default:
@@ -77,7 +77,7 @@ export function GridFaseCard({
     <div className="w-48 shrink-0">
       {games.length > 0 && (
         <>
-          <h2 className="mb-4 text-sm font-semibold text-foreground">
+          <h2 className="mb-4 text-sm font-semibold text-foreground border-b">
             {getFaseTitle(fase)}
           </h2>
           <ul
@@ -94,7 +94,7 @@ export function GridFaseCard({
                   top: 'calc(50% + 5rem)',
                 }}
               >
-                <h3 className="mb-2 text-xs font-semibold text-muted-foreground">
+                <h3 className="mb-2 text-xs font-semibold text-foreground">
                   Terceiro Lugar
                 </h3>
                 <div className="space-y-3">

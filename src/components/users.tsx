@@ -25,12 +25,12 @@ export function Users({ users, className, ...props }: UsersProps) {
   return (
     <Card className={className} {...props}>
       <CardHeader>
-        <CardTitle>Participantes do Bolão</CardTitle>
+        <CardTitle>Participantes</CardTitle>
         <CardDescription>
-          Confira a lista de participantes do bolão da Copa do Mundo 2026.
+          Lista de participantes do bolão da Copa do Mundo 2026.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-2">
         {users.map(user => (
           <Button
             key={user.id}
