@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { LayoutDashboardIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -18,8 +19,9 @@ function PrivateLayout() {
   const navigate = Route.useNavigate()
 
   const route = {
-    gamesPage: () => navigate({ to: '/jogos' }),
+    resumePage: () => navigate({ to: '/' }),
     groupsPage: () => navigate({ to: '/grupos' }),
+    gamesPage: () => navigate({ to: '/jogos' }),
     finalsPage: () => navigate({ to: '/jogos/finais' }),
   }
 
@@ -32,32 +34,61 @@ function PrivateLayout() {
         <Separator />
         <SidebarContent>
           <SidebarGroup>
-            <Button variant="ghost" onClick={route.gamesPage}>
-              Calendário de Jogos
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.resumePage}
+            >
+              <LayoutDashboardIcon />
+              Resumo
             </Button>
-            <Button variant="ghost" onClick={route.gamesPage}>
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.gamesPage}
+            >
+              <LayoutDashboardIcon />
               Jogos de Hoje
             </Button>
-            <Button variant="ghost" onClick={route.groupsPage}>
-              Seleções e Grupos
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.gamesPage}
+            >
+              <LayoutDashboardIcon />
+              Calendário de Jogos
             </Button>
-            <Button variant="ghost" onClick={route.finalsPage}>
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.finalsPage}
+            >
+              <LayoutDashboardIcon />
               Chaveamento de Mata-Mata
             </Button>
-            <Button variant="ghost" onClick={route.finalsPage}>
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.finalsPage}
+            >
+              <LayoutDashboardIcon />
               Bônus
             </Button>
-            <Button variant="ghost" onClick={route.finalsPage}>
-              Usuários
-            </Button>
-            <Button variant="ghost" onClick={route.finalsPage}>
-              Estatísticas
+            <Button
+              className="justify-start cursor-pointer"
+              variant="ghost"
+              onClick={route.finalsPage}
+            >
+              <LayoutDashboardIcon />
+              Participantes
             </Button>
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter />
       </Sidebar>
-      <Outlet />
+      <main className="w-full flex-auto flex flex-col p-6 bg-yellow-100">
+        <Outlet />
+      </main>
     </SidebarProvider>
   )
 }

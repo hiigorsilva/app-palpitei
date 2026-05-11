@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { IUser } from '../users/type'
 import { createUser } from './api'
-import type { IUser } from './type'
 
 export type CreateUserInput = { name: string }
 

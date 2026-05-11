@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { RankingTable } from '@/components/ranking-table'
+import { Users } from '@/components/users'
 import { useListDailyGames } from '@/services/games/query'
+import { useListUsers } from '@/services/users/query'
 import { DailyMatchesSummary } from './-components/daily-games'
 
 export const Route = createFileRoute('/(private)/')({
@@ -16,9 +18,10 @@ export const Route = createFileRoute('/(private)/')({
 
 function HomePage() {
   const games = useListDailyGames()
+  const users = useListUsers()
+
+  if (!users.data) return <div>Carregando...</div>
   if (!games.data) return <div>Carregando...</div>
-  if (games.data.length === 0)
-    return <div>Nenhum jogo encontrado para hoje.</div>
 
   return (
     <div className="flex flex-col">
@@ -106,6 +109,7 @@ function HomePage() {
         ]}
       />
       <DailyMatchesSummary matches={games.data} />
+      <Users users={users.data} />
     </div>
   )
 }

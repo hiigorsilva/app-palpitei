@@ -15,6 +15,7 @@ import { Route as privateIndexRouteImport } from './view/(private)/index'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
 import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
 import { Route as privateGruposIndexRouteImport } from './view/(private)/grupos/index'
+import { Route as privateParticipantesUserIdIndexRouteImport } from './view/(private)/participantes/$userId/index'
 import { Route as privateJogosFinaisIndexRouteImport } from './view/(private)/jogos/finais/index'
 import { Route as privateJogosGameIdIndexRouteImport } from './view/(private)/jogos/$gameId/index'
 
@@ -46,6 +47,12 @@ const privateGruposIndexRoute = privateGruposIndexRouteImport.update({
   path: '/grupos/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
+const privateParticipantesUserIdIndexRoute =
+  privateParticipantesUserIdIndexRouteImport.update({
+    id: '/participantes/$userId/',
+    path: '/participantes/$userId/',
+    getParentRoute: () => privateLayoutRoute,
+  } as any)
 const privateJogosFinaisIndexRoute = privateJogosFinaisIndexRouteImport.update({
   id: '/jogos/finais/',
   path: '/jogos/finais/',
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/login/': typeof publicLoginIndexRoute
   '/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
   '/jogos/finais/': typeof privateJogosFinaisIndexRoute
+  '/participantes/$userId/': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
@@ -72,6 +80,7 @@ export interface FileRoutesByTo {
   '/login': typeof publicLoginIndexRoute
   '/jogos/$gameId': typeof privateJogosGameIdIndexRoute
   '/jogos/finais': typeof privateJogosFinaisIndexRoute
+  '/participantes/$userId': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,6 +92,7 @@ export interface FileRoutesById {
   '/(public)/login/': typeof publicLoginIndexRoute
   '/(private)/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
   '/(private)/jogos/finais/': typeof privateJogosFinaisIndexRoute
+  '/(private)/participantes/$userId/': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -93,8 +103,16 @@ export interface FileRouteTypes {
     | '/login/'
     | '/jogos/$gameId/'
     | '/jogos/finais/'
+    | '/participantes/$userId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/grupos' | '/jogos' | '/login' | '/jogos/$gameId' | '/jogos/finais'
+  to:
+    | '/'
+    | '/grupos'
+    | '/jogos'
+    | '/login'
+    | '/jogos/$gameId'
+    | '/jogos/finais'
+    | '/participantes/$userId'
   id:
     | '__root__'
     | '/(private)'
@@ -105,6 +123,7 @@ export interface FileRouteTypes {
     | '/(public)/login/'
     | '/(private)/jogos/$gameId/'
     | '/(private)/jogos/finais/'
+    | '/(private)/participantes/$userId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -156,6 +175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateGruposIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
+    '/(private)/participantes/$userId/': {
+      id: '/(private)/participantes/$userId/'
+      path: '/participantes/$userId'
+      fullPath: '/participantes/$userId/'
+      preLoaderRoute: typeof privateParticipantesUserIdIndexRouteImport
+      parentRoute: typeof privateLayoutRoute
+    }
     '/(private)/jogos/finais/': {
       id: '/(private)/jogos/finais/'
       path: '/jogos/finais'
@@ -179,6 +205,7 @@ interface privateLayoutRouteChildren {
   privateJogosIndexRoute: typeof privateJogosIndexRoute
   privateJogosGameIdIndexRoute: typeof privateJogosGameIdIndexRoute
   privateJogosFinaisIndexRoute: typeof privateJogosFinaisIndexRoute
+  privateParticipantesUserIdIndexRoute: typeof privateParticipantesUserIdIndexRoute
 }
 
 const privateLayoutRouteChildren: privateLayoutRouteChildren = {
@@ -187,6 +214,7 @@ const privateLayoutRouteChildren: privateLayoutRouteChildren = {
   privateJogosIndexRoute: privateJogosIndexRoute,
   privateJogosGameIdIndexRoute: privateJogosGameIdIndexRoute,
   privateJogosFinaisIndexRoute: privateJogosFinaisIndexRoute,
+  privateParticipantesUserIdIndexRoute: privateParticipantesUserIdIndexRoute,
 }
 
 const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(

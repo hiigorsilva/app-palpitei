@@ -1,6 +1,6 @@
 import { api } from '@/lib/api'
+import type { IUser } from '../users/type'
 import type { CreateUserInput } from './query'
-import type { IUser } from './type'
 
 export async function createUser(data: CreateUserInput) {
   try {
