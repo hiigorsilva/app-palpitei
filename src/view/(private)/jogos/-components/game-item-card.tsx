@@ -1,11 +1,6 @@
-import { CircleDollarSignIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
+import { IconApostaTooltip } from '@/components/icon-aposta-tooltip'
 import { Card } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { formatDateWithoutYear } from '@/helpers/date'
 import { cn } from '@/lib/utils'
 import type { IGame } from '@/services/games/type'
@@ -20,21 +15,7 @@ export function GameItemCard({ game, className, ...props }: Props) {
       className={cn('relative w-48 min-w-0 gap-2 p-3', className)}
       {...props}
     >
-      {game.has_palpites && (
-        <Tooltip>
-          <TooltipTrigger>
-            <div className="absolute top-0 right-0 p-1 rounded-bl-md bg-green-400/15">
-              <CircleDollarSignIcon
-                strokeWidth={1.2}
-                className="size-4 text-green-600"
-              />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="xs">Esse jogo possui uma aposta ativa.</p>
-          </TooltipContent>
-        </Tooltip>
-      )}
+      {game.has_palpites && <IconApostaTooltip />}
       <h3 className="text-xs text-muted-foreground">
         {formatDateWithoutYear(game.data_hora)}
       </h3>

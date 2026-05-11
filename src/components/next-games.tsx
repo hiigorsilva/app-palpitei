@@ -1,13 +1,12 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { CircleDollarSignIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { formatDateWithoutYear } from '@/helpers/date'
 import { getFaseName } from '@/helpers/games'
 import { cn } from '@/lib/utils'
 import type { IGame } from '@/services/games/type'
+import { IconApostaTooltip } from './icon-aposta-tooltip'
 import { TitleContainer } from './title-container'
 import { Card } from './ui/card'
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 type NextGamesProps = ComponentProps<'ul'> & {
   nextGames: IGame[]
@@ -37,21 +36,7 @@ export function NextGames({ nextGames, className, ...props }: NextGamesProps) {
             className="transition hover:scale-[98%]"
           >
             <Card className="relative min-w-3xs w-fit flex flex-col gap-2 p-3">
-              {game.has_palpites && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <div className="absolute top-0 right-0 p-1 rounded-bl-md bg-green-400/15">
-                      <CircleDollarSignIcon
-                        strokeWidth={1.2}
-                        className="size-5 text-green-600"
-                      />
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="xs">Esse jogo possui uma aposta ativa.</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              {game.has_palpites && <IconApostaTooltip />}
               <span className="block text-xs text-muted-foreground">
                 {formatDateWithoutYear(game.data_hora)} -{' '}
                 {getFaseName(game.fase)}

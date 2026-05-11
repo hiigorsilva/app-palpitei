@@ -1,3 +1,4 @@
+import { IconApostaTooltip } from '@/components/icon-aposta-tooltip'
 import { Card } from '@/components/ui/card'
 import { formatDateWithoutYear } from '@/helpers/date'
 import type { IGame } from '@/services/games/type'
@@ -63,7 +64,8 @@ export function GridFaseCard({
 
   function renderGameCard(game: IGame) {
     return (
-      <Card className="w-48 min-w-0 gap-2 p-3">
+      <Card className="relative w-48 min-w-0 gap-2 p-3">
+        {game.has_palpites && <IconApostaTooltip />}
         <h3 className="text-xs text-muted-foreground">
           {formatDateWithoutYear(game.data_hora)}
         </h3>
