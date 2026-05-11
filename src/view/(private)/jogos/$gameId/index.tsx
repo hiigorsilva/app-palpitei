@@ -3,6 +3,13 @@ import { useGetGameId } from '@/services/games/query'
 
 export const Route = createFileRoute('/(private)/jogos/$gameId/')({
   component: GameIdPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Jogo | Palpitei',
+      },
+    ],
+  }),
 })
 
 function GameIdPage() {

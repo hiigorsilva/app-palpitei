@@ -35,6 +35,13 @@ export const Route = createFileRoute('/(private)/jogos/')({
     tab: isGamesTab(search.tab) ? search.tab : undefined,
   }),
   component: GamesPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Jogos | Palpitei',
+      },
+    ],
+  }),
 })
 
 function GamesPage() {

@@ -6,6 +6,13 @@ import { Group } from './-components/grid-teams'
 
 export const Route = createFileRoute('/(private)/grupos/')({
   component: GruposPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Grupos e Seleções | Palpitei',
+      },
+    ],
+  }),
 })
 
 function GruposPage() {

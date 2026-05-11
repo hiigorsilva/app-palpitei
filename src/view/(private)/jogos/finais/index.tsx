@@ -12,6 +12,13 @@ import { GridFaseCard } from '../-components/grid-fase-card'
 
 export const Route = createFileRoute('/(private)/jogos/finais/')({
   component: TournamentFinalGames,
+  head: () => ({
+    meta: [
+      {
+        title: 'Jogos Mata-Mata | Palpitei',
+      },
+    ],
+  }),
 })
 
 function TournamentFinalGames() {

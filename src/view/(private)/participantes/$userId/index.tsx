@@ -3,6 +3,13 @@ import { useGetUserId } from '@/services/users/query'
 
 export const Route = createFileRoute('/(private)/participantes/$userId/')({
   component: UserIdPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Participante | Palpitei',
+      },
+    ],
+  }),
 })
 
 function UserIdPage() {
