@@ -12,13 +12,16 @@ export function formatDate(dateString: string) {
   return value
 }
 
-export function formatDateWithoutYear(dateString: string) {
+export function formatDateWithoutYear(
+  dateString: string,
+  style: 'short' | 'long' = 'short'
+) {
   const dateFormatted = dateString.trim()
   if (dateFormatted === '') return null
 
   const date = new Date(dateFormatted).toLocaleDateString('pt-BR', {
     day: '2-digit',
-    month: '2-digit',
+    month: style === 'short' ? '2-digit' : 'long',
   })
 
   const hours = new Date(dateFormatted).getHours()
