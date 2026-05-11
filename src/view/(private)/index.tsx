@@ -28,7 +28,7 @@ function HomePage() {
   if (!games.data) return <div>Carregando...</div>
 
   return (
-    <div className="min-w-0 w-full flex flex-col">
+    <section className="min-w-0 w-full flex flex-col gap-6">
       <TitleContainer>
         Bem-vindo ao Palpitei - Bolão Copa do Mundo 2026!
       </TitleContainer>
@@ -53,6 +53,6 @@ function HomePage() {
       <div className="min-w-0 w-full">
         <NextGames nextGames={nextGames.data} />
       </div>
-    </div>
+    </section>
   )
 }

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { TitleContainer } from '@/components/title-container'
 import {
   useListFase16AvosGames,
   useListFaseFinalGames,
@@ -73,21 +74,24 @@ function TournamentFinalGames() {
   )
 
   return (
-    <section className="min-h-dvh h-fit w-full overflow-x-auto">
-      <div className="flex min-w-max items-start justify-start gap-8 p-1">
-        {fases.map((fase, index) => (
-          <GridFaseCard
-            key={fase.fase}
-            fase={fase.fase}
-            games={fase.games}
-            complementaryGames={fase.complementaryGames}
-            bracketRows={bracketRows}
-            roundIndex={index}
-            isVisible={fase.isVisible}
-            hasNextFase={index < fases.length - 1}
-          />
-        ))}
-      </div>
+    <section className="flex flex-col gap-6">
+      <TitleContainer>Confrontos de Mata-Mata</TitleContainer>
+      <section className="min-h-dvh h-fit w-full overflow-x-auto">
+        <div className="flex min-w-max items-start justify-start gap-8 p-1">
+          {fases.map((fase, index) => (
+            <GridFaseCard
+              key={fase.fase}
+              fase={fase.fase}
+              games={fase.games}
+              complementaryGames={fase.complementaryGames}
+              bracketRows={bracketRows}
+              roundIndex={index}
+              isVisible={fase.isVisible}
+              hasNextFase={index < fases.length - 1}
+            />
+          ))}
+        </div>
+      </section>
     </section>
   )
 }

@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { TitleContainer } from '@/components/title-container'
 import { useGetUserId } from '@/services/users/query'
 
 export const Route = createFileRoute('/(private)/participantes/$userId/')({
@@ -18,5 +19,9 @@ function UserIdPage() {
   const user = useGetUserId(userId)
   if (!user.data) return <div>Carregando...</div>
 
-  return <div>Hello {user.data.name}!</div>
+  return (
+    <section className="flex flex-col gap-6">
+      <TitleContainer>{user.data.name}</TitleContainer>
+    </section>
+  )
 }

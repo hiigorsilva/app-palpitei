@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useMemo } from 'react'
+import { TitleContainer } from '@/components/title-container'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/helpers/date'
 import { useListGames } from '@/services/games/query'
@@ -60,52 +61,56 @@ function GamesPage() {
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange}>
-      <TabsList className={'p-0'} variant="line">
-        <TabsTrigger className={'leading-none'} value="group">
-          Fase de Grupos
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="16_avos">
-          Fase 16 Avos
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="oitavas">
-          Oitavas de Final
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="quartas">
-          Quartas de Final
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="semifinais">
-          Semifinais
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="terceiro_lugar">
-          Terceiro Lugar
-        </TabsTrigger>
-        <TabsTrigger className={'leading-none'} value="final">
-          Final
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="group">
-        <GroupGamesTab />
-      </TabsContent>
-      <TabsContent value="16_avos">
-        <ThirtyTwoAvosGamesTab />
-      </TabsContent>
-      <TabsContent value="oitavas">
-        <OitavasGamesTab />
-      </TabsContent>
-      <TabsContent value="quartas">
-        <QuartasGamesTab />
-      </TabsContent>
-      <TabsContent value="semifinais">
-        <SemiGamesTab />
-      </TabsContent>
-      <TabsContent value="terceiro_lugar">
-        <TerceiroGamesTab />
-      </TabsContent>
-      <TabsContent value="final">
-        <FinalsGamesTab />
-      </TabsContent>
-    </Tabs>
+    <section className="flex flex-col gap-6">
+      <TitleContainer>Calendário de Jogos</TitleContainer>
+
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
+        <TabsList className={'p-0'} variant="line">
+          <TabsTrigger className={'leading-none'} value="group">
+            Fase de Grupos
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="16_avos">
+            Fase 16 Avos
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="oitavas">
+            Oitavas de Final
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="quartas">
+            Quartas de Final
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="semifinais">
+            Semifinais
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="terceiro_lugar">
+            Terceiro Lugar
+          </TabsTrigger>
+          <TabsTrigger className={'leading-none'} value="final">
+            Final
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="group">
+          <GroupGamesTab />
+        </TabsContent>
+        <TabsContent value="16_avos">
+          <ThirtyTwoAvosGamesTab />
+        </TabsContent>
+        <TabsContent value="oitavas">
+          <OitavasGamesTab />
+        </TabsContent>
+        <TabsContent value="quartas">
+          <QuartasGamesTab />
+        </TabsContent>
+        <TabsContent value="semifinais">
+          <SemiGamesTab />
+        </TabsContent>
+        <TabsContent value="terceiro_lugar">
+          <TerceiroGamesTab />
+        </TabsContent>
+        <TabsContent value="final">
+          <FinalsGamesTab />
+        </TabsContent>
+      </Tabs>
+    </section>
   )
 }
 
