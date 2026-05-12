@@ -5,14 +5,18 @@ import {
   LayoutDashboardIcon,
   ShieldIcon,
   TrophyIcon,
+  UsersIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { getStorageAuth } from '@/helpers/auth'
 
 export function SidebarRoutes() {
   const navigate = useNavigate()
   const currentPath = useRouterState({
     select: state => state.location.pathname,
   })
+  // get user id from local storage
+  const userId = getStorageAuth()?.id
 
   const links = [
     {
@@ -44,6 +48,13 @@ export function SidebarRoutes() {
       icon: <TrophyIcon />,
       onClick: () => navigate({ to: '/jogos/finais' }),
       path: '/jogos/finais',
+    },
+    {
+      label: 'Participantes',
+      icon: <UsersIcon />,
+      onClick: () =>
+        navigate({ to: '/participantes/$userId', params: { userId: userId! } }),
+      path: '/participantes',
     },
   ]
 

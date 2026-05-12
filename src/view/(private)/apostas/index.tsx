@@ -40,7 +40,16 @@ function ApostasPage() {
         <ul className="col-span-1 w-full flex flex-col gap-6">
           {bets.data &&
             bets.data.length > 0 &&
-            bets.data.map(bet => <ApostaCardItem key={bet.id} bet={bet} />)}
+            bets.data.map(bet => (
+              <>
+                <ApostaCardItem key={bet.id} bet={bet} />
+                <ApostaCardItem key={bet.id} bet={bet} />
+                <ApostaCardItem key={bet.id} bet={bet} />
+                <ApostaCardItem key={bet.id} bet={bet} />
+                <ApostaCardItem key={bet.id} bet={bet} />
+                <ApostaCardItem key={bet.id} bet={bet} />
+              </>
+            ))}
         </ul>
 
         <Card className="col-span-2 w-full h-auto"></Card>

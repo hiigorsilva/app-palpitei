@@ -32,26 +32,30 @@ function HomePage() {
       <TitleContainer>
         Bem-vindo ao Palpitei - Bolão Copa do Mundo 2026!
       </TitleContainer>
-      <RankingTable
-        variant="summary"
-        data={[
-          {
-            position: 1,
-            userId: 'user-001',
-            name: 'Higor Silva',
-            pontos_total: 2450,
-            pontos_apostas: 2100,
-            pontos_bonus: 350,
-            acertos: 42,
-            total_apostas: 50,
-            taxa_acerto: 84,
-          },
-        ]}
-      />
-      <DailyMatchesSummary matches={games.data} />
-      <Users users={users.data} />
+
       <div className="min-w-0 w-full">
         <NextGames nextGames={nextGames.data} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <RankingTable
+          variant="summary"
+          data={[
+            {
+              position: 1,
+              userId: 'user-001',
+              name: 'Higor Silva',
+              pontos_total: 2450,
+              pontos_apostas: 2100,
+              pontos_bonus: 350,
+              acertos: 42,
+              total_apostas: 50,
+              taxa_acerto: 84,
+            },
+          ]}
+        />
+        <DailyMatchesSummary matches={games.data} />
+        <Users users={users.data} />
       </div>
     </section>
   )

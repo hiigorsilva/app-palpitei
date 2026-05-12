@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { CardProfile } from '@/components/card-profile'
 import { TitleContainer } from '@/components/title-container'
 import { useGetUserId } from '@/services/users/query'
 
@@ -22,6 +23,22 @@ function UserIdPage() {
   return (
     <section className="flex flex-col gap-6">
       <TitleContainer>{user.data.name}</TitleContainer>
+      <CardProfile
+        user={{
+          userId: 'user-id',
+          name: 'Higor',
+          bonus_concedido: 100,
+          jogos_apostados: 10,
+          nivel_atual: 'Bronze',
+          percentual: 50,
+          proximo_nivel: {
+            nivel: 'Platina',
+            bonusPontos: 200,
+            minimoPercentual: 70,
+          },
+          total_jogos: 20,
+        }}
+      />
     </section>
   )
 }

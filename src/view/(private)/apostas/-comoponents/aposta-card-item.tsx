@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import type { IBet } from '@/services/bets/type'
 import seloBetGreen from '/icons/bet-green.svg'
 import seloBetRed from '/icons/bet-red.svg'
+import { CreateApostaDrawer } from './create-aposta-drawer'
 
 type ApostaCardItemProps = ComponentProps<'div'> & {
   bet: IBet
@@ -47,13 +48,15 @@ export function ApostaCardItem({
         {!bet.finish_game && bet.palpite !== null && (
           <Tooltip>
             <TooltipTrigger className={'ml-auto'}>
-              <Button
-                variant={'outline'}
-                size={'icon'}
-                className={'cursor-pointer'}
-              >
-                <PencilIcon strokeWidth={1.2} />
-              </Button>
+              <CreateApostaDrawer bet={bet}>
+                <Button
+                  variant={'outline'}
+                  size={'icon'}
+                  className={'cursor-pointer'}
+                >
+                  <PencilIcon strokeWidth={1.2} />
+                </Button>
+              </CreateApostaDrawer>
             </TooltipTrigger>
             <TooltipContent>
               <p className="text-xs">Clique para editar sua aposta</p>
