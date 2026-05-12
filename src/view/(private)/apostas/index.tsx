@@ -36,14 +36,14 @@ function ApostasPage() {
         Minhas Apostas
       </TitleContainer>
 
-      <div className="grid grid-cols-5 gap-6">
-        <ul className="col-span-2 w-full flex flex-col gap-6">
+      <div className="grid grid-cols-3 gap-6">
+        <ul className="col-span-1 w-full flex flex-col gap-6">
           {bets.data &&
             bets.data.length > 0 &&
             bets.data.map(bet => <ApostaCardItem key={bet.id} bet={bet} />)}
         </ul>
 
-        <Card className="col-span-3 w-full h-auto"></Card>
+        <Card className="col-span-2 w-full h-auto"></Card>
       </div>
     </section>
   )

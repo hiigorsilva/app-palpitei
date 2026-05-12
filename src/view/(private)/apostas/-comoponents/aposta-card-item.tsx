@@ -1,6 +1,13 @@
+import { PencilIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { formatDateWithoutYear } from '@/helpers/date'
 import { cn } from '@/lib/utils'
 import type { IBet } from '@/services/bets/type'
@@ -23,7 +30,7 @@ export function ApostaCardItem({
       {...props}
     >
       {/* HEADER */}
-      <div className="flex justify-start items-center gap-6">
+      <div className="relative flex justify-start items-center gap-6">
         <Badge variant={'outline'}>
           {formatDateWithoutYear(bet.data_hora)}
         </Badge>
@@ -37,21 +44,37 @@ export function ApostaCardItem({
         >
           <h3>{bet.finish_game ? 'Encerrado' : 'Em Breve'}</h3>
         </Badge>
+        {!bet.finish_game && bet.palpite !== null && (
+          <Tooltip>
+            <TooltipTrigger className={'ml-auto'}>
+              <Button
+                variant={'outline'}
+                size={'icon'}
+                className={'cursor-pointer'}
+              >
+                <PencilIcon strokeWidth={1.2} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Clique para editar sua aposta</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
 
       <div className="relative grid grid-cols-1">
-        <div className="grid grid-cols-5 gap-2">
-          <div className="inline-flex text-base text-foreground">
+        <div className="flex justify-start items-center gap-2">
+          <div className="inline-flex font-semibold text-sm text-foreground">
             {bet.team_a}
           </div>
-          <span className="inline-flex text-base text-foreground">
-            {bet.gols_a}
+          <span className="size-7 flex justify-center items-center text-sm text-foreground bg-muted rounded">
+            {bet.gols_a ?? '-'}
           </span>
           <div className="inline-flex text-sm text-foreground">x</div>
-          <span className="inline-flex text-base text-foreground">
-            {bet.gols_b}
+          <span className="size-7 flex justify-center items-center text-sm text-foreground bg-muted rounded">
+            {bet.gols_b ?? '-'}
           </span>
-          <div className="inline-flex text-base text-foreground">
+          <div className="inline-flex font-semibold text-sm text-foreground">
             {bet.team_b}
           </div>
         </div>
@@ -63,11 +86,30 @@ export function ApostaCardItem({
           />
         )}
       </div>
-
       {/* FOOTER */}
-      <span className="inline-flex text-xs text-muted-foreground ml-auto">
-        Última atualização {formatDateWithoutYear(bet.updated_at)}
-      </span>
+      <footer className="flex justify-between items-center gap-6 text-muted-foreground">
+        <p className="inline-flex items-center gap-1 text-xs">
+          Palpite:
+          {bet.palpite === 'A' && (
+            <span className="font-semibold uppercase px-2 py-1 text-green-600 bg-green-400/10 rounded-full">
+              {bet.team_a}
+            </span>
+          )}
+          {bet.palpite === 'B' && (
+            <span className="font-semibold uppercase px-2 py-1 text-green-600 bg-green-400/10 rounded-full">
+              {bet.team_b}
+            </span>
+          )}
+          {bet.palpite === 'EMPATE' && (
+            <span className="font-semibold uppercase px-2 py-1 text-green-600 bg-green-400/10 rounded-full">
+              Empate
+            </span>
+          )}
+        </p>
+        <span className="inline-flex text-xs">
+          Atualizado em {formatDateWithoutYear(bet.updated_at)}
+        </span>
+      </footer>
     </Card>
   )
 }
