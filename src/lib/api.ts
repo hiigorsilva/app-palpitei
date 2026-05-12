@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from 'axios'
-import { getStorageAuth } from '@/helpers/auth'
+import { getStorageAdminAuth } from '@/helpers/auth'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,18 +10,26 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   config => {
-    const basicAuth = getStorageAuth()
     const isPublicRoute = config.headers?.isPublic
+    const requiresAdminAuth = config.headers?.requiresAdminAuth
 
-    // Só injeta auth se NÃO for rota pública
-    if (!isPublicRoute && basicAuth) {
-      const { username, password } = basicAuth
+    if (!isPublicRoute && requiresAdminAuth) {
+      const adminAuth = getStorageAdminAuth()
+
+      if (!adminAuth) {
+        return Promise.reject(new Error('Credenciais de admin não informadas.'))
+      }
+
+      const { username, password } = adminAuth
       config.headers.Authorization = `Basic ${btoa(`${username}:${password}`)}`
     }
 
-    // Limpa flag custom
     if (config.headers?.isPublic) {
       delete config.headers.isPublic
+    }
+
+    if (config.headers?.requiresAdminAuth) {
+      delete config.headers.requiresAdminAuth
     }
 
     return config

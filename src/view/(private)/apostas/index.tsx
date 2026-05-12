@@ -13,7 +13,8 @@ export const Route = createFileRoute('/(private)/apostas/')({
 
 function ApostasPage() {
   const navigate = Route.useNavigate()
-  const user = getStorageAuth()!
+  const user = getStorageAuth()
+  if (!user) return null
 
   const bets = useGetBetsByUserId(user.id)
 
