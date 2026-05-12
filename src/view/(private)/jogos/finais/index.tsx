@@ -1,5 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
+import { Button } from '@/components/ui/button'
 import {
   useListFase16AvosGames,
   useListFaseFinalGames,
@@ -23,6 +25,8 @@ export const Route = createFileRoute('/(private)/jogos/finais/')({
 })
 
 function TournamentFinalGames() {
+  const navigate = Route.useNavigate()
+
   const { data: games16Avos } = useListFase16AvosGames()
   const { data: gamesOitavas } = useListFaseOitavasGames()
   const { data: gamesQuartas } = useListFaseQuartasGames()
@@ -73,9 +77,23 @@ function TournamentFinalGames() {
     1
   )
 
+  function handleBackNavigate() {
+    navigate({ to: '../..' })
+  }
+
   return (
     <section className="flex flex-col gap-6">
-      <TitleContainer>Confrontos de Mata-Mata</TitleContainer>
+      <TitleContainer>
+        <Button
+          size={'icon'}
+          variant={'ghost'}
+          className={'cursor-pointer'}
+          onClick={handleBackNavigate}
+        >
+          <ArrowLeftIcon />
+        </Button>
+        Confrontos de Mata-Mata
+      </TitleContainer>
       <section className="min-h-dvh h-fit w-full overflow-x-auto">
         <div className="flex min-w-max items-start justify-start gap-8 p-1">
           {fases.map((fase, index) => (

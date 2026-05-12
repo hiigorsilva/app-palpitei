@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { ArrowLeftIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { TitleContainer } from '@/components/title-container'
+import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate } from '@/helpers/date'
 import { useListGames } from '@/services/games/query'
@@ -60,9 +62,23 @@ function GamesPage() {
     })
   }
 
+  function handleBackNavigate() {
+    navigate({ to: '..' })
+  }
+
   return (
     <section className="flex flex-col gap-6">
-      <TitleContainer>Calendário de Jogos</TitleContainer>
+      <TitleContainer>
+        <Button
+          size={'icon'}
+          variant={'ghost'}
+          className={'cursor-pointer'}
+          onClick={handleBackNavigate}
+        >
+          <ArrowLeftIcon />
+        </Button>
+        Calendário de Jogos
+      </TitleContainer>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className={'p-0'} variant="line">

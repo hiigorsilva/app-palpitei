@@ -1,6 +1,7 @@
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   CalendarIcon,
+  HandHelpingIcon,
   LayoutDashboardIcon,
   ShieldIcon,
   TrophyIcon,
@@ -21,22 +22,28 @@ export function SidebarRoutes() {
       path: '/',
     },
     {
+      label: 'Grupos e Seleções',
+      icon: <ShieldIcon />,
+      onClick: () => navigate({ to: '/grupos' }),
+      path: '/grupos',
+    },
+    {
       label: 'Calendário',
       icon: <CalendarIcon />,
       onClick: () => navigate({ to: '/jogos' }),
       path: '/jogos',
     },
     {
+      label: 'Minhas Apostas',
+      icon: <HandHelpingIcon />,
+      onClick: () => navigate({ to: '/apostas' }),
+      path: '/apostas',
+    },
+    {
       label: 'Mata-Mata',
       icon: <TrophyIcon />,
       onClick: () => navigate({ to: '/jogos/finais' }),
       path: '/jogos/finais',
-    },
-    {
-      label: 'Grupos e Seleções',
-      icon: <ShieldIcon />,
-      onClick: () => navigate({ to: '/grupos' }),
-      path: '/grupos',
     },
   ]
 

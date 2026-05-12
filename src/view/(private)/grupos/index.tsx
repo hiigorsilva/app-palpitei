@@ -1,5 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
+import { Button } from '@/components/ui/button'
 import { useListGrupos } from '@/services/grupos/query'
 import type { IGrupo } from '@/services/grupos/type'
 import { Group } from './-components/grid-teams'
@@ -18,6 +20,8 @@ export const Route = createFileRoute('/(private)/grupos/')({
 function GruposPage() {
   const grupos = useListGrupos()
 
+  const navigate = Route.useNavigate()
+
   const groupedTeams = () => {
     return grupos.data?.reduce(
       (acc, current) => {
@@ -30,9 +34,23 @@ function GruposPage() {
     )
   }
 
+  function handleBackNavigate() {
+    navigate({ to: '..' })
+  }
+
   return (
     <section className="flex flex-col gap-6">
-      <TitleContainer>Grupos e Seleções</TitleContainer>
+      <TitleContainer>
+        <Button
+          size={'icon'}
+          variant={'ghost'}
+          className={'cursor-pointer'}
+          onClick={handleBackNavigate}
+        >
+          <ArrowLeftIcon />
+        </Button>
+        Grupos e Seleções
+      </TitleContainer>
       <Group.Grid>
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>
