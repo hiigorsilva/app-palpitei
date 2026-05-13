@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Separator } from '@/components/ui/separator'
+import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 
 // Root: Controla o Grid
@@ -37,19 +38,27 @@ const GroupRoot = ({ children, title }: GroupRootProps) => (
 // Item: A linha do time
 interface GroupTeamProps {
   name: string
-  logo?: string | null
+  flag?: string | null
 }
-const GroupTeam = ({ name, logo }: GroupTeamProps) => (
-  <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
-    <img
-      src={logo ?? 'https://loremflickr.com/320/240?random=1'}
-      alt={name}
-      className="w-6 h-6 mr-3 bg-muted-foreground/10 object-contain shrink-0"
-    />
+const GroupTeam = ({ name, flag }: GroupTeamProps) => {
+  const flagCode = flag ? getCountryCodeFromEmoji(flag) : null
 
-    <span className="truncate">{name}</span>
-  </li>
-)
+  return (
+    <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
+      <img
+        src={
+          flagCode
+            ? `/country-flags/${flagCode}.webp`
+            : 'https://loremflickr.com/320/240?random=1'
+        }
+        alt={name}
+        className="aspect-video w-6 mr-3 bg-muted-foreground/10 rounded-xs object-cover ring-1 ring-border shrink-0"
+      />
+
+      <span className="truncate">{name}</span>
+    </li>
+  )
+}
 
 // Exportando como um único objeto para facilitar o uso (Opcional)
 export const Group = {

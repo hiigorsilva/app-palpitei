@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react'
+import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import type { IGame } from '@/services/games/type'
 
 type TeamInfoItemProps = ComponentProps<'li'> & {
@@ -7,12 +8,28 @@ type TeamInfoItemProps = ComponentProps<'li'> & {
 }
 
 export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
+  const teamInfo = team === 'a' ? game.team_a_info : game.team_b_info
+  const flagCode = teamInfo?.flag_icon
+    ? getCountryCodeFromEmoji(teamInfo.flag_icon)
+    : null
+  const teamName = team === 'a' ? game.team_a : game.team_b
+
   return (
     <li className="flex flex-col justify-start items-center gap-2">
       {/* FLAG */}
-      <div className="aspect-video w-60 h-auto bg-muted rounded ring-1 ring-ring"></div>
+      <div className="relative aspect-video w-60 h-auto bg-muted rounded ring-1 ring-ring">
+        <img
+          className="absolute object-cover w-full h-full"
+          src={
+            flagCode
+              ? `/country-flags/${flagCode}.webp`
+              : 'https://loremflickr.com/320/240?random=1'
+          }
+          alt={teamName}
+        />
+      </div>
       <h2 className="font-semibold text-lg text-foreground text-nowrap">
-        {team === 'a' ? game.team_a : game.team_b}
+        {teamName}
       </h2>
     </li>
   )

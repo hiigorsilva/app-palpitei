@@ -55,7 +55,11 @@ function GruposPage() {
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>
             {group.teams.map(team => (
-              <Group.Team key={team.id} name={team.name} logo={team.logo} />
+              <Group.Team
+                key={team.id}
+                name={team.name}
+                flag={team.flag_icon?.toLocaleLowerCase()}
+              />
             ))}
           </Group.Root>
         ))}
