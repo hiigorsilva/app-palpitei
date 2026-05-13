@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { LogOutIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
@@ -11,16 +11,26 @@ import {
   SidebarHeader,
   SidebarProvider,
 } from '@/components/ui/sidebar'
-import { removeStorageAuth } from '@/helpers/auth'
+import { useAuth } from '@/contexts/auth'
+import { getStorageAuth } from '@/helpers/auth'
 import { SidebarRoutes } from './-components/sidebar-routes'
 
 export const Route = createFileRoute('/(private)')({
+  beforeLoad: () => {
+    if (!getStorageAuth()) {
+      throw redirect({ to: '/login' })
+    }
+  },
   component: PrivateLayout,
 })
 
 function PrivateLayout() {
+  const navigate = Route.useNavigate()
+  const { logout } = useAuth()
+
   function handleLogout() {
-    removeStorageAuth()
+    logout()
+    navigate({ to: '/login' })
   }
 
   return (

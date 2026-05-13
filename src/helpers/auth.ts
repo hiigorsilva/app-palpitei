@@ -1,7 +1,7 @@
 const STORAGE_KEY = '@palpitei:auth'
 const ADMIN_STORAGE_KEY = '@palpitei:admin-auth'
 
-type AuthData = {
+type AuthUser = {
   id: string
   name: string
   created_at: string
@@ -12,20 +12,20 @@ type AdminAuthData = {
   password: string
 }
 
-export function getStorageAuth(): AuthData | null {
+export function getStorageAuth(): AuthUser | null {
   if (typeof window === 'undefined') return null
 
   const data = localStorage.getItem(STORAGE_KEY)
   if (!data) return null
 
   try {
-    return JSON.parse(data) as AuthData
+    return JSON.parse(data) as AuthUser
   } catch {
     return null
   }
 }
 
-export function setStorageAuth(data: AuthData) {
+export function setStorageAuth(data: AuthUser) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
 

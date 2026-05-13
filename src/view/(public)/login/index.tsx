@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { ArrowRightIcon } from 'lucide-react'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
@@ -22,11 +23,16 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { setStorageAuth } from '@/helpers/auth'
+import { useAuth } from '@/contexts/auth'
+import { getStorageAuth } from '@/helpers/auth'
 import { ErrorResponseApi } from '@/helpers/error'
-import { useCreateLogin } from '@/services/login/query'
 
 export const Route = createFileRoute('/(public)/login/')({
+  beforeLoad: () => {
+    if (getStorageAuth()) {
+      throw redirect({ to: '/' })
+    }
+  },
   component: LoginPage,
 })
 
@@ -39,7 +45,9 @@ const loginFormSchema = z.object({
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 function LoginPage() {
-  const { mutateAsync: createLogin, isPending } = useCreateLogin()
+  const navigate = Route.useNavigate()
+  const { login } = useAuth()
+  const [isPending, setIsPending] = useState(false)
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
@@ -50,14 +58,15 @@ function LoginPage() {
 
   async function onSubmit(data: LoginFormData) {
     try {
-      const user = await createLogin(data)
-      if (user.id) {
-        setStorageAuth(user)
-        form.reset({ name: '' })
-        toast.success('Login realizado com sucesso!')
-      }
+      setIsPending(true)
+      await login(data)
+      form.reset({ name: '' })
+      toast.success('Login realizado com sucesso!')
+      navigate({ to: '/' })
     } catch (error) {
       ErrorResponseApi(error)
+    } finally {
+      setIsPending(false)
     }
   }
 

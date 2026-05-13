@@ -3,6 +3,7 @@ import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Toaster } from 'sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider } from '@/contexts/auth'
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -21,11 +22,13 @@ export const queryClient = new QueryClient()
 function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Outlet />
-        <Toaster richColors theme="light" position="top-right" />
-        <TanStackRouterDevtools />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Outlet />
+          <Toaster richColors theme="light" position="top-right" />
+          <TanStackRouterDevtools />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   )
 }
