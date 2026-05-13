@@ -1,9 +1,11 @@
+import { StarIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Separator } from '@/components/ui/separator'
 import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
+import type { IGrupo } from '@/services/grupos/type'
 
 // Root: Controla o Grid
 interface GroupGridProps {
@@ -38,21 +40,28 @@ const GroupRoot = ({ children, title }: GroupRootProps) => (
 
 // Item: A linha do time
 interface GroupTeamProps {
-  name: string
-  flag?: string | null
+  team: IGrupo
 }
-const GroupTeam = ({ name, flag }: GroupTeamProps) => {
-  const flagCode = flag ? getCountryCodeFromEmoji(flag) : null
+const GroupTeam = ({ team }: GroupTeamProps) => {
+  const flagCode = team.flag_icon
+    ? getCountryCodeFromEmoji(team.flag_icon?.toLocaleLowerCase())
+    : null
 
   return (
     <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
       <img
         src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
-        alt={name}
+        alt={team.name}
         className="aspect-video w-6 mr-3 bg-muted-foreground/10 rounded-xs object-cover ring-1 ring-border shrink-0"
       />
 
-      <span className="truncate">{name}</span>
+      <span className="truncate">{team.name}</span>
+
+      {team.isPalpiteCampeao && (
+        <div className="w-fit h-fit p-1 border border-green-500/50 bg-green-500/15 rounded-full ml-auto">
+          <StarIcon strokeWidth={1.3} className="size-4 text-green-500" />
+        </div>
+      )}
     </li>
   )
 }

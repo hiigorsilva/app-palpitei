@@ -9,6 +9,7 @@ export interface IGrupo {
   flag_unicode: string | null
   fifa_code: string | null
   group: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L'
+  isPalpiteCampeao: boolean
   confed: string | null
   created_at: string
   updated_at: string

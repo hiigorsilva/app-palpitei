@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { getStorageAuth } from '@/helpers/auth'
 import { useListGrupos } from '@/services/grupos/query'
 import type { IGrupo } from '@/services/grupos/type'
 import { Group } from './-components/grid-teams'
@@ -18,7 +19,8 @@ export const Route = createFileRoute('/(private)/grupos/')({
 })
 
 function GruposPage() {
-  const grupos = useListGrupos()
+  const userId = getStorageAuth()?.id
+  const grupos = useListGrupos(userId)
 
   const navigate = Route.useNavigate()
 
@@ -55,11 +57,7 @@ function GruposPage() {
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>
             {group.teams.map(team => (
-              <Group.Team
-                key={team.id}
-                name={team.name}
-                flag={team.flag_icon?.toLocaleLowerCase()}
-              />
+              <Group.Team key={team.id} team={team} />
             ))}
           </Group.Root>
         ))}

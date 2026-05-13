@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MoveHorizontalIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
