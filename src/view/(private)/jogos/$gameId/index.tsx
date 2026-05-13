@@ -3,6 +3,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { NextGames } from '@/components/next-games'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { getStorageAuth } from '@/helpers/auth'
 import { useGetGameId, useNextGames } from '@/services/games/query'
 import { DisplayGame } from './-components/display-game'
 
@@ -20,9 +21,10 @@ export const Route = createFileRoute('/(private)/jogos/$gameId/')({
 function GameIdPage() {
   const { gameId } = Route.useParams()
   const navigate = Route.useNavigate()
+  const userId = getStorageAuth()?.id
 
-  const game = useGetGameId(gameId)
-  const nextGames = useNextGames()
+  const game = useGetGameId(gameId, userId)
+  const nextGames = useNextGames(userId)
 
   if (game.isLoading) return <p>Loading...</p>
   if (nextGames.isLoading) return <p>Loading...</p>

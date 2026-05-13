@@ -19,17 +19,19 @@ export type IGameFilters = {
   status?: string
 }
 
-export function useListDailyGames(filters?: IGameFilters) {
+export function useListDailyGames(userId?: string, filters?: IGameFilters) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', 'daily'],
-    queryFn: () => listDailyGames(filters),
+    queryKey: ['games', 'daily', userId, filters],
+    queryFn: () => listDailyGames(userId!, filters),
+    enabled: Boolean(userId),
   })
 }
 
-export function useNextGames() {
+export function useNextGames(userId?: string) {
   const nextGames = useQuery<IGame[], Error>({
-    queryKey: ['games', 'next'],
-    queryFn: () => listNextGames(),
+    queryKey: ['games', 'next', userId],
+    queryFn: () => listNextGames(userId!),
+    enabled: Boolean(userId),
   })
   const data = nextGames.data
     ?.filter(match => new Date(match.data_hora) > DateNow())
@@ -41,58 +43,66 @@ export function useNextGames() {
   return { ...nextGames, data }
 }
 
-export function useListGames(filters?: IGameFilters) {
+export function useListGames(userId?: string, filters?: IGameFilters) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', filters],
-    queryFn: () => listGames(filters),
+    queryKey: ['games', userId, filters],
+    queryFn: () => listGames(userId!, filters),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFase16AvosGames() {
+export function useListFase16AvosGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: '16_AVOS' }],
-    queryFn: () => listFase16AvosGames(),
+    queryKey: ['games', userId, { fase: '16_AVOS' }],
+    queryFn: () => listFase16AvosGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFaseOitavasGames() {
+export function useListFaseOitavasGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: 'OITAVAS' }],
-    queryFn: () => listFaseOitavasGames(),
+    queryKey: ['games', userId, { fase: 'OITAVAS' }],
+    queryFn: () => listFaseOitavasGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFaseQuartasGames() {
+export function useListFaseQuartasGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: 'QUARTAS' }],
-    queryFn: () => listFaseQuartasGames(),
+    queryKey: ['games', userId, { fase: 'QUARTAS' }],
+    queryFn: () => listFaseQuartasGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFaseSemiGames() {
+export function useListFaseSemiGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: 'SEMI' }],
-    queryFn: () => listFaseSemiGames(),
+    queryKey: ['games', userId, { fase: 'SEMI' }],
+    queryFn: () => listFaseSemiGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFaseTerceiroGames() {
+export function useListFaseTerceiroGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: 'TERCEIRO' }],
-    queryFn: () => listFaseTerceiroGames(),
+    queryKey: ['games', userId, { fase: 'TERCEIRO' }],
+    queryFn: () => listFaseTerceiroGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useListFaseFinalGames() {
+export function useListFaseFinalGames(userId?: string) {
   return useQuery<IGame[], Error>({
-    queryKey: ['games', { fase: 'FINAL' }],
-    queryFn: () => listFaseFinalGames(),
+    queryKey: ['games', userId, { fase: 'FINAL' }],
+    queryFn: () => listFaseFinalGames(userId!),
+    enabled: Boolean(userId),
   })
 }
 
-export function useGetGameId(gameId: string) {
+export function useGetGameId(gameId: string, userId?: string) {
   return useQuery<IGame, Error>({
-    queryKey: ['games', gameId],
-    queryFn: () => listGameById(gameId),
+    queryKey: ['games', gameId, userId],
+    queryFn: () => listGameById(gameId, userId!),
+    enabled: Boolean(gameId && userId),
   })
 }

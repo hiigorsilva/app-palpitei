@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { getStorageAuth } from '@/helpers/auth'
 import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import {
@@ -28,13 +29,14 @@ export const Route = createFileRoute('/(private)/jogos/finais/')({
 
 function TournamentFinalGames() {
   const navigate = Route.useNavigate()
+  const userId = getStorageAuth()?.id
 
-  const { data: games16Avos } = useListFase16AvosGames()
-  const { data: gamesOitavas } = useListFaseOitavasGames()
-  const { data: gamesQuartas } = useListFaseQuartasGames()
-  const { data: gamesSemi } = useListFaseSemiGames()
-  const { data: gamesTerceiro } = useListFaseTerceiroGames()
-  const { data: gamesFinal } = useListFaseFinalGames()
+  const { data: games16Avos } = useListFase16AvosGames(userId)
+  const { data: gamesOitavas } = useListFaseOitavasGames(userId)
+  const { data: gamesQuartas } = useListFaseQuartasGames(userId)
+  const { data: gamesSemi } = useListFaseSemiGames(userId)
+  const { data: gamesTerceiro } = useListFaseTerceiroGames(userId)
+  const { data: gamesFinal } = useListFaseFinalGames(userId)
 
   const games = {
     fase_16avos: games16Avos ?? [],

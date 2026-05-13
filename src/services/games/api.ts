@@ -2,9 +2,11 @@ import { api } from '@/lib/api'
 import type { IGameFilters } from './query'
 import type { IGame } from './type'
 
-export async function listNextGames() {
+export async function listNextGames(userId: string) {
   try {
-    const res = await api.get<IGame[]>('/games/pendentes')
+    const res = await api.get<IGame[]>('/games/pendentes', {
+      params: { userId },
+    })
     return res.data
   } catch (error) {
     console.error('Error listing next games:', error)
@@ -12,9 +14,11 @@ export async function listNextGames() {
   }
 }
 
-export async function listDailyGames(filters?: IGameFilters) {
+export async function listDailyGames(userId: string, filters?: IGameFilters) {
   try {
-    const res = await api.get<IGame[]>('/games/hoje', { params: filters })
+    const res = await api.get<IGame[]>('/games/hoje', {
+      params: { ...filters, userId },
+    })
     return res.data
   } catch (error) {
     console.error('Error listing daily games:', error)
@@ -22,9 +26,11 @@ export async function listDailyGames(filters?: IGameFilters) {
   }
 }
 
-export async function listGames(filters?: IGameFilters) {
+export async function listGames(userId: string, filters?: IGameFilters) {
   try {
-    const res = await api.get<IGame[]>('/games', { params: filters })
+    const res = await api.get<IGame[]>('/games', {
+      params: { ...filters, userId },
+    })
     return res.data
   } catch (error) {
     console.error('Error listing games:', error)
@@ -32,10 +38,10 @@ export async function listGames(filters?: IGameFilters) {
   }
 }
 
-export async function listFase16AvosGames() {
+export async function listFase16AvosGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: '16_AVOS', status: 'FUTURO' },
+      params: { fase: '16_AVOS', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -44,10 +50,10 @@ export async function listFase16AvosGames() {
   }
 }
 
-export async function listFaseOitavasGames() {
+export async function listFaseOitavasGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: 'OITAVAS', status: 'FUTURO' },
+      params: { fase: 'OITAVAS', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -56,10 +62,10 @@ export async function listFaseOitavasGames() {
   }
 }
 
-export async function listFaseQuartasGames() {
+export async function listFaseQuartasGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: 'QUARTAS', status: 'FUTURO' },
+      params: { fase: 'QUARTAS', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -68,10 +74,10 @@ export async function listFaseQuartasGames() {
   }
 }
 
-export async function listFaseSemiGames() {
+export async function listFaseSemiGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: 'SEMI', status: 'FUTURO' },
+      params: { fase: 'SEMI', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -80,10 +86,10 @@ export async function listFaseSemiGames() {
   }
 }
 
-export async function listFaseTerceiroGames() {
+export async function listFaseTerceiroGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: 'TERCEIRO', status: 'FUTURO' },
+      params: { fase: 'TERCEIRO', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -92,10 +98,10 @@ export async function listFaseTerceiroGames() {
   }
 }
 
-export async function listFaseFinalGames() {
+export async function listFaseFinalGames(userId: string) {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: 'FINAL', status: 'FUTURO' },
+      params: { fase: 'FINAL', status: 'FUTURO', userId },
     })
     return res.data
   } catch (error) {
@@ -104,9 +110,11 @@ export async function listFaseFinalGames() {
   }
 }
 
-export async function listGameById(gameId: string) {
+export async function listGameById(gameId: string, userId: string) {
   try {
-    const res = await api.get<IGame>(`/games/${gameId}`)
+    const res = await api.get<IGame>(`/games/${gameId}`, {
+      params: { userId },
+    })
     return res.data
   } catch (error) {
     console.error(`Error listing game by ID ${gameId}:`, error)

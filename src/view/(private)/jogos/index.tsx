@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getStorageAuth } from '@/helpers/auth'
 import { formatDate } from '@/helpers/date'
 import { useListGames } from '@/services/games/query'
 import type { IGame } from '@/services/games/type'
@@ -51,6 +52,7 @@ function GamesPage() {
   const navigate = Route.useNavigate()
   const { tab } = Route.useSearch()
   const activeTab = tab ?? DEFAULT_TAB
+  const userId = getStorageAuth()?.id
 
   const handleTabChange = (value: string | number) => {
     if (!isGamesTab(value)) return
@@ -105,25 +107,25 @@ function GamesPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="group">
-          <GroupGamesTab />
+          <GroupGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="16_avos">
-          <SixteenAvosGamesTab />
+          <SixteenAvosGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="oitavas">
-          <OitavasGamesTab />
+          <OitavasGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="quartas">
-          <QuartasGamesTab />
+          <QuartasGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="semifinais">
-          <SemiGamesTab />
+          <SemiGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="terceiro_lugar">
-          <TerceiroGamesTab />
+          <TerceiroGamesTab userId={userId} />
         </TabsContent>
         <TabsContent value="final">
-          <FinalsGamesTab />
+          <FinalsGamesTab userId={userId} />
         </TabsContent>
       </Tabs>
     </section>
@@ -135,8 +137,12 @@ export type GamesByDate = {
   games: IGame[]
 }
 
-export function GroupGamesTab() {
-  const games = useListGames({ fase: 'GRUPOS', status: 'FUTURO' })
+type GamesTabProps = {
+  userId?: string
+}
+
+export function GroupGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'GRUPOS', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -182,8 +188,8 @@ export function GroupGamesTab() {
   )
 }
 
-export function SixteenAvosGamesTab() {
-  const games = useListGames({ fase: '16_AVOS', status: 'FUTURO' })
+export function SixteenAvosGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: '16_AVOS', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -229,8 +235,8 @@ export function SixteenAvosGamesTab() {
   )
 }
 
-export function OitavasGamesTab() {
-  const games = useListGames({ fase: 'OITAVAS', status: 'FUTURO' })
+export function OitavasGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'OITAVAS', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -276,8 +282,8 @@ export function OitavasGamesTab() {
   )
 }
 
-export function QuartasGamesTab() {
-  const games = useListGames({ fase: 'QUARTAS', status: 'FUTURO' })
+export function QuartasGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'QUARTAS', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -323,8 +329,8 @@ export function QuartasGamesTab() {
   )
 }
 
-export function SemiGamesTab() {
-  const games = useListGames({ fase: 'SEMI', status: 'FUTURO' })
+export function SemiGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'SEMI', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -370,8 +376,8 @@ export function SemiGamesTab() {
   )
 }
 
-export function TerceiroGamesTab() {
-  const games = useListGames({ fase: 'TERCEIRO', status: 'FUTURO' })
+export function TerceiroGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'TERCEIRO', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []
@@ -417,8 +423,8 @@ export function TerceiroGamesTab() {
   )
 }
 
-export function FinalsGamesTab() {
-  const games = useListGames({ fase: 'FINAL', status: 'FUTURO' })
+export function FinalsGamesTab({ userId }: GamesTabProps) {
+  const games = useListGames(userId, { fase: 'FINAL', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []

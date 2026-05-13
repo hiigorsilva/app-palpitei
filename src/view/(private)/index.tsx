@@ -3,6 +3,7 @@ import { NextGames } from '@/components/next-games'
 import { RankingTable } from '@/components/ranking-table'
 import { TitleContainer } from '@/components/title-container'
 import { Users } from '@/components/users'
+import { getStorageAuth } from '@/helpers/auth'
 import { useListDailyGames, useNextGames } from '@/services/games/query'
 import { useListUsers } from '@/services/users/query'
 import { DailyMatchesSummary } from './-components/daily-games'
@@ -19,9 +20,10 @@ export const Route = createFileRoute('/(private)/')({
 })
 
 function HomePage() {
-  const games = useListDailyGames()
+  const userId = getStorageAuth()?.id
+  const games = useListDailyGames(userId)
   const users = useListUsers()
-  const nextGames = useNextGames()
+  const nextGames = useNextGames(userId)
 
   if (!nextGames.data) return <div>Carregando...</div>
   if (!users.data) return <div>Carregando...</div>

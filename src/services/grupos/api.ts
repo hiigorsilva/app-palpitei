@@ -1,7 +1,7 @@
 import { api } from '@/lib/api'
 import type { IGrupo } from './type'
 
-export async function listGrupos(userId: string | undefined) {
+export async function listGrupos(userId: string) {
   try {
     const res = await api.get<IGrupo[]>('/teams', {
       params: { userId },
