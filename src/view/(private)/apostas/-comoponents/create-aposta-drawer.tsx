@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { MoveHorizontalIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
@@ -15,6 +16,7 @@ import {
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import type { IBet } from '@/services/bets/type'
 
@@ -51,6 +53,9 @@ export function CreateApostaDrawer({
     },
   })
 
+  const flagTeamA = `/country-flags/${getCountryCodeFromEmoji(bet.team_a_info?.flag_icon || '').toLowerCase()}.webp`
+  const flagTeamB = `/country-flags/${getCountryCodeFromEmoji(bet.team_b_info?.flag_icon || '').toLowerCase()}.webp`
+
   function onSubmit(data: CreateApostaFormData) {
     const payload: Pick<CreateApostaFormData, 'palpite'> = {
       palpite: data.palpite,
@@ -86,10 +91,7 @@ export function CreateApostaDrawer({
                         className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
                       >
                         <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
-                          <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1920px-Flag_of_Brazil.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20240809055211"
-                            alt="Bandeira"
-                          />
+                          <img src={flagTeamA} alt={`Bandeira ${bet.team_a}`} />
                         </div>
                         <h2>{bet.team_a}</h2>
                         <RadioGroupItem
@@ -102,10 +104,11 @@ export function CreateApostaDrawer({
                         htmlFor={`palpite-${bet.id}-EMPATE`}
                         className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
                       >
-                        <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
+                        <div className="relative z-0 flex justify-center items-center aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
                           <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1920px-Flag_of_Brazil.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20240809055211"
-                            alt="Bandeira"
+                            className="w-full"
+                            src="/icons/ball.svg"
+                            alt="Empate"
                           />
                         </div>
                         <h2>Empate</h2>
@@ -120,10 +123,7 @@ export function CreateApostaDrawer({
                         className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
                       >
                         <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
-                          <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/1920px-Flag_of_Brazil.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail&_=20240809055211"
-                            alt="Bandeira"
-                          />
+                          <img src={flagTeamB} alt={`Bandeira ${bet.team_b}`} />
                         </div>
                         <h2>{bet.team_b}</h2>
                         <RadioGroupItem
