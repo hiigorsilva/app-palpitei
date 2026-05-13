@@ -2,6 +2,11 @@ import { StarIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Separator } from '@/components/ui/separator'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
@@ -48,21 +53,28 @@ const GroupTeam = ({ team }: GroupTeamProps) => {
     : null
 
   return (
-    <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
+    <div className="w-full flex items-center text-sm font-medium p-1 rounded transition-colors">
       <img
         src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
         alt={team.name}
         className="aspect-video w-6 mr-3 bg-muted-foreground/10 rounded-xs object-cover ring-1 ring-border shrink-0"
       />
 
-      <span className="truncate">{team.name}</span>
+      <span className="inline-flex truncate mr-auto">{team.name}</span>
 
       {team.isPalpiteCampeao && (
-        <div className="w-fit h-fit p-1 border border-green-500/50 bg-green-500/15 rounded-full ml-auto">
-          <StarIcon strokeWidth={1.3} className="size-4 text-green-500" />
-        </div>
+        <Tooltip>
+          <TooltipTrigger>
+            <div className="w-fit h-fit p-1 border border-green-500/50 bg-green-500/15 rounded-full">
+              <StarIcon strokeWidth={1.3} className="size-4 text-green-500" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-xs">Seu palpite para o Campeão da Copa</p>
+          </TooltipContent>
+        </Tooltip>
       )}
-    </li>
+    </div>
   )
 }
 
