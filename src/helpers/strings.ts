@@ -1,5 +1,5 @@
 export function getCountryCodeFromEmoji(emoji: string): string {
-  if (!emoji) return 'https://loremflickr.com/320/240?random=1' // Retorna uma imagem genérica se o emoji estiver vazio
+  if (!emoji) return 'https://loremflickr.com/320/240?random=1'
   return Array.from(emoji)
     .map(char => {
       const codePoint = char.codePointAt(0)

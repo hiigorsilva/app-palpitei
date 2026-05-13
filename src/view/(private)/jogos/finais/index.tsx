@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import {
   useListFase16AvosGames,
   useListFaseFinalGames,
@@ -119,12 +120,28 @@ type Props = {
   team: 'a' | 'b'
 }
 export function TeamDisplayRow({ game, team }: Props) {
+  const teamInfo = team === 'a' ? game.team_a_info : game.team_b_info
+  const flagCode = teamInfo?.flag_icon
+    ? getCountryCodeFromEmoji(teamInfo.flag_icon)
+    : null
+  const teamName = team === 'a' ? game.team_a : game.team_b
+
   return (
     <div className="flex flex-col gap-1">
       <div className="w-full flex justify-between items-center gap-1">
-        <div className="aspect-video w-14 relative rounded border bg-muted-foreground/10"></div>
+        <div className="aspect-video w-14 relative rounded border bg-muted-foreground/10 overflow-hidden">
+          <img
+            className="absolute object-cover w-full h-full"
+            src={
+              flagCode
+                ? `/country-flags/${flagCode}.webp`
+                : 'https://loremflickr.com/320/240?random=1'
+            }
+            alt={teamName}
+          />
+        </div>
         <p className="min-w-0 w-full truncate text-sm text-foreground">
-          {team === 'a' ? game.team_a : game.team_b}
+          {teamName}
         </p>
         <div className="w-14 flex justify-center items-center text-sm text-foreground rounded border bg-muted-foreground/10">
           {team === 'a' ? (game.gols_a ?? '-') : (game.gols_b ?? '-')}

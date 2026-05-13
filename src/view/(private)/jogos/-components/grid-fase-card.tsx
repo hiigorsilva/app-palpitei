@@ -65,7 +65,7 @@ export function GridFaseCard({
   function renderGameCard(game: IGame) {
     return (
       <Card className="relative w-48 min-w-0 gap-2 p-3">
-        {game.has_palpites && <IconApostaTooltip />}
+        {game.has_palpite && <IconApostaTooltip />}
         <h3 className="text-xs text-muted-foreground">
           {formatDateWithoutYear(game.data_hora)}
         </h3>

@@ -36,7 +36,7 @@ export function NextGames({ nextGames, className, ...props }: NextGamesProps) {
             className="transition hover:scale-[98%]"
           >
             <Card className="relative min-w-3xs w-fit flex flex-col gap-2 p-3">
-              {game.has_palpites && <IconApostaTooltip />}
+              {game.has_palpite && <IconApostaTooltip />}
               <span className="block text-xs text-muted-foreground">
                 {formatDateWithoutYear(game.data_hora)} -{' '}
                 {getFaseName(game.fase)}

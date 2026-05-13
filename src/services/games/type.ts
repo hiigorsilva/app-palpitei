@@ -8,6 +8,7 @@ export interface IGame {
   data_hora: string
   gols_a: number | null
   gols_b: number | null
+  has_palpite: boolean
   finish_game: boolean
   created_at: Date
   updated_at: Date

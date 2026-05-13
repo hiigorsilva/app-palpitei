@@ -1,3 +1,5 @@
+import type { ITeamDetails } from '../games/type'
+
 export interface IBet {
   id: string
   userId: string
@@ -13,4 +15,6 @@ export interface IBet {
   gols_a: number | null
   gols_b: number | null
   finish_game: boolean
+  team_a_info: ITeamDetails | null
+  team_b_info: ITeamDetails | null
 }
