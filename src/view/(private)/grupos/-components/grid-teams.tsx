@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Separator } from '@/components/ui/separator'
+import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 
@@ -46,11 +47,7 @@ const GroupTeam = ({ name, flag }: GroupTeamProps) => {
   return (
     <li className="flex items-center text-sm font-medium p-1 rounded transition-colors">
       <img
-        src={
-          flagCode
-            ? `/country-flags/${flagCode}.webp`
-            : 'https://loremflickr.com/320/240?random=1'
-        }
+        src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
         alt={name}
         className="aspect-video w-6 mr-3 bg-muted-foreground/10 rounded-xs object-cover ring-1 ring-border shrink-0"
       />

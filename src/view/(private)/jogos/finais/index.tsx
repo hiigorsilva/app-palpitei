@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import {
   useListFase16AvosGames,
@@ -132,11 +133,7 @@ export function TeamDisplayRow({ game, team }: Props) {
         <div className="aspect-video w-14 relative rounded border bg-muted-foreground/10 overflow-hidden">
           <img
             className="absolute object-cover w-full h-full"
-            src={
-              flagCode
-                ? `/country-flags/${flagCode}.webp`
-                : 'https://loremflickr.com/320/240?random=1'
-            }
+            src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
             alt={teamName}
           />
         </div>

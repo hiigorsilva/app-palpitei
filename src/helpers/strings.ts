@@ -1,5 +1,7 @@
+import { flagPlaceholder } from './placeholders'
+
 export function getCountryCodeFromEmoji(emoji: string): string {
-  if (!emoji) return 'https://loremflickr.com/320/240?random=1'
+  if (!emoji) return flagPlaceholder
   return Array.from(emoji)
     .map(char => {
       const codePoint = char.codePointAt(0)
