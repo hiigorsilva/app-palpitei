@@ -108,7 +108,7 @@ function GamesPage() {
           <GroupGamesTab />
         </TabsContent>
         <TabsContent value="16_avos">
-          <ThirtyTwoAvosGamesTab />
+          <SixteenAvosGamesTab />
         </TabsContent>
         <TabsContent value="oitavas">
           <OitavasGamesTab />
@@ -182,8 +182,8 @@ export function GroupGamesTab() {
   )
 }
 
-export function ThirtyTwoAvosGamesTab() {
-  const games = useListGames({ fase: '32_AVOS', status: 'FUTURO' })
+export function SixteenAvosGamesTab() {
+  const games = useListGames({ fase: '16_AVOS', status: 'FUTURO' })
 
   const gamesByDate = useMemo<GamesByDate[]>(() => {
     if (!games.data) return []

@@ -35,7 +35,7 @@ export async function listGames(filters?: IGameFilters) {
 export async function listFase16AvosGames() {
   try {
     const res = await api.get<IGame[]>('/games', {
-      params: { fase: '32_AVOS', status: 'FUTURO' },
+      params: { fase: '16_AVOS', status: 'FUTURO' },
     })
     return res.data
   } catch (error) {

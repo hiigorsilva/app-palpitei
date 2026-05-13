@@ -2,7 +2,7 @@ export function getFaseName(fase: string) {
   switch (fase) {
     case 'GRUPOS':
       return 'Fase de Grupos'
-    case '32_AVOS':
+    case '16_AVOS':
       return 'Fase 16 Avos'
     case 'OITAVAS':
       return 'Oitavas de Final'
