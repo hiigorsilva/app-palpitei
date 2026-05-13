@@ -26,7 +26,7 @@ function RootLayout() {
         <TooltipProvider>
           <Outlet />
           <Toaster richColors theme="light" position="top-right" />
-          <TanStackRouterDevtools />
+          <TanStackRouterDevtools position="bottom-right" />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
