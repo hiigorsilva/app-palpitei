@@ -76,7 +76,7 @@ function GruposPage() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6 min-h-full h-fit">
       <TitleContainer>
         <Button
           size={'icon'}
