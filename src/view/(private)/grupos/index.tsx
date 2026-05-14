@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { TitleContainer } from '@/components/title-container'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -16,6 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
+import { Separator } from '@/components/ui/separator'
 import { getStorageAuth } from '@/helpers/auth'
 import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
@@ -86,6 +88,11 @@ function GruposPage() {
         </Button>
         Grupos e Seleções
       </TitleContainer>
+
+      <p className="text-base text-muted-foreground">
+        Clique em uma seleção para ser seu palpite de Campeão da Copa do Mundo
+        2026.
+      </p>
       <Group.Grid>
         {groupedTeams()?.map(group => (
           <Group.Root key={group.group} title={group.group}>
@@ -160,50 +167,80 @@ export function FavoriteTeamToChampion({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className={cn('', className)}>
+      <DialogContent className={cn('min-w-lg w-fit', className)}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-6"
+          >
             <DialogHeader>
-              <DialogTitle>Confirme seu Palpite</DialogTitle>
+              <DialogTitle>Palpite do Campeão</DialogTitle>
               <DialogDescription>
-                Tem certeza que deseja apostar em{' '}
-                <strong className="font-semibold text-primary">
-                  {team?.name}
-                </strong>{' '}
-                para ganhar a Copa do Mundo?
+                Você poderá alterar esse palpite até 1h antes da Final.
               </DialogDescription>
-
-              <div className="flex justify-center items-center py-3">
-                <div className="relative aspect-video w-3/4 h-auto overflow-hidden rounded-md">
-                  <img
-                    className="absolute object-contain w-full h-full rounded-md overflow-hidden"
-                    src={
-                      flagCode
-                        ? `/country-flags/${flagCode}.webp`
-                        : flagPlaceholder
-                    }
-                    alt={team?.name}
-                  />
-                </div>
-              </div>
-
-              <DialogFooter className="w-full flex justify-center items-center">
-                <Button type="submit" className={'flex-1'}>
-                  Salvar palpite
-                </Button>
-                <DialogClose
-                  render={
-                    <Button
-                      type="button"
-                      variant={'outline'}
-                      className={'flex-1'}
-                    />
-                  }
-                >
-                  Cancelar
-                </DialogClose>
-              </DialogFooter>
             </DialogHeader>
+
+            <div className="w-full flex justify-center items-center">
+              <Badge
+                className="uppercase text-xs tracking-widest bg-primary/10 text-primary"
+                variant={'secondary'}
+              >
+                {team?.name}
+              </Badge>
+            </div>
+
+            <div className="flex justify-center items-center">
+              <div className="relative aspect-video w-1/2 h-auto overflow-hidden ring-0 border-0 rounded-md">
+                <img
+                  className="absolute object-cover w-full h-full ring-0 border-0 rounded-md overflow-hidden"
+                  src={
+                    flagCode
+                      ? `/country-flags/${flagCode}.webp`
+                      : flagPlaceholder
+                  }
+                  alt={team?.name}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 justify-center items-center place-content-center gap-2">
+              <span className="inline-flex place-self-center font-semibold text-sm">
+                Grupo
+              </span>
+              <span className="inline-flex place-self-center font-semibold text-sm">
+                Federação
+              </span>
+              <span className="inline-flex place-self-center font-semibold text-sm">
+                Continente
+              </span>
+              <Separator className={'col-span-3'} />
+              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
+                Grupo {team?.group}
+              </span>
+              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
+                {team?.confed}
+              </span>
+              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
+                {team?.continent}
+              </span>
+            </div>
+
+            <DialogFooter className="w-full flex justify-center items-center">
+              <Button type="submit" className={'flex-1'}>
+                Salvar palpite
+              </Button>
+              <DialogClose
+                render={
+                  <Button
+                    type="button"
+                    variant={'outline'}
+                    className={'flex-1'}
+                  />
+                }
+              >
+                Cancelar
+              </DialogClose>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

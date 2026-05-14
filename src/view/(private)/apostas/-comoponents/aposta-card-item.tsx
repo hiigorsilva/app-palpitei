@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { formatDateWithoutYear } from '@/helpers/date'
+import { DateNow, formatDateWithoutYear } from '@/helpers/date'
 import { cn } from '@/lib/utils'
 import type { IBet } from '@/services/bets/type'
 import seloBetGreen from '/icons/bet-green.svg'
@@ -24,6 +24,8 @@ export function ApostaCardItem({
   className,
   ...props
 }: ApostaCardItemProps) {
+  const cannotBet = new Date(bet.data_hora) > DateNow()
+
   return (
     <Card
       key={bet.id}
@@ -47,7 +49,7 @@ export function ApostaCardItem({
         </Badge>
         {!bet.finish_game && bet.palpite !== null && (
           <Tooltip>
-            <TooltipTrigger className={'ml-auto'}>
+            <TooltipTrigger disabled={cannotBet} className={'ml-auto'}>
               <CreateApostaDrawer bet={bet}>
                 <Button
                   variant={'outline'}
@@ -59,7 +61,11 @@ export function ApostaCardItem({
               </CreateApostaDrawer>
             </TooltipTrigger>
             <TooltipContent>
-              <p className="text-xs">Clique para editar sua aposta</p>
+              <p className="text-xs">
+                {cannotBet
+                  ? 'Você não pode editar esta aposta'
+                  : 'Clique para editar sua aposta'}
+              </p>
             </TooltipContent>
           </Tooltip>
         )}

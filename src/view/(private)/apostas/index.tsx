@@ -36,6 +36,11 @@ function ApostasPage() {
         Minhas Apostas
       </TitleContainer>
 
+      <p className="text-base text-muted-foreground">
+        Confira suas apostas ativas. Você pode alterar suas apostas até o início
+        de cada jogo.
+      </p>
+
       <div className="grid grid-cols-3 gap-6">
         <ul className="col-span-1 w-full flex flex-col gap-6">
           {bets.data &&

@@ -1,5 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Card,
@@ -10,13 +9,15 @@ import {
 } from '@/components/ui/card'
 import type { IUser } from '@/services/users/type'
 import { Button } from './ui/button'
+import { UserDetailsCard } from './user-card-item'
 
 type UsersProps = ComponentProps<'div'> & {
   users: IUser[]
 }
 
 export function Users({ users, className, ...props }: UsersProps) {
-  const navigate = useNavigate()
+  const [openUserCard, setOpenUserCard] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
 
   const size = '96x96'
   const randomColor = 'random'
@@ -35,13 +36,11 @@ export function Users({ users, className, ...props }: UsersProps) {
           <Button
             key={user.id}
             variant="outline"
-            onClick={() =>
-              navigate({
-                to: `/participantes/$userId`,
-                params: { userId: user.id },
-              })
-            }
             className="min-w-full w-fit h-fit flex justify-start items-center gap-3 p-3 cursor-pointer"
+            onClick={() => {
+              setSelectedUser(user)
+              setOpenUserCard(true)
+            }}
           >
             <Avatar>
               <AvatarImage
@@ -54,6 +53,11 @@ export function Users({ users, className, ...props }: UsersProps) {
             <h3>{user.name}</h3>
           </Button>
         ))}
+        <UserDetailsCard
+          onOpenChange={setOpenUserCard}
+          open={openUserCard}
+          user={selectedUser}
+        />
       </CardContent>
     </Card>
   )

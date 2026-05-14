@@ -3,6 +3,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getStorageAuth } from '@/helpers/auth'
 import { formatDate } from '@/helpers/date'
@@ -82,52 +83,59 @@ function GamesPage() {
         Calendário de Jogos
       </TitleContainer>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className={'p-0'} variant="line">
-          <TabsTrigger className={'leading-none'} value="group">
-            Fase de Grupos
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="16_avos">
-            Fase 16 Avos
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="oitavas">
-            Oitavas de Final
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="quartas">
-            Quartas de Final
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="semifinais">
-            Semifinais
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="terceiro_lugar">
-            Terceiro Lugar
-          </TabsTrigger>
-          <TabsTrigger className={'leading-none'} value="final">
-            Final
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="group">
-          <GroupGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="16_avos">
-          <SixteenAvosGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="oitavas">
-          <OitavasGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="quartas">
-          <QuartasGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="semifinais">
-          <SemiGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="terceiro_lugar">
-          <TerceiroGamesTab userId={userId} />
-        </TabsContent>
-        <TabsContent value="final">
-          <FinalsGamesTab userId={userId} />
-        </TabsContent>
-      </Tabs>
+      <p className="text-base text-muted-foreground">
+        Confira os próximos jogos, seus horários e palpite para cada fase da
+        competição.
+      </p>
+
+      <Card className="p-6 bg-transparent">
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
+          <TabsList className={'p-0'} variant="line">
+            <TabsTrigger className={'leading-none'} value="group">
+              Fase de Grupos
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="16_avos">
+              Fase 16 Avos
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="oitavas">
+              Oitavas de Final
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="quartas">
+              Quartas de Final
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="semifinais">
+              Semifinais
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="terceiro_lugar">
+              Terceiro Lugar
+            </TabsTrigger>
+            <TabsTrigger className={'leading-none'} value="final">
+              Final
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="group">
+            <GroupGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="16_avos">
+            <SixteenAvosGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="oitavas">
+            <OitavasGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="quartas">
+            <QuartasGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="semifinais">
+            <SemiGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="terceiro_lugar">
+            <TerceiroGamesTab userId={userId} />
+          </TabsContent>
+          <TabsContent value="final">
+            <FinalsGamesTab userId={userId} />
+          </TabsContent>
+        </Tabs>
+      </Card>
     </section>
   )
 }

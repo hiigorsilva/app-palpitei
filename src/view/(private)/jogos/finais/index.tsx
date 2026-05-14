@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { getStorageAuth } from '@/helpers/auth'
 import { flagPlaceholder } from '@/helpers/placeholders'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
@@ -98,7 +99,7 @@ function TournamentFinalGames() {
         </Button>
         Confrontos de Mata-Mata
       </TitleContainer>
-      <section className="min-h-dvh h-fit w-full overflow-x-auto">
+      <Card className="min-h-dvh h-fit w-full p-6 bg-transparent overflow-x-auto">
         <div className="flex min-w-max items-start justify-start gap-8 p-1">
           {fases.map((fase, index) => (
             <GridFaseCard
@@ -113,7 +114,7 @@ function TournamentFinalGames() {
             />
           ))}
         </div>
-      </section>
+      </Card>
     </section>
   )
 }

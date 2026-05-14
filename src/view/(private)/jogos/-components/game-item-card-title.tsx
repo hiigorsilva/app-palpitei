@@ -8,7 +8,7 @@ type Props = ComponentProps<'h2'> & {
 export function GameItemCardTitle({ group }: Props) {
   return (
     <Card className="h-full min-w-44 w-fit p-3">
-      <h2 className="font-semibold text-md text-start text-wrap">{`${group.date}`}</h2>
+      <h2 className="font-normal text-sm text-muted-foreground text-start text-wrap">{`${group.date}`}</h2>
     </Card>
   )
 }

@@ -79,7 +79,7 @@ export function GridFaseCard({
     <div className="w-48 shrink-0">
       {games.length > 0 && (
         <>
-          <h2 className="mb-4 text-sm font-semibold text-foreground border-b">
+          <h2 className="mb-4 text-sm font-semibold text-foreground pb-2 border-b">
             {getFaseTitle(fase)}
           </h2>
           <ul
