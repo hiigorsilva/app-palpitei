@@ -25,9 +25,9 @@ function HomePage() {
   const users = useListUsers()
   const nextGames = useNextGames(userId)
 
-  if (!nextGames.data) return <div>Carregando...</div>
-  if (!users.data) return <div>Carregando...</div>
-  if (!games.data) return <div>Carregando...</div>
+  if (!nextGames.data) return <div>Carregando Próximos Jogos...</div>
+  if (!users.data) return <div>Carregando Usuários...</div>
+  if (!games.data) return <div>Carregando Jogos Diários...</div>
 
   return (
     <section className="min-w-0 w-full flex flex-col gap-6">
@@ -53,6 +53,7 @@ function HomePage() {
               acertos: 42,
               total_apostas: 50,
               taxa_acerto: 84,
+              pontos_campeao: 0,
             },
           ]}
         />

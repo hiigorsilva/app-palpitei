@@ -17,7 +17,7 @@ function UserIdPage() {
   const { userId } = Route.useParams()
 
   const user = useGetUserId(userId)
-  if (!user.data) return <div>Carregando...</div>
+  if (!user.data) return <div>Carregando Usuário...</div>
 
   return (
     <section className="flex flex-col gap-6">

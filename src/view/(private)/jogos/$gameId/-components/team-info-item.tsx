@@ -18,7 +18,7 @@ export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
   return (
     <li className="flex flex-col justify-start items-center gap-2">
       {/* FLAG */}
-      <div className="relative aspect-video w-60 h-auto bg-muted rounded ring-1 ring-ring">
+      <div className="relative aspect-video w-48 h-auto bg-muted rounded ring-1 ring-ring">
         <img
           className="absolute object-cover w-full h-full"
           src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}

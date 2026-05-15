@@ -10,11 +10,11 @@ type DisplayGameProps = {
 }
 export function DisplayGame({ game }: DisplayGameProps) {
   return (
-    <Card className="flex flex-col justify-center items-center gap-3 bg-yellow-50">
+    <Card className="flex flex-col justify-center items-center gap-3">
       <span className="inline-flex text-sm text-muted-foreground tracking-tight">
         Copa do Mundo FIFA 2026 - {getFaseName(game.fase)}
       </span>
-      <Badge variant={'secondary'} className="text-sm">
+      <Badge variant={'secondary'} className="text-sm capitalize">
         {formatDateWithoutYear(game.data_hora, 'long')}
       </Badge>
       <ul className="grid grid-cols-3 gap-3 place-content-end">

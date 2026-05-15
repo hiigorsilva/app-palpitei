@@ -1,10 +1,19 @@
+import {
+  AwardIcon,
+  CoinsIcon,
+  GemIcon,
+  HandHelpingIcon,
+  SparklesIcon,
+  StarIcon,
+  TargetIcon,
+} from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
+import { useListNiveisBonus } from '@/services/bonus/query'
 import { useGetUserId } from '@/services/users/query'
 import type { IUser } from '@/services/users/type'
-import iconVerifyProfile from '/icons/profile-verify.svg'
 import { Badge } from './ui/badge'
-import { Card } from './ui/card'
+import { Card, CardContent, CardHeader } from './ui/card'
 import {
   Dialog,
   DialogContent,
@@ -12,8 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog'
-import { Separator } from './ui/separator'
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+import { Progress } from './ui/progress'
 
 type UserDetailsCardProps = ComponentProps<'div'> & {
   open: boolean
@@ -29,155 +37,207 @@ export function UserDetailsCard({
   className,
   ...props
 }: UserDetailsCardProps) {
-  if (!userData) return <div>Carregando...</div>
+  if (!userData) return <div>Carregando Usuário...</div>
 
-  const { data } = useGetUserId(userData.id)
-  if (!data) return <div>Carregando...</div>
-  const user = {
-    ...data,
-    bonus_concedido: 100,
-    jogos_apostados: 10,
-    nivel_atual: 'Platina',
-    percentual: 50,
-    proximo_nivel: {
-      nivel: 'Diamante',
-      bonusPontos: 200,
-      minimoPercentual: 70,
-    },
-    total_jogos: 20,
+  const { data: user } = useGetUserId(userData.id)
+  const { data: niveisBonus } = useListNiveisBonus()
+  if (!user) return <div>Carregando Usuário...</div>
+  if (!niveisBonus) return <div>Carregando Níveis de Bônus...</div>
+
+  const { name, percentual, nivel_atual, bonus_concedido, proximo_nivel } = user
+
+  const progressoParaProximoNivel =
+    proximo_nivel.minimoPercentual > 0
+      ? Math.min((percentual / proximo_nivel.minimoPercentual) * 100, 100)
+      : 0
+
+  const getCorNivel = (nivel: string): string => {
+    const cores: Record<string, string> = {
+      INICIANTE: 'bg-gray-500/20 text-gray-500',
+      BRONZE: 'bg-orange-400/20 text-orange-400',
+      PRATA: 'bg-slate-400/20 text-slate-400',
+      OURO: 'bg-yellow-400/20 text-yellow-400',
+      PLATINA: 'bg-cyan-400/20 text-cyan-400',
+      DIAMANTE: 'bg-blue-400/20 text-blue-400',
+    }
+    return cores[nivel] || 'bg-gray-500/20 text-gray-500'
   }
 
-  function getBadgeColor(nivel: string) {
-    switch (nivel) {
-      case 'Bronze':
-        return 'bg-orange-500/20 text-orange-500'
-      case 'Prata':
-        return 'bg-gray-500/20 text-gray-500'
-      case 'Ouro':
-        return 'bg-yellow-500/20 text-yellow-500'
-      case 'Platina':
-        return 'bg-blue-500/20 text-blue-500'
-      case 'Diamante':
-        return 'bg-purple-500/20 text-purple-500'
-      default:
-        return 'bg-muted text-foreground'
+  const getIconeNivel = (nivel: string): string => {
+    const icones: Record<string, string> = {
+      INICIANTE: '⚪',
+      BRONZE: '🥉',
+      PRATA: '🥈',
+      OURO: '🥇',
+      PLATINA: '🌀',
+      DIAMANTE: '💎',
     }
-  }
-
-  function getProgressColor(nivel: string) {
-    switch (nivel) {
-      case 'Bronze':
-        return 'bg-orange-500'
-      case 'Prata':
-        return 'bg-gray-500'
-      case 'Ouro':
-        return 'bg-yellow-500'
-      case 'Platina':
-        return 'bg-blue-500'
-      case 'Diamante':
-        return 'bg-purple-500'
-      default:
-        return 'bg-muted'
-    }
+    return icones[nivel] || '⚪'
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className={cn('min-w-80 w-fit flex flex-col gap-3', className)}
+        className={cn(
+          'min-w-lg w-fit max-h-3/4 h-full flex flex-col gap-3 overflow-y-hidden',
+          className
+        )}
         {...props}
       >
         <DialogHeader>
           <DialogTitle className={'text-base'}>
-            Detalhes de {user.name}
+            Detalhes de Participante
           </DialogTitle>
-          <DialogDescription>Informações do participante</DialogDescription>
+          <DialogDescription>
+            Veja informações sobre o participante
+          </DialogDescription>
         </DialogHeader>
 
-        <Card
-          className={cn(
-            'min-w-60 w-full flex flex-col gap-0 rounded-lg p-0 shadow-2xl shadow-foreground/5',
-            className
-          )}
-          {...props}
-        >
-          <div className="relative w-full h-36 rounded bg-muted">
-            <img
-              className="absolute w-full h-full object-cover"
-              src="https://www.flagcolorcodes.com/data/flag-of-brazil.png"
-              alt="Bandeira do Brasil"
-            />
-          </div>
-          <div className="flex flex-col gap-2 p-4">
-            {/* NAME */}
-            <div className="flex justify-between items-center gap-6">
-              <div className="flex justify-center items-center gap-2">
-                <h3 className="font-semibold text-sm tracking-tight">
-                  {user.name}
-                </h3>
-                <img
-                  className="relative size-3"
-                  src={iconVerifyProfile}
-                  alt="Verified Profile"
-                />
+        <Card className="w-full gap-0 shadow-lg p-0 overflow-hidden overflow-y-auto">
+          <CardHeader className="bg-background p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl">
+                  {getIconeNivel(nivel_atual)}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">{name}</h3>
+                  <Badge className={`${getCorNivel(nivel_atual)} mt-1`}>
+                    {nivel_atual}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex justify-center items-center gap-1">
-                <Badge
-                  className={`w-fit px-2 ${getBadgeColor(user.nivel_atual)}`}
-                >
-                  {user.nivel_atual}
+              {bonus_concedido > 0 && (
+                <Badge variant="secondary" className="bg-green-500 text-white">
+                  +{bonus_concedido}
                 </Badge>
-              </div>
+              )}
             </div>
-            <Separator />
-            {/* INFOS */}
-            <div className="grid grid-cols-3 justify-between">
-              <div className="w-full text-center">
-                <h4 className="text-xs text-muted-foreground">Jogos</h4>
-                <p className="font-semibold text-sm text-foreground tracking-tight">
-                  {user.total_jogos}
-                </p>
+          </CardHeader>
+
+          <CardContent className="p-6 space-y-5">
+            {/* Progresso Total */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted-foreground">
+                  Progresso Total
+                </span>
+                <span className="text-sm font-semibold text-muted-foreground">
+                  {percentual}%
+                </span>
               </div>
-              <div className="w-full text-center">
-                <h4 className="text-xs text-muted-foreground">Apostados</h4>
-                <p className="font-semibold text-sm text-foreground tracking-tight">
-                  {user.jogos_apostados}
-                </p>
-              </div>
-              <div className="w-full text-center">
-                <h4 className="text-xs text-muted-foreground">Bônus</h4>
-                <p className="font-semibold text-sm text-foreground tracking-tight">
-                  {user.bonus_concedido}
+              <Progress value={percentual} className="h-2" />
+            </div>
+
+            {/* Próximo Nível */}
+            <div className="flex flex-col gap-2 bg-muted border-0 rounded-lg p-4 space-y-2">
+              {proximo_nivel.nivel !== null && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <StarIcon className="size-4 text-muted-foreground" />
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      Próximo Nível
+                    </span>
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={`${getCorNivel(proximo_nivel.nivel)}`}
+                  >
+                    {proximo_nivel.nivel}
+                  </Badge>
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">
+                    {percentual}% / {proximo_nivel.minimoPercentual}%
+                  </span>
+                  <span className="font-medium text-muted-foreground">
+                    {progressoParaProximoNivel.toFixed(0)}% do caminho
+                  </span>
+                </div>
+                <Progress
+                  value={progressoParaProximoNivel}
+                  className="h-1.5 bg-muted-foreground/10 rounded-full overflow-hidden"
+                >
+                  <div
+                    className="bg-white transition-all h-full"
+                    style={{ width: `${percentual}%` }}
+                  />
+                </Progress>
+                <p className="text-xs text-muted-foreground font-medium">
+                  +{proximo_nivel.bonusPontos} pontos de bônus
                 </p>
               </div>
             </div>
 
-            <div className="w-full flex flex-col gap-1">
-              <div className="flex justify-between items-center gap-6">
-                <span className="inline-flex text-xs text-muted-foreground">
-                  {user.nivel_atual}
-                </span>
-                <span className="inline-flex text-xs text-muted-foreground">
-                  {user.proximo_nivel.nivel}
-                </span>
+            {/* Estatísticas de Jogos */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <HandHelpingIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">
+                    {/* {statistics?.total_apostas || 0} */}2
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Apostas feitas
+                  </p>
+                </div>
               </div>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="w-full h-2 bg-muted rounded-full">
-                    <div
-                      className={`h-full ${getProgressColor(user.nivel_atual)} rounded-full`}
-                      style={{
-                        width: `${user.percentual}%`,
-                      }}
-                    />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">{user.percentual}%</p>
-                </TooltipContent>
-              </Tooltip>
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <AwardIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">
+                    {/* {statistics.position || '-'}º */}
+                    1º
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Posição no Ranking
+                  </p>
+                </div>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <TargetIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">
+                    {/* {statistics.position || '-'}º */}1
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Total de Acertos
+                  </p>
+                </div>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <CoinsIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">
+                    {/* {statistics.position || '-'}º */}
+                    {user.carta_dobro_pontos}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Pts Dobro Restantes
+                  </p>
+                </div>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <GemIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">32</p>
+                  <p className="text-xs text-muted-foreground">Total pontos</p>
+                </div>
+              </div>
+              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
+                <SparklesIcon className="size-5 text-muted-foreground mx-auto" />
+                <div>
+                  <p className="text-xl font-semibold text-foreground">{47}%</p>
+                  <p className="text-xs text-muted-foreground">
+                    Taxa de Acertos
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
+          </CardContent>
         </Card>
       </DialogContent>
     </Dialog>

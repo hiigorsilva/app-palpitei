@@ -128,4 +128,44 @@
   html {
     @apply font-sans;
     }
+
+    /* Minimal global scrollbar: Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-foreground) transparent;
+  }
+
+  /* WebKit browsers: both vertical and horizontal */
+  *::-webkit-scrollbar {
+    height: 8px; /* horizontal thickness */
+    width: 8px; /* vertical thickness */
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary-foreground); /* fallback color */
+    background-color: var(--tw-scrollbar-thumb, var(--color-primary-foreground));
+    border-radius: 9999px;
+    border: 2px solid transparent; /* creates spacing from edge */
+    background-clip: padding-box;
+  }
+
+  /* Hover state for thumb */
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100,100,100,0.6);
+    background-color: var(--tw-scrollbar-thumb-hover, rgba(100,100,100,0.6));
+  }
+
+  /* Optional: hide scrollbar buttons/corner */
+  *::-webkit-scrollbar-button {
+    display: none;
+  }
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
