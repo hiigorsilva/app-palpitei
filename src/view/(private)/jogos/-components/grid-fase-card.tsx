@@ -63,8 +63,29 @@ export function GridFaseCard({
   if (!isVisible) return null
 
   function renderGameCard(game: IGame) {
+    function getBackgroundColorCard(fase: string) {
+      switch (fase) {
+        case '16_AVOS':
+          return 'bg-emerald-400/10 backdrop-blur-xs'
+        case 'OITAVAS':
+          return 'bg-emerald-400/10 backdrop-blur-xs'
+        case 'QUARTAS':
+          return 'bg-emerald-400/10 backdrop-blur-xs'
+        case 'SEMI':
+          return 'bg-emerald-400/10 backdrop-blur-xs'
+        case 'TERCEIRO':
+          return 'bg-emerald-400/10 backdrop-blur-xs'
+        case 'FINAL':
+          return 'bg-emerald-400/10 backdrop-blur-xs border border-primary/30 shadow-[0_0_24px] shadow-yellow-400/35'
+        default:
+          return ''
+      }
+    }
+
     return (
-      <Card className="relative w-48 min-w-0 gap-2 p-3">
+      <Card
+        className={`relative w-48 min-w-0 gap-2 p-3 ${getBackgroundColorCard(game.fase)}`}
+      >
         {game.has_palpite && <IconApostaTooltip />}
         <h3 className="text-xs text-muted-foreground">
           {formatDateWithoutYear(game.data_hora)}
