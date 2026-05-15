@@ -1,8 +1,10 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { getStorageAuth } from '@/helpers/auth'
 import { formatDateWithoutYear } from '@/helpers/date'
 import { getFaseName } from '@/helpers/games'
+import { useGetBetsByUserId } from '@/services/bets/query'
 import type { IGame } from '@/services/games/type'
 import { CreateApostaDrawer } from '@/view/(private)/apostas/-comoponents/create-aposta-drawer'
 import { TeamInfoItem } from './team-info-item'
@@ -11,6 +13,21 @@ type DisplayGameProps = {
   game: IGame
 }
 export function DisplayGame({ game }: DisplayGameProps) {
+  const userId = getStorageAuth()?.id
+  const { data: bets, isLoading: isLoadingBets } = useGetBetsByUserId(userId!)
+
+  const gameBet = bets?.find(bet => bet.gameId === game.id) ?? null
+  const hasBet = Boolean(gameBet)
+
+  function getBetLabel() {
+    if (gameBet?.palpite === 'A') return `Apostou na vitória de ${game.team_a}`
+    if (gameBet?.palpite === 'B') return `Apostou na vitória de ${game.team_b}`
+    if (gameBet?.palpite === 'EMPATE') return 'Apostou no empate'
+    return null
+  }
+
+  const betLabel = getBetLabel()
+
   return (
     <Card className="relative flex flex-col justify-center items-center gap-3 overflow-hidden">
       <div className="absolute inset-0 z-10 bg-background/75" />
@@ -20,7 +37,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
         alt=""
       />
 
-      <div className="relative z-20 flex flex-col justify-center items-center gap-3">
+      <div className="relative z-20 flex flex-col justify-center items-center gap-6">
         <span className="inline-flex text-sm text-foreground tracking-tight">
           Copa do Mundo FIFA 2026 - {getFaseName(game.fase)}
         </span>
@@ -43,8 +60,18 @@ export function DisplayGame({ game }: DisplayGameProps) {
           <TeamInfoItem game={game} team="b" />
         </ul>
 
-        <CreateApostaDrawer bet={game}>
-          <Button>Fazer aposta</Button>
+        {betLabel && (
+          <div className="w-full flex justify-center items-center -mt-6">
+            <Badge className="bg-primary/15 text-primary backdrop-blur-xs border border-primary/20">
+              {betLabel}
+            </Badge>
+          </div>
+        )}
+
+        <CreateApostaDrawer bet={gameBet ?? game}>
+          <Button disabled={game.finish_game || isLoadingBets}>
+            {hasBet ? 'Editar aposta' : 'Fazer aposta'}
+          </Button>
         </CreateApostaDrawer>
       </div>
     </Card>

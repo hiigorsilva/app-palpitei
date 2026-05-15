@@ -15,6 +15,7 @@ export interface IGame {
 }
 
 export interface ITeamDetails {
+  id: string
   name: string
   flag: string | null
   continent: string | null
@@ -23,6 +24,7 @@ export interface ITeamDetails {
   fifa_code: string | null
   group: Grupo
   confed: string | null
+  isPalpiteCampeao: boolean
 }
 
 type Grupo =

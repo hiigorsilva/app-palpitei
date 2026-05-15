@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getStorageAuth } from '@/helpers/auth'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
-import { useCreateGameBet } from '@/services/bets/query'
+import { useCreateGameBet, useGetBetsByUserId } from '@/services/bets/query'
 import type { IBet } from '@/services/bets/type'
 import type { IGame } from '@/services/games/type'
 import { useGetUserId } from '@/services/users/query'
@@ -64,7 +64,10 @@ export function CreateApostaDrawer({
   const { data: user } = useGetUserId(userId!)
   const gameId = 'gameId' in bet ? bet.gameId : bet.id
 
+  const { data: bets } = useGetBetsByUserId(userId!)
   const mutation = useCreateGameBet(userId!, gameId)
+
+  const betDataFiltered = bets?.find(bet => bet.gameId === gameId) ?? null
 
   const flagTeamA = `/country-flags/${getCountryCodeFromEmoji(bet.team_a_info?.flag_icon || '').toLowerCase()}.webp`
   const flagTeamB = `/country-flags/${getCountryCodeFromEmoji(bet.team_b_info?.flag_icon || '').toLowerCase()}.webp`
@@ -92,6 +95,13 @@ export function CreateApostaDrawer({
     form.reset()
     setOpen(false)
   }
+
+  useEffect(() => {
+    if (betDataFiltered) {
+      form.setValue('palpite', betDataFiltered.palpite)
+      form.setValue('useDoublePoints', betDataFiltered.usou_carta_dobro_pontos)
+    }
+  }, [betDataFiltered, form])
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

@@ -6,6 +6,7 @@ export interface IBet {
   gameId: string
   palpite: 'A' | 'B' | 'EMPATE'
   acertou: boolean
+  usou_carta_dobro_pontos: boolean
   created_at: string
   updated_at: string
   username: string
@@ -17,6 +18,7 @@ export interface IBet {
   finish_game: boolean
   team_a_info: ITeamDetails | null
   team_b_info: ITeamDetails | null
+  pontos: number
 }
 
 export interface ICreateBet {

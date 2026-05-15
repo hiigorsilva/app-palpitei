@@ -3,7 +3,6 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { NextGames } from '@/components/next-games'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { getStorageAuth } from '@/helpers/auth'
 import { useGetGameId, useNextGames } from '@/services/games/query'
 import { DisplayGame } from './-components/display-game'
@@ -34,7 +33,7 @@ function GameIdPage() {
   if (game.isError || !game.data) return <p>Not Found</p>
 
   function handleBackNavigate() {
-    navigate({ to: '../..' })
+    navigate({ to: '../../jogos' })
   }
 
   return (
@@ -51,13 +50,11 @@ function GameIdPage() {
         Detalhes da partida
       </TitleContainer>
 
-      <Card className="p-6 bg-transparent">
-        <DisplayGame game={game.data} />
+      <DisplayGame game={game.data} />
 
-        <div className="min-w-0 w-full">
-          <NextGames nextGames={nextGames.data} />
-        </div>
-      </Card>
+      <div className="min-w-0 w-full">
+        <NextGames nextGames={nextGames.data} />
+      </div>
     </section>
   )
 }

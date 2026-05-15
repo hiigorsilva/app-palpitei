@@ -15,7 +15,7 @@ export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
   const teamName = team === 'a' ? game.team_a : game.team_b
 
   return (
-    <li className="flex flex-col justify-start items-center gap-2">
+    <li className="relative flex flex-col justify-start items-center gap-2">
       {/* FLAG */}
       <div className="relative aspect-video w-48 h-auto bg-muted rounded ring-1 ring-ring">
         <img
