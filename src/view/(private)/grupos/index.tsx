@@ -19,8 +19,7 @@ import {
 import { Form } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
 import { getStorageAuth } from '@/helpers/auth'
-import { flagPlaceholder } from '@/helpers/placeholders'
-import { getCountryCodeFromEmoji } from '@/helpers/strings'
+import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import { useListGrupos } from '@/services/grupos/query'
 import type { IGrupo } from '@/services/grupos/type'
@@ -196,7 +195,7 @@ export function FavoriteTeamToChampion({
                   src={
                     flagCode
                       ? `/country-flags/${flagCode}.webp`
-                      : flagPlaceholder
+                      : imagesUrl.flagPlaceholder.url
                   }
                   alt={team?.name}
                 />

@@ -7,8 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { flagPlaceholder } from '@/helpers/placeholders'
-import { getCountryCodeFromEmoji } from '@/helpers/strings'
+import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import type { IGrupo } from '@/services/grupos/type'
 
@@ -55,7 +54,11 @@ const GroupTeam = ({ team }: GroupTeamProps) => {
   return (
     <div className="w-full flex items-center text-sm font-medium p-1 rounded transition-colors">
       <img
-        src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
+        src={
+          flagCode
+            ? `/country-flags/${flagCode}.webp`
+            : imagesUrl.flagPlaceholder.url
+        }
         alt={team.name}
         className="aspect-video w-6 mr-3 bg-muted-foreground/10 rounded-xs object-cover ring-1 ring-border shrink-0"
       />

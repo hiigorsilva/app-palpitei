@@ -4,8 +4,7 @@ import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { getStorageAuth } from '@/helpers/auth'
-import { flagPlaceholder } from '@/helpers/placeholders'
-import { getCountryCodeFromEmoji } from '@/helpers/strings'
+import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import {
   useListFase16AvosGames,
   useListFaseFinalGames,
@@ -136,7 +135,11 @@ export function TeamDisplayRow({ game, team }: Props) {
         <div className="aspect-video w-14 relative rounded border bg-muted-foreground/10 overflow-hidden">
           <img
             className="absolute object-cover w-full h-full"
-            src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
+            src={
+              flagCode
+                ? `/country-flags/${flagCode}.webp`
+                : imagesUrl.flagPlaceholder.url
+            }
             alt={teamName}
           />
         </div>

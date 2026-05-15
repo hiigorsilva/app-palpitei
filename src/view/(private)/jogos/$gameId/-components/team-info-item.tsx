@@ -1,6 +1,5 @@
 import type { ComponentProps } from 'react'
-import { flagPlaceholder } from '@/helpers/placeholders'
-import { getCountryCodeFromEmoji } from '@/helpers/strings'
+import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import type { IGame } from '@/services/games/type'
 
 type TeamInfoItemProps = ComponentProps<'li'> & {
@@ -21,7 +20,11 @@ export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
       <div className="relative aspect-video w-48 h-auto bg-muted rounded ring-1 ring-ring">
         <img
           className="absolute object-cover w-full h-full"
-          src={flagCode ? `/country-flags/${flagCode}.webp` : flagPlaceholder}
+          src={
+            flagCode
+              ? `/country-flags/${flagCode}.webp`
+              : imagesUrl.flagPlaceholder.url
+          }
           alt={teamName}
         />
       </div>

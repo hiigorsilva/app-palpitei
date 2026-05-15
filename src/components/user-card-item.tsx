@@ -7,7 +7,8 @@ import {
   StarIcon,
   TargetIcon,
 } from 'lucide-react'
-import type { ComponentProps } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
+import { imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import { useListNiveisBonus } from '@/services/bonus/query'
 import { useStatistics } from '@/services/ranking/query'
@@ -98,8 +99,14 @@ export function UserDetailsCard({
         </DialogHeader>
 
         <Card className="w-full gap-0 shadow-lg p-0 overflow-hidden overflow-y-auto">
-          <CardHeader className="bg-background p-6">
-            <div className="flex items-center justify-between">
+          <CardHeader className="relative min-h-fit bg-background p-6 overflow-hidden">
+            <div className="absolute z-10 inset-0 w-full h-full bg-background/75" />
+            <img
+              className="absolute top-0 left-0 z-0"
+              src={imagesUrl.bannerProfileCard.url}
+              alt={imagesUrl.bannerProfileCard.alt_text}
+            />
+            <div className="relative z-10 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl">
                   {getIconeNivel(nivel_atual)}
@@ -178,74 +185,71 @@ export function UserDetailsCard({
 
             {/* Estatísticas de Jogos */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <HandHelpingIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {statistics?.total_apostas || 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Apostas feitas
-                  </p>
-                </div>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <AwardIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {statistics.position ? `${statistics.position}º` : '-'}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Posição no Ranking
-                  </p>
-                </div>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <TargetIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {statistics.acertos ? `${statistics.acertos}º` : '-'}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Total de Acertos
-                  </p>
-                </div>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <CoinsIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {user.carta_dobro_pontos}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Pts Dobro Restantes
-                  </p>
-                </div>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <GemIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {statistics.pontos_total || 0}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Total pontos</p>
-                </div>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center space-y-1">
-                <SparklesIcon className="size-5 text-muted-foreground mx-auto" />
-                <div>
-                  <p className="text-xl font-semibold text-foreground">
-                    {statistics.taxa_acerto || 0}%
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Taxa de Acertos
-                  </p>
-                </div>
-              </div>
+              <ItemStatisticsCard
+                icon={<HandHelpingIcon className="size-5 text-primary/75" />}
+                value={statistics?.total_apostas || 0}
+                label="Apostas feitas"
+              />
+              <ItemStatisticsCard
+                icon={<AwardIcon className="size-5 text-primary/75" />}
+                value={statistics.position ? `${statistics.position}º` : '-'}
+                label="Posição no Ranking"
+              />
+              <ItemStatisticsCard
+                icon={<TargetIcon className="size-5 text-primary/75" />}
+                value={statistics.acertos ? `${statistics.acertos}º` : '-'}
+                label="Total de Acertos"
+              />
+              <ItemStatisticsCard
+                icon={<CoinsIcon className="size-5 text-primary/75" />}
+                value={user.carta_dobro_pontos}
+                label="Pts Dobro Restantes"
+              />
+              <ItemStatisticsCard
+                icon={<GemIcon className="size-5 text-primary/75" />}
+                value={statistics.pontos_total || 0}
+                label="Total pontos"
+              />
+              <ItemStatisticsCard
+                icon={<SparklesIcon className="size-5 text-primary/75" />}
+                value={statistics.taxa_acerto || 0}
+                label="Taxa de Acertos"
+              />
             </div>
           </CardContent>
         </Card>
       </DialogContent>
     </Dialog>
+  )
+}
+
+type ItemStatisticsCardProps = ComponentProps<'div'> & {
+  icon: ReactNode
+  value: string | number
+  label: string
+}
+function ItemStatisticsCard({
+  icon,
+  value,
+  label,
+  className,
+  ...props
+}: ItemStatisticsCardProps) {
+  return (
+    <div
+      className={cn(
+        'flex flex-col items-center gap-1 bg-muted rounded-lg p-3 text-center',
+        className
+      )}
+      {...props}
+    >
+      <div className="w-fit bg-primary/20 p-1 rounded">{icon}</div>
+      <div>
+        <p className="text-xl text-center font-semibold text-foreground">
+          {value}
+        </p>
+        <p className="text-xs text-center text-muted-foreground">{label}</p>
+      </div>
+    </div>
   )
 }
