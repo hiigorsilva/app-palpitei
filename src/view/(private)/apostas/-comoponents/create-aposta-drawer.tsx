@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -15,9 +15,13 @@ import {
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { getStorageAuth } from '@/helpers/auth'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
+import { useCreateGameBet } from '@/services/bets/query'
 import type { IBet } from '@/services/bets/type'
+import type { IGame } from '@/services/games/type'
+import { useGetUserId } from '@/services/users/query'
 
 type PalpiteValue = IBet['palpite']
 
@@ -31,12 +35,13 @@ const createApostaFormSchema = z.object({
   palpite: z.enum(palpiteOptions, {
     error: 'Selecione um palpite para confirmar sua aposta.',
   }),
+  useDoublePoints: z.boolean(),
 })
 
 type CreateApostaFormData = z.infer<typeof createApostaFormSchema>
 
 type CreateApostaDrawerProps = ComponentProps<'div'> & {
-  bet: IBet
+  bet: IBet | IGame
 }
 
 export function CreateApostaDrawer({
@@ -45,26 +50,51 @@ export function CreateApostaDrawer({
   className,
   ...props
 }: CreateApostaDrawerProps) {
+  const [open, setOpen] = useState(false)
   const form = useForm<CreateApostaFormData>({
     resolver: zodResolver(createApostaFormSchema),
+    mode: 'onChange',
     defaultValues: {
       palpite: undefined,
+      useDoublePoints: false,
     },
   })
+
+  const userId = getStorageAuth()?.id
+  const { data: user } = useGetUserId(userId!)
+  const gameId = 'gameId' in bet ? bet.gameId : bet.id
+
+  const mutation = useCreateGameBet(userId!, gameId)
 
   const flagTeamA = `/country-flags/${getCountryCodeFromEmoji(bet.team_a_info?.flag_icon || '').toLowerCase()}.webp`
   const flagTeamB = `/country-flags/${getCountryCodeFromEmoji(bet.team_b_info?.flag_icon || '').toLowerCase()}.webp`
 
-  function onSubmit(data: CreateApostaFormData) {
-    const payload: Pick<CreateApostaFormData, 'palpite'> = {
+  async function onSubmit(data: CreateApostaFormData) {
+    const payload = {
       palpite: data.palpite,
+      usou_carta_dobro_pontos: data.useDoublePoints,
     }
 
-    console.log('submit aposta', payload)
+    await mutation.mutateAsync(payload)
+    setOpen(false)
+    form.reset()
+  }
+
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen)
+
+    if (!nextOpen) {
+      form.reset()
+    }
+  }
+
+  function handleCancel() {
+    form.reset()
+    setOpen(false)
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className={cn('', className)} {...props}>
         <Form {...form}>
@@ -87,7 +117,7 @@ export function CreateApostaDrawer({
                     >
                       <Label
                         htmlFor={`palpite-${bet.id}-A`}
-                        className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
+                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
                       >
                         <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
                           <img src={flagTeamA} alt={`Bandeira ${bet.team_a}`} />
@@ -101,7 +131,7 @@ export function CreateApostaDrawer({
                       </Label>
                       <Label
                         htmlFor={`palpite-${bet.id}-EMPATE`}
-                        className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
+                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
                       >
                         <div className="relative z-0 flex justify-center items-center aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
                           <img
@@ -119,7 +149,7 @@ export function CreateApostaDrawer({
                       </Label>
                       <Label
                         htmlFor={`palpite-${bet.id}-B`}
-                        className="flex flex-col items-center gap-2 cursor-pointer rounded border-0 transition-colors has-data-checked:border-primary has-data-checked:bg-primary/5 has-data-checked:ring-2 has-data-checked:ring-primary/20 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 overflow-hidden"
+                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
                       >
                         <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
                           <img src={flagTeamB} alt={`Bandeira ${bet.team_b}`} />
@@ -137,11 +167,84 @@ export function CreateApostaDrawer({
                 )}
               />
 
+              {user && user.carta_dobro_pontos > 0 && (
+                <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold">
+                        Usar carta de dobro de pontos?
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Você possui {user.carta_dobro_pontos}{' '}
+                        {user.carta_dobro_pontos === 1 ? 'carta' : 'cartas'}{' '}
+                        disponível
+                      </p>
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="useDoublePoints"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RadioGroup
+                          value={String(field.value)}
+                          onValueChange={value =>
+                            field.onChange(value === 'true')
+                          }
+                          className="grid grid-cols-2 gap-2"
+                        >
+                          <Label
+                            htmlFor={`use-double-points-${bet.id}-true`}
+                            className="group flex min-h-16 cursor-pointer flex-col justify-center gap-1 rounded-md border bg-muted-background p-3 text-sm transition-all has-data-checked:bg-primary/10 has-data-checked:border-primary has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+                          >
+                            <span className="font-semibold">Sim</span>
+                            <span className="text-xs text-muted-foreground transition-colors group-has-data-checked:text-primary/80">
+                              Dobrar pontos
+                            </span>
+                            <RadioGroupItem
+                              value="true"
+                              id={`use-double-points-${bet.id}-true`}
+                              className="sr-only"
+                            />
+                          </Label>
+                          <Label
+                            htmlFor={`use-double-points-${bet.id}-false`}
+                            className="group flex min-h-16 cursor-pointer flex-col justify-center gap-1 rounded-md border bg-muted-background p-3 text-sm transition-all has-data-checked:bg-primary/10 has-data-checked:border-primary has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+                          >
+                            <span className="font-semibold">Não</span>
+                            <span className="text-xs text-muted-foreground transition-colors group-has-data-checked:text-primary/80">
+                              Pontuação normal
+                            </span>
+                            <RadioGroupItem
+                              value="false"
+                              id={`use-double-points-${bet.id}-false`}
+                              className="sr-only"
+                            />
+                          </Label>
+                        </RadioGroup>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+
               <DialogFooter className="w-full flex justify-center items-center">
-                <Button type="submit" className={'flex-1'}>
-                  Confirmar Aposta
+                <Button
+                  type="submit"
+                  className={'flex-1'}
+                  disabled={!form.formState.isValid || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Confirmando...' : 'Confirmar Aposta'}
                 </Button>
-                <Button type="button" variant={'outline'} className={'flex-1'}>
+                <Button
+                  type="button"
+                  variant={'outline'}
+                  className={'flex-1'}
+                  onClick={handleCancel}
+                  disabled={mutation.isPending}
+                >
                   Cancelar
                 </Button>
               </DialogFooter>

@@ -30,3 +30,8 @@ export interface ICreateBet {
   created_at: string
   updated_at: string
 }
+
+export type CreateBetInput = {
+  palpite: IBet['palpite']
+  usou_carta_dobro_pontos: boolean
+}

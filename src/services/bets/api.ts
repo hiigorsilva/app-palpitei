@@ -1,5 +1,5 @@
 import { api } from '@/lib/api'
-import type { IBet, ICreateBet } from './type'
+import type { CreateBetInput, IBet, ICreateBet } from './type'
 
 export async function listBetsByUserId(userId: string) {
   try {
@@ -11,10 +11,15 @@ export async function listBetsByUserId(userId: string) {
   }
 }
 
-export async function createGameBet(userId: string, gameId: string) {
+export async function createGameBet(
+  userId: string,
+  gameId: string,
+  payload: CreateBetInput
+) {
   try {
     const res = await api.post<ICreateBet>(
-      `/users/${userId}/games/${gameId}/bets`
+      `/users/${userId}/games/${gameId}/bets`,
+      payload
     )
     return res.data
   } catch (error) {

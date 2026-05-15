@@ -53,6 +53,7 @@ function GameIdPage() {
 
       <Card className="p-6 bg-transparent">
         <DisplayGame game={game.data} />
+
         <div className="min-w-0 w-full">
           <NextGames nextGames={nextGames.data} />
         </div>
