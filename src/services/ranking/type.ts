@@ -9,4 +9,12 @@ export interface RankingData {
   acertos: number
   total_apostas: number
   taxa_acerto: number
+  palpite_campeao: {
+    teamId: string
+    name: string
+    code: string
+    flag: string
+    acertou: boolean
+    pontos: number
+  }
 }

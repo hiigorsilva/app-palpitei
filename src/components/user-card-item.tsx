@@ -10,6 +10,7 @@ import {
 import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 import { useListNiveisBonus } from '@/services/bonus/query'
+import { useStatistics } from '@/services/ranking/query'
 import { useGetUserId } from '@/services/users/query'
 import type { IUser } from '@/services/users/type'
 import { Badge } from './ui/badge'
@@ -41,8 +42,11 @@ export function UserDetailsCard({
 
   const { data: user } = useGetUserId(userData.id)
   const { data: niveisBonus } = useListNiveisBonus()
+  const { data: statistics } = useStatistics(userData.id)
+
   if (!user) return <div>Carregando Usuário...</div>
   if (!niveisBonus) return <div>Carregando Níveis de Bônus...</div>
+  if (!statistics) return <div>Carregando Estatísticas...</div>
 
   const { name, percentual, nivel_atual, bonus_concedido, proximo_nivel } = user
 
@@ -178,7 +182,7 @@ export function UserDetailsCard({
                 <HandHelpingIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
                   <p className="text-xl font-semibold text-foreground">
-                    {/* {statistics?.total_apostas || 0} */}2
+                    {statistics?.total_apostas || 0}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Apostas feitas
@@ -189,8 +193,7 @@ export function UserDetailsCard({
                 <AwardIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
                   <p className="text-xl font-semibold text-foreground">
-                    {/* {statistics.position || '-'}º */}
-                    1º
+                    {statistics.position ? `${statistics.position}º` : '-'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Posição no Ranking
@@ -201,7 +204,7 @@ export function UserDetailsCard({
                 <TargetIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
                   <p className="text-xl font-semibold text-foreground">
-                    {/* {statistics.position || '-'}º */}1
+                    {statistics.acertos ? `${statistics.acertos}º` : '-'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Total de Acertos
@@ -212,7 +215,6 @@ export function UserDetailsCard({
                 <CoinsIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
                   <p className="text-xl font-semibold text-foreground">
-                    {/* {statistics.position || '-'}º */}
                     {user.carta_dobro_pontos}
                   </p>
                   <p className="text-xs text-muted-foreground">
@@ -223,14 +225,18 @@ export function UserDetailsCard({
               <div className="bg-muted rounded-lg p-3 text-center space-y-1">
                 <GemIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
-                  <p className="text-xl font-semibold text-foreground">32</p>
+                  <p className="text-xl font-semibold text-foreground">
+                    {statistics.pontos_total || 0}
+                  </p>
                   <p className="text-xs text-muted-foreground">Total pontos</p>
                 </div>
               </div>
               <div className="bg-muted rounded-lg p-3 text-center space-y-1">
                 <SparklesIcon className="size-5 text-muted-foreground mx-auto" />
                 <div>
-                  <p className="text-xl font-semibold text-foreground">{47}%</p>
+                  <p className="text-xl font-semibold text-foreground">
+                    {statistics.taxa_acerto || 0}%
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     Taxa de Acertos
                   </p>
