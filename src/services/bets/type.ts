@@ -18,3 +18,15 @@ export interface IBet {
   team_a_info: ITeamDetails | null
   team_b_info: ITeamDetails | null
 }
+
+export interface ICreateBet {
+  id: number
+  userId: string
+  gameId: string
+  palpite: string
+  acertou: boolean
+  pontos: number
+  usou_carta_dobro_pontos: boolean
+  created_at: string
+  updated_at: string
+}
