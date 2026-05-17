@@ -89,8 +89,16 @@ function GamesPage() {
       </p>
 
       <Card className="p-6 bg-transparent">
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList className={'p-0'} variant="line">
+        <Tabs
+          className="gap-6"
+          value={activeTab}
+          onValueChange={handleTabChange}
+        >
+          <TabsList
+            className={'w-full bg-primary/10 overflow-hidden p-1'}
+            variant="line"
+            style={{ borderRadius: '0.625rem' }}
+          >
             <TabsTrigger className={'leading-none'} value="group">
               Fase de Grupos
             </TabsTrigger>
