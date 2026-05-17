@@ -8,7 +8,6 @@ import {
   UsersIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { getStorageAuth } from '@/helpers/auth'
 
 export function SidebarRoutes() {
   const navigate = useNavigate()
@@ -16,7 +15,6 @@ export function SidebarRoutes() {
     select: state => state.location.pathname,
   })
   // get user id from local storage
-  const userId = getStorageAuth()?.id
 
   const links = [
     {
@@ -52,8 +50,7 @@ export function SidebarRoutes() {
     {
       label: 'Participantes',
       icon: <UsersIcon />,
-      onClick: () =>
-        navigate({ to: '/participantes/$userId', params: { userId: userId! } }),
+      onClick: () => navigate({ to: '/participantes' }),
       path: '/participantes',
     },
   ]

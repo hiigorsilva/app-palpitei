@@ -13,10 +13,10 @@ import { Route as publicLayoutRouteImport } from './view/(public)/layout'
 import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
+import { Route as privateParticipantesIndexRouteImport } from './view/(private)/participantes/index'
 import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
 import { Route as privateGruposIndexRouteImport } from './view/(private)/grupos/index'
 import { Route as privateApostasIndexRouteImport } from './view/(private)/apostas/index'
-import { Route as privateParticipantesUserIdIndexRouteImport } from './view/(private)/participantes/$userId/index'
 import { Route as privateJogosFinaisIndexRouteImport } from './view/(private)/jogos/finais/index'
 import { Route as privateJogosGameIdIndexRouteImport } from './view/(private)/jogos/$gameId/index'
 
@@ -38,6 +38,12 @@ const publicLoginIndexRoute = publicLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => publicLayoutRoute,
 } as any)
+const privateParticipantesIndexRoute =
+  privateParticipantesIndexRouteImport.update({
+    id: '/participantes/',
+    path: '/participantes/',
+    getParentRoute: () => privateLayoutRoute,
+  } as any)
 const privateJogosIndexRoute = privateJogosIndexRouteImport.update({
   id: '/jogos/',
   path: '/jogos/',
@@ -53,12 +59,6 @@ const privateApostasIndexRoute = privateApostasIndexRouteImport.update({
   path: '/apostas/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
-const privateParticipantesUserIdIndexRoute =
-  privateParticipantesUserIdIndexRouteImport.update({
-    id: '/participantes/$userId/',
-    path: '/participantes/$userId/',
-    getParentRoute: () => privateLayoutRoute,
-  } as any)
 const privateJogosFinaisIndexRoute = privateJogosFinaisIndexRouteImport.update({
   id: '/jogos/finais/',
   path: '/jogos/finais/',
@@ -75,20 +75,20 @@ export interface FileRoutesByFullPath {
   '/apostas/': typeof privateApostasIndexRoute
   '/grupos/': typeof privateGruposIndexRoute
   '/jogos/': typeof privateJogosIndexRoute
+  '/participantes/': typeof privateParticipantesIndexRoute
   '/login/': typeof publicLoginIndexRoute
   '/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
   '/jogos/finais/': typeof privateJogosFinaisIndexRoute
-  '/participantes/$userId/': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
   '/apostas': typeof privateApostasIndexRoute
   '/grupos': typeof privateGruposIndexRoute
   '/jogos': typeof privateJogosIndexRoute
+  '/participantes': typeof privateParticipantesIndexRoute
   '/login': typeof publicLoginIndexRoute
   '/jogos/$gameId': typeof privateJogosGameIdIndexRoute
   '/jogos/finais': typeof privateJogosFinaisIndexRoute
-  '/participantes/$userId': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,10 +98,10 @@ export interface FileRoutesById {
   '/(private)/apostas/': typeof privateApostasIndexRoute
   '/(private)/grupos/': typeof privateGruposIndexRoute
   '/(private)/jogos/': typeof privateJogosIndexRoute
+  '/(private)/participantes/': typeof privateParticipantesIndexRoute
   '/(public)/login/': typeof publicLoginIndexRoute
   '/(private)/jogos/$gameId/': typeof privateJogosGameIdIndexRoute
   '/(private)/jogos/finais/': typeof privateJogosFinaisIndexRoute
-  '/(private)/participantes/$userId/': typeof privateParticipantesUserIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,20 +110,20 @@ export interface FileRouteTypes {
     | '/apostas/'
     | '/grupos/'
     | '/jogos/'
+    | '/participantes/'
     | '/login/'
     | '/jogos/$gameId/'
     | '/jogos/finais/'
-    | '/participantes/$userId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/apostas'
     | '/grupos'
     | '/jogos'
+    | '/participantes'
     | '/login'
     | '/jogos/$gameId'
     | '/jogos/finais'
-    | '/participantes/$userId'
   id:
     | '__root__'
     | '/(private)'
@@ -132,10 +132,10 @@ export interface FileRouteTypes {
     | '/(private)/apostas/'
     | '/(private)/grupos/'
     | '/(private)/jogos/'
+    | '/(private)/participantes/'
     | '/(public)/login/'
     | '/(private)/jogos/$gameId/'
     | '/(private)/jogos/finais/'
-    | '/(private)/participantes/$userId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -173,6 +173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicLoginIndexRouteImport
       parentRoute: typeof publicLayoutRoute
     }
+    '/(private)/participantes/': {
+      id: '/(private)/participantes/'
+      path: '/participantes'
+      fullPath: '/participantes/'
+      preLoaderRoute: typeof privateParticipantesIndexRouteImport
+      parentRoute: typeof privateLayoutRoute
+    }
     '/(private)/jogos/': {
       id: '/(private)/jogos/'
       path: '/jogos'
@@ -192,13 +199,6 @@ declare module '@tanstack/react-router' {
       path: '/apostas'
       fullPath: '/apostas/'
       preLoaderRoute: typeof privateApostasIndexRouteImport
-      parentRoute: typeof privateLayoutRoute
-    }
-    '/(private)/participantes/$userId/': {
-      id: '/(private)/participantes/$userId/'
-      path: '/participantes/$userId'
-      fullPath: '/participantes/$userId/'
-      preLoaderRoute: typeof privateParticipantesUserIdIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
     '/(private)/jogos/finais/': {
@@ -223,9 +223,9 @@ interface privateLayoutRouteChildren {
   privateApostasIndexRoute: typeof privateApostasIndexRoute
   privateGruposIndexRoute: typeof privateGruposIndexRoute
   privateJogosIndexRoute: typeof privateJogosIndexRoute
+  privateParticipantesIndexRoute: typeof privateParticipantesIndexRoute
   privateJogosGameIdIndexRoute: typeof privateJogosGameIdIndexRoute
   privateJogosFinaisIndexRoute: typeof privateJogosFinaisIndexRoute
-  privateParticipantesUserIdIndexRoute: typeof privateParticipantesUserIdIndexRoute
 }
 
 const privateLayoutRouteChildren: privateLayoutRouteChildren = {
@@ -233,9 +233,9 @@ const privateLayoutRouteChildren: privateLayoutRouteChildren = {
   privateApostasIndexRoute: privateApostasIndexRoute,
   privateGruposIndexRoute: privateGruposIndexRoute,
   privateJogosIndexRoute: privateJogosIndexRoute,
+  privateParticipantesIndexRoute: privateParticipantesIndexRoute,
   privateJogosGameIdIndexRoute: privateJogosGameIdIndexRoute,
   privateJogosFinaisIndexRoute: privateJogosFinaisIndexRoute,
-  privateParticipantesUserIdIndexRoute: privateParticipantesUserIdIndexRoute,
 }
 
 const privateLayoutRouteWithChildren = privateLayoutRoute._addFileChildren(

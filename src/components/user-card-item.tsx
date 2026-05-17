@@ -55,6 +55,10 @@ export function UserDetailsCard({
     proximo_nivel.minimoPercentual > 0
       ? Math.min((percentual / proximo_nivel.minimoPercentual) * 100, 100)
       : 0
+  const percentualRestanteProximoNivel = Math.max(
+    proximo_nivel.minimoPercentual - percentual,
+    0
+  )
 
   const getCorNivel = (nivel: string): string => {
     const cores: Record<string, string> = {
@@ -159,24 +163,21 @@ export function UserDetailsCard({
                 </div>
               )}
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">
-                    {percentual}% / {proximo_nivel.minimoPercentual}%
+                    {percentualRestanteProximoNivel > 0
+                      ? `Faltam ${percentualRestanteProximoNivel.toFixed(1)}% para o próximo nível`
+                      : 'Próximo nível alcançado'}
                   </span>
                   <span className="font-medium text-muted-foreground">
-                    {progressoParaProximoNivel.toFixed(0)}% do caminho
+                    {progressoParaProximoNivel.toFixed(0)}%
                   </span>
                 </div>
                 <Progress
                   value={progressoParaProximoNivel}
-                  className="h-1.5 bg-muted-foreground/10 rounded-full overflow-hidden"
-                >
-                  <div
-                    className="bg-white transition-all h-full"
-                    style={{ width: `${percentual}%` }}
-                  />
-                </Progress>
+                  className="h-1.5 bg-muted-foreground/10 rounded-full ring ring-ring/25 overflow-hidden"
+                />
                 <p className="text-xs text-muted-foreground font-medium">
                   +{proximo_nivel.bonusPontos} pontos de bônus
                 </p>
