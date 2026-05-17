@@ -14,3 +14,18 @@ export interface IUser {
   }
   total_jogos: number
 }
+
+export interface IPalpiteCampeaoInput {
+  teamId: string
+}
+
+export interface IPalpiteCampeaoResponse {
+  id: number
+  userId: string
+  teamId: string
+  teamName: string
+  acertou: boolean
+  pontos: number
+  created_at: string | null
+  updated_at: string | null
+}

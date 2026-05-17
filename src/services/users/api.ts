@@ -1,5 +1,5 @@
 import { api } from '@/lib/api'
-import type { IUser } from './type'
+import type { IPalpiteCampeaoResponse, IUser } from './type'
 
 export async function listUsers() {
   try {
@@ -17,6 +17,19 @@ export async function listUserId(userId: string) {
     return res.data
   } catch (error) {
     console.error('Error listing user:', error)
+    throw error
+  }
+}
+
+export async function updatePalpiteCampeao(userId: string, teamId: string) {
+  try {
+    const res = await api.put<IPalpiteCampeaoResponse>(
+      `/users/${userId}/palpite-campeao`,
+      { teamId }
+    )
+    return res.data
+  } catch (error) {
+    console.error('Error updating palpite campeao:', error)
     throw error
   }
 }

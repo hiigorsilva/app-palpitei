@@ -23,6 +23,7 @@ import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import { useListGrupos } from '@/services/grupos/query'
 import type { IGrupo } from '@/services/grupos/type'
+import { useUpdatePalpiteCampeao } from '@/services/users/query'
 import { Group } from './-components/grid-teams'
 
 export const Route = createFileRoute('/(private)/grupos/')({
@@ -145,19 +146,23 @@ export function FavoriteTeamToChampion({
     },
   })
 
+  const userId = getStorageAuth()!.id
+
+  const mutation = useUpdatePalpiteCampeao(userId)
+
   useEffect(() => {
     if (team) {
       form.setValue('teamId', team.id)
     }
   }, [form, team])
 
-  function onSubmit(data: FavoriteTeamFormData) {
-    const payload: Pick<FavoriteTeamFormData, 'teamId'> = {
-      teamId: data.teamId,
+  async function onSubmit(data: FavoriteTeamFormData) {
+    try {
+      await mutation.mutateAsync(data.teamId)
+      setOpen(false)
+    } catch (error) {
+      console.error('Erro ao salvar palpite de campeão:', error)
     }
-
-    console.log('submit aposta', payload)
-    setOpen(false)
   }
 
   const flagCode = team?.flag_icon
@@ -225,8 +230,12 @@ export function FavoriteTeamToChampion({
             </div>
 
             <DialogFooter className="w-full flex justify-center items-center">
-              <Button type="submit" className={'flex-1'}>
-                Salvar palpite
+              <Button
+                type="submit"
+                className={'flex-1'}
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? 'Salvando...' : 'Salvar palpite'}
               </Button>
               <DialogClose
                 render={

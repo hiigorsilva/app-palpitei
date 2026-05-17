@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
-import { listUserId, listUsers } from './api'
-import type { IUser } from './type'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { listUserId, listUsers, updatePalpiteCampeao } from './api'
+import type { IPalpiteCampeaoResponse, IUser } from './type'
 
 export function useListUsers() {
   return useQuery<IUser[], Error>({
@@ -13,5 +13,18 @@ export function useGetUserId(userId: string) {
   return useQuery<IUser, Error>({
     queryKey: ['users', userId],
     queryFn: () => listUserId(userId),
+  })
+}
+
+export function useUpdatePalpiteCampeao(userId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation<IPalpiteCampeaoResponse, Error, string>({
+    mutationKey: ['palpite-campeao', userId],
+    mutationFn: teamId => updatePalpiteCampeao(userId, teamId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', userId] })
+      queryClient.invalidateQueries({ queryKey: ['grupos', userId] })
+    },
   })
 }
