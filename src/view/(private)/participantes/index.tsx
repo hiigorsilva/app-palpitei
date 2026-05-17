@@ -153,7 +153,10 @@ function ParticipantesPage() {
                     />
                   )}
                   <span
-                    className={cn('text-xl font-bold', positionStyles.text)}
+                    className={cn(
+                      'inline-flex -mr-2 text-xl font-bold',
+                      positionStyles.text
+                    )}
                   >
                     {position}º
                   </span>
@@ -195,10 +198,7 @@ function ParticipantesPage() {
                           {progressToNextLevel.toFixed(0)}%
                         </span>
                       </div>
-                      <Progress
-                        value={progressToNextLevel}
-                        className="h-1.5"
-                      />
+                      <Progress value={progressToNextLevel} className="h-1.5" />
                     </div>
                   )}
                 </div>
