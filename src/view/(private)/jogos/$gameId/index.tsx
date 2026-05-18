@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
+import { Loading } from '@/components/loading'
 import { NextGames } from '@/components/next-games'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
@@ -26,8 +27,8 @@ function GameIdPage() {
   const game = useGetGameId(gameId, userId)
   const nextGames = useNextGames(userId)
 
-  if (game.isLoading) return <p>Loading...</p>
-  if (nextGames.isLoading) return <p>Loading...</p>
+  if (game.isLoading) return <Loading />
+  if (nextGames.isLoading) return <Loading />
 
   if (nextGames.isError || !nextGames.data) return <p>Not Found</p>
   if (game.isError || !game.data) return <p>Not Found</p>

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { TrophyIcon } from 'lucide-react'
+import { Loading } from '@/components/loading'
 import { NextGames } from '@/components/next-games'
 import { RankingTable } from '@/components/ranking-table'
 import { TitleContainer } from '@/components/title-container'
@@ -30,10 +31,10 @@ function HomePage() {
   const nextGames = useNextGames(userId)
   const ranking = useRanking()
 
-  if (!nextGames.data) return <div>Carregando Próximos Jogos...</div>
-  if (!users.data) return <div>Carregando Usuários...</div>
-  if (!games.data) return <div>Carregando Jogos Diários...</div>
-  if (!ranking.data) return <div>Carregando Ranking...</div>
+  if (!nextGames.data) return <Loading />
+  if (!users.data) return <Loading />
+  if (!games.data) return <Loading />
+  if (!ranking.data) return <Loading />
 
   return (
     <section className="min-w-0 w-full flex flex-col gap-6">

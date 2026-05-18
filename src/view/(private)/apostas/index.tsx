@@ -8,6 +8,7 @@ import {
   TrophyIcon,
   ZapIcon,
 } from 'lucide-react'
+import { Loading } from '@/components/loading'
 import { TitleContainer } from '@/components/title-container'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -28,9 +29,9 @@ function ApostasPage() {
   const bets = useGetBetsByUserId(user?.id)
   const users = useListUsers()
 
-  if (!user) return null
+  if (!user) return <Loading />
 
-  if (!bets.data) return <span>Carregando apostas...</span>
+  if (!bets.data) return <Loading />
 
   const finishedBets = bets.data.filter(bet => bet.finish_game)
   const upcomingBets = bets.data.filter(bet => !bet.finish_game)
@@ -163,10 +164,7 @@ function ApostasPage() {
 
         {/* RIGHTSIDE */}
         <div className="w-full h-full flex flex-col gap-6">
-          <MiniRanking
-            currentUserId={user.id}
-            users={users.data || []}
-          />
+          <MiniRanking currentUserId={user.id} users={users.data || []} />
 
           <div className="rounded-lg border bg-card p-4">
             <h4 className="mb-3 flex items-center gap-2 font-medium">

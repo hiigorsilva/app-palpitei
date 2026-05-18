@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { LogOutIcon } from 'lucide-react'
+import { Loading } from '@/components/loading'
+import { NotFound } from '@/components/not-found'
 import { TitleContainer } from '@/components/title-container'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -21,6 +23,8 @@ export const Route = createFileRoute('/(private)')({
       throw redirect({ to: '/login' })
     }
   },
+  loader: () => <Loading />,
+  notFoundComponent: () => <NotFound />,
   component: PrivateLayout,
 })
 
@@ -58,7 +62,7 @@ function PrivateLayout() {
           </Button>
         </SidebarFooter>
       </Sidebar>
-      <main className="min-w-0 flex-1 flex flex-col p-4">
+      <main className="relative min-w-0 flex-1 flex flex-col p-4">
         <Outlet />
       </main>
     </SidebarProvider>

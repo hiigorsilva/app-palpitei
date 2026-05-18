@@ -6,6 +6,7 @@ import {
   TrophyIcon,
 } from 'lucide-react'
 import { useState } from 'react'
+import { Loading } from '@/components/loading'
 import { TitleContainer } from '@/components/title-container'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -103,7 +104,7 @@ function ParticipantesPage() {
     setOpenUserCard(true)
   }
 
-  if (!participantes.data) return <span>Carregando participantes...</span>
+  if (!participantes.data) return <Loading />
 
   return (
     <section className="flex flex-col gap-6">
