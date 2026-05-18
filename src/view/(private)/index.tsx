@@ -66,7 +66,7 @@ function HomePage() {
             <Users users={users.data} />
           </div>
 
-          <div className="w-full flex flex-col gap-2">
+          <div className="w-full h-full flex flex-col gap-2">
             <TitleContainer>Próximos Jogos</TitleContainer>
             <Card className="bg-transparent p-2 overflow-hidden">
               <NextGames nextGames={nextGames.data} />
@@ -75,9 +75,9 @@ function HomePage() {
         </div>
 
         {/* RIGHTSIDE */}
-        <div className="col-span-2 w-full flex flex-col gap-2">
+        <div className="col-span-2 w-full h-full flex flex-col gap-2">
           <TitleContainer>Jogos do Dia</TitleContainer>
-          <DailyMatchesSummary matches={nextGames.data} />
+          <DailyMatchesSummary matches={games.data} />
         </div>
       </div>
     </section>

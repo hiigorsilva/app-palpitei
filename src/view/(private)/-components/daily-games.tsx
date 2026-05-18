@@ -1,10 +1,8 @@
-import { NotebookIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { Match } from '@/components/games-day'
 import { Card } from '@/components/ui/card'
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
@@ -21,23 +19,17 @@ export function DailyMatchesSummary({ matches }: { matches: IGame[] }) {
   }, [matches])
 
   return (
-    <Card className="w-full grid grid-cols-1 gap-3 bg-transparent p-3">
+    <Card className="w-full h-full grid grid-cols-1 gap-3 bg-transparent p-3">
       {sortedMatches.length === 0 ? (
         <Empty>
           <EmptyHeader>
-            <EmptyTitle className="text-muted-foreground">
+            <EmptyTitle className="text-sm text-muted-foreground">
               Nenhum jogo hoje
             </EmptyTitle>
             <EmptyDescription>
               Não há jogos programados para este dia.
             </EmptyDescription>
           </EmptyHeader>
-          <EmptyContent>
-            <NotebookIcon
-              strokeWidth={1.3}
-              className="size-5 text-muted-foreground shrink-0"
-            />
-          </EmptyContent>
         </Empty>
       ) : (
         sortedMatches.map(match => (
