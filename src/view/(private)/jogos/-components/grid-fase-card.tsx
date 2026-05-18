@@ -1,10 +1,11 @@
 import { IconApostaTooltip } from '@/components/icon-aposta-tooltip'
 import { Card } from '@/components/ui/card'
 import { formatDateWithoutYear } from '@/helpers/date'
+import { getFaseName } from '@/helpers/games'
 import type { IGame } from '@/services/games/type'
 import { TeamDisplayRow } from '../finais'
 
-type GridFaseCardProps = {
+export type GridFaseCardProps = {
   games: IGame[]
   complementaryGames?: IGame[]
   fase: '16_AVOS' | 'OITAVAS' | 'QUARTAS' | 'SEMI' | 'FINAL' | 'TERCEIRO'
@@ -22,25 +23,6 @@ export function GridFaseCard({
   isVisible,
   hasNextFase,
 }: GridFaseCardProps) {
-  function getFaseTitle(fase: GridFaseCardProps['fase']) {
-    switch (fase) {
-      case '16_AVOS':
-        return 'Fase 16 Avos'
-      case 'OITAVAS':
-        return 'Oitavas de Final'
-      case 'QUARTAS':
-        return 'Quartas de Final'
-      case 'SEMI':
-        return 'Semi de Final'
-      case 'FINAL':
-        return 'Finais'
-      case 'TERCEIRO':
-        return 'Terceiro Lugar'
-      default:
-        return ''
-    }
-  }
-
   const rowSpan = 2 ** roundIndex
   const connectorPairs = hasNextFase
     ? games.reduce<{ key: string; startRow: number }[]>(
@@ -101,7 +83,7 @@ export function GridFaseCard({
       {games.length > 0 && (
         <>
           <h2 className="mb-4 text-sm font-semibold text-foreground pb-2 border-b">
-            {getFaseTitle(fase)}
+            {getFaseName(fase)}
           </h2>
           <ul
             className="relative grid w-48 grid-cols-[minmax(0,12rem)] gap-3"

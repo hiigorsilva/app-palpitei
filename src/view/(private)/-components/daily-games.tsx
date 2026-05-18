@@ -1,6 +1,16 @@
+import { NotebookIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { Match } from '@/components/games-day'
 import { TitleContainer } from '@/components/title-container'
+import { Card } from '@/components/ui/card'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { Separator } from '@/components/ui/separator'
 import type { IGame } from '@/services/games/type'
 
 export function DailyMatchesSummary({ matches }: { matches: IGame[] }) {
@@ -15,20 +25,35 @@ export function DailyMatchesSummary({ matches }: { matches: IGame[] }) {
     <section className="space-y-4">
       <TitleContainer>Jogos do Dia</TitleContainer>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {sortedMatches.map(match => (
-          <Match.Root key={match.id}>
-            <Match.Header fase={match.fase} isFinished={match.finish_game} />
-            <Match.Score
-              teamA={match.team_a}
-              teamB={match.team_b}
-              golsA={match.gols_a}
-              golsB={match.gols_b}
-            />
-            <Match.Footer date={match.data_hora} />
-          </Match.Root>
-        ))}
-      </div>
+      <Card className="w-full grid grid-cols-1 gap-3 bg-transparent p-4">
+        {sortedMatches.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyTitle className="text-muted-foreground">
+                Nenhum jogo hoje
+              </EmptyTitle>
+              <EmptyDescription>
+                Não há jogos programados para este dia.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <NotebookIcon
+                strokeWidth={1.3}
+                className="size-5 text-muted-foreground shrink-0"
+              />
+            </EmptyContent>
+          </Empty>
+        ) : (
+          sortedMatches.map(match => (
+            <Match.Root key={match.id}>
+              <Match.Header match={match} />
+              <Separator />
+              <Match.Score match={match} />
+              <Match.Footer match={match} />
+            </Match.Root>
+          ))
+        )}
+      </Card>
     </section>
   )
 }

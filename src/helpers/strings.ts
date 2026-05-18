@@ -23,3 +23,22 @@ export function getCountryCodeFromEmoji(emoji: string): string {
     .join('')
     .toLowerCase()
 }
+
+// export function getFaseTitle(fase: string) {
+//   switch (fase) {
+//     case '16_AVOS':
+//       return 'Fase 16 Avos'
+//     case 'OITAVAS':
+//       return 'Oitavas de Final'
+//     case 'QUARTAS':
+//       return 'Quartas de Final'
+//     case 'SEMI':
+//       return 'Semi de Final'
+//     case 'FINAL':
+//       return 'Finais'
+//     case 'TERCEIRO':
+//       return 'Terceiro Lugar'
+//     default:
+//       return ''
+//   }
+// }
