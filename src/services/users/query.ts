@@ -9,10 +9,11 @@ export function useListUsers() {
   })
 }
 
-export function useGetUserId(userId: string) {
+export function useGetUserId(userId: string | undefined) {
   return useQuery<IUser, Error>({
     queryKey: ['users', userId],
-    queryFn: () => listUserId(userId),
+    queryFn: () => listUserId(userId!),
+    enabled: Boolean(userId),
   })
 }
 

@@ -2,10 +2,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createGameBet, listBetsByUserId, updateGameBet } from './api'
 import type { CreateBetInput, IBet, ICreateBet } from './type'
 
-export function useGetBetsByUserId(userId: string) {
+export function useGetBetsByUserId(userId: string | undefined) {
   return useQuery<IBet[], Error>({
     queryKey: ['bets', userId],
-    queryFn: () => listBetsByUserId(userId),
+    queryFn: () => listBetsByUserId(userId!),
+    enabled: Boolean(userId),
   })
 }
 

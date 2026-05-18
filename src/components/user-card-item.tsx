@@ -87,9 +87,7 @@ export function UserDetailsCard({
   className,
   ...props
 }: UserDetailsCardProps) {
-  if (!userData) return <div>Carregando Usuário...</div>
-
-  const { data: user } = useGetUserId(userData.id)
+  const { data: user } = useGetUserId(userData?.id)
 
   if (!user) return <div>Carregando Usuário...</div>
 

@@ -25,9 +25,11 @@ export const Route = createFileRoute('/(private)/apostas/')({
 function ApostasPage() {
   const navigate = Route.useNavigate()
   const user = getStorageAuth()
+  const bets = useGetBetsByUserId(user?.id)
+  const users = useListUsers()
+
   if (!user) return null
 
-  const bets = useGetBetsByUserId(user.id)
   if (!bets.data) return <span>Carregando apostas...</span>
 
   const finishedBets = bets.data.filter(bet => bet.finish_game)
@@ -163,7 +165,7 @@ function ApostasPage() {
         <div className="w-full h-full flex flex-col gap-6">
           <MiniRanking
             currentUserId={user.id}
-            users={useListUsers().data || []}
+            users={users.data || []}
           />
 
           <div className="rounded-lg border bg-card p-4">
