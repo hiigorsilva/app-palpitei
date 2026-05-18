@@ -45,7 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     removeStorageAuth()
     setUser(null)
-  }, [])
+    queryClient.invalidateQueries({ queryKey: ['users'] })
+  }, [queryClient])
 
   const value = useMemo(
     () => ({

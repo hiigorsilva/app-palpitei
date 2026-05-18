@@ -68,7 +68,10 @@ export function DisplayGame({ game }: DisplayGameProps) {
           </div>
         )}
 
-        <CreateApostaDrawer bet={gameBet ?? game}>
+        <CreateApostaDrawer
+          bet={gameBet ?? game}
+          mode={hasBet ? 'edit' : 'create'}
+        >
           <Button disabled={game.finish_game || isLoadingBets}>
             {hasBet ? 'Editar aposta' : 'Fazer aposta'}
           </Button>

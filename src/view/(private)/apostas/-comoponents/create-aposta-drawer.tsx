@@ -18,7 +18,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getStorageAuth } from '@/helpers/auth'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
-import { useCreateGameBet, useGetBetsByUserId } from '@/services/bets/query'
+import {
+  useCreateGameBet,
+  useGetBetsByUserId,
+  useUpdateGameBet,
+} from '@/services/bets/query'
 import type { IBet } from '@/services/bets/type'
 import type { IGame } from '@/services/games/type'
 import { useGetUserId } from '@/services/users/query'
@@ -42,10 +46,12 @@ type CreateApostaFormData = z.infer<typeof createApostaFormSchema>
 
 type CreateApostaDrawerProps = ComponentProps<'div'> & {
   bet: IBet | IGame
+  mode: 'create' | 'edit'
 }
 
 export function CreateApostaDrawer({
   bet,
+  mode = 'create',
   children,
   className,
   ...props
@@ -65,7 +71,8 @@ export function CreateApostaDrawer({
   const gameId = 'gameId' in bet ? bet.gameId : bet.id
 
   const { data: bets } = useGetBetsByUserId(userId!)
-  const mutation = useCreateGameBet(userId!, gameId)
+  const mutationCreate = useCreateGameBet(userId!, gameId)
+  const mutationEdit = useUpdateGameBet(userId!, bet.id)
 
   const betDataFiltered = bets?.find(bet => bet.gameId === gameId) ?? null
 
@@ -78,7 +85,12 @@ export function CreateApostaDrawer({
       usou_carta_dobro_pontos: data.useDoublePoints,
     }
 
-    await mutation.mutateAsync(payload)
+    if (mode === 'edit' && betDataFiltered) {
+      await mutationEdit.mutateAsync(payload)
+    }
+    if (mode === 'create' && !betDataFiltered) {
+      await mutationCreate.mutateAsync(payload)
+    }
     setOpen(false)
     form.reset()
   }
@@ -244,16 +256,22 @@ export function CreateApostaDrawer({
                 <Button
                   type="submit"
                   className={'flex-1'}
-                  disabled={!form.formState.isValid || mutation.isPending}
+                  disabled={
+                    !form.formState.isValid ||
+                    mutationCreate.isPending ||
+                    mutationEdit.isPending
+                  }
                 >
-                  {mutation.isPending ? 'Confirmando...' : 'Confirmar Aposta'}
+                  {mutationCreate.isPending || mutationEdit.isPending
+                    ? 'Confirmando...'
+                    : 'Confirmar Aposta'}
                 </Button>
                 <Button
                   type="button"
                   variant={'outline'}
                   className={'flex-1'}
                   onClick={handleCancel}
-                  disabled={mutation.isPending}
+                  disabled={mutationCreate.isPending || mutationEdit.isPending}
                 >
                   Cancelar
                 </Button>

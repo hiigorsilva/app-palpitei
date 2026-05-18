@@ -27,3 +27,20 @@ export async function createGameBet(
     throw error
   }
 }
+
+export async function updateGameBet(
+  userId: string,
+  betId: string,
+  payload: CreateBetInput
+) {
+  try {
+    const res = await api.put<ICreateBet>(
+      `bets/${betId}/users/${userId}`,
+      payload
+    )
+    return res.data
+  } catch (error) {
+    console.error('Error updating game bet:', error)
+    throw error
+  }
+}
