@@ -4,7 +4,6 @@ import {
   SparklesIcon,
   TargetIcon,
   TrendingUpIcon,
-  TrophyIcon,
   ZapIcon,
 } from 'lucide-react'
 import type { ComponentProps, ReactNode } from 'react'
@@ -110,10 +109,7 @@ export function UserDetailsCard({
     proximo_nivel.minimoPercentual > 0
       ? Math.min((percentual / proximo_nivel.minimoPercentual) * 100, 100)
       : 0
-  const percentualRestanteProximoNivel = Math.max(
-    proximo_nivel.minimoPercentual - percentual,
-    0
-  )
+
   const positionStyles = getPositionStyles(position)
   const levelColor = getLevelColor(nivel_atual)
 
@@ -132,10 +128,9 @@ export function UserDetailsCard({
                 positionStyles.border
               )}
             >
-              {position <= 3 && (
-                <TrophyIcon className={cn('h-6 w-6', positionStyles.icon)} />
-              )}
-              <span className={cn('text-2xl font-bold', positionStyles.text)}>
+              <span
+                className={cn('font-bold text-2xl -mr-2', positionStyles.text)}
+              >
                 {position}º
               </span>
             </div>
@@ -210,13 +205,13 @@ export function UserDetailsCard({
 
           {proximo_nivel && (
             <div className="rounded-lg border bg-card p-4">
-              <h4 className="mb-3 font-medium">
-                Progresso para Próximo Nível
-              </h4>
+              <h4 className="mb-3 font-medium">Progresso para Próximo Nível</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="truncate text-muted-foreground">
-                    {nivel_atual} → {proximo_nivel.nivel}
+                  <span className="truncate text-sm text-muted-foreground capitalize">
+                    <span>{nivel_atual.toLocaleLowerCase()}</span>
+                    {' → '}
+                    <span>{proximo_nivel.nivel.toLocaleLowerCase()}</span>
                   </span>
                   <span className="shrink-0 font-medium">
                     {progressoParaProximoNivel.toFixed(0)}%
@@ -224,19 +219,13 @@ export function UserDetailsCard({
                 </div>
                 <Progress value={progressoParaProximoNivel} className="h-2" />
                 <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-                  <span>
-                    {percentualRestanteProximoNivel > 0
-                      ? `Faltam ${percentualRestanteProximoNivel.toFixed(1)}% para subir`
-                      : 'Próximo nível alcançado'}
-                  </span>
                   <span className="shrink-0">
-                    {percentual.toFixed(1)}% /{' '}
-                    {proximo_nivel.minimoPercentual}%
+                    {percentual.toFixed(1)}% / {proximo_nivel.minimoPercentual}%
                   </span>
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Bônus ao subir: +{proximo_nivel.bonusPontos} pontos
+                  </p>
                 </div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  Bônus ao subir: +{proximo_nivel.bonusPontos} pontos
-                </p>
               </div>
             </div>
           )}
@@ -244,7 +233,8 @@ export function UserDetailsCard({
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarIcon className="h-4 w-4" />
             <span>
-              Participando desde {formatDate(created_at) ?? 'data não informada'}
+              Participando desde{' '}
+              {formatDate(created_at) ?? 'data não informada'}
             </span>
           </div>
         </div>
