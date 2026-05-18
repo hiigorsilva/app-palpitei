@@ -48,14 +48,37 @@ function HomePage() {
         Dashboard do Bolão Copa do Mundo 2026
       </TitleContainer>
 
-      <Card className="bg-transparent p-3">
-        <NextGames nextGames={nextGames.data} />
-      </Card>
+      <p className="text-muted-foreground">
+        Acompanhe os próximos jogos, confira o ranking dos participantes e veja
+        um resumo dos jogos do dia.
+      </p>
 
-      <div className="grid grid-cols-2 gap-6">
-        <RankingTable variant="full" data={ranking.data} />
-        <DailyMatchesSummary matches={nextGames.data} />
-        <Users users={users.data} />
+      <div className="grid grid-cols-5 gap-6">
+        {/* LEFTSIDE */}
+        <div className="col-span-3 w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <TitleContainer>Ranking do Bolão</TitleContainer>
+            <RankingTable variant="full" data={ranking.data} />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <TitleContainer>Participantes</TitleContainer>
+            <Users users={users.data} />
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <TitleContainer>Próximos Jogos</TitleContainer>
+            <Card className="bg-transparent p-2 overflow-hidden">
+              <NextGames nextGames={nextGames.data} />
+            </Card>
+          </div>
+        </div>
+
+        {/* RIGHTSIDE */}
+        <div className="col-span-2 w-full flex flex-col gap-2">
+          <TitleContainer>Jogos do Dia</TitleContainer>
+          <DailyMatchesSummary matches={nextGames.data} />
+        </div>
       </div>
     </section>
   )

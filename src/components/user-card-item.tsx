@@ -88,28 +88,18 @@ export function UserDetailsCard({
   ...props
 }: UserDetailsCardProps) {
   const { data: user } = useGetUserId(userData?.id)
-
-  if (!user) return <div>Carregando Usuário...</div>
-
-  const {
-    name,
-    percentual,
-    nivel_atual,
-    bonus_concedido,
-    carta_dobro_pontos,
-    created_at,
-    jogos_apostados,
-    proximo_nivel,
-    total_jogos,
-  } = user
+  if (!user) return null
 
   const progressoParaProximoNivel =
-    proximo_nivel.minimoPercentual > 0
-      ? Math.min((percentual / proximo_nivel.minimoPercentual) * 100, 100)
+    user.proximo_nivel.minimoPercentual > 0
+      ? Math.min(
+          (user.percentual / user.proximo_nivel.minimoPercentual) * 100,
+          100
+        )
       : 0
 
   const positionStyles = getPositionStyles(position)
-  const levelColor = getLevelColor(nivel_atual)
+  const levelColor = getLevelColor(user.nivel_atual)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -133,10 +123,12 @@ export function UserDetailsCard({
               </span>
             </div>
             <div className="min-w-0">
-              <DialogTitle className="truncate text-xl">{name}</DialogTitle>
+              <DialogTitle className="truncate text-xl">
+                {user.name}
+              </DialogTitle>
               <DialogDescription className="mt-1 flex items-center gap-2">
                 <Badge variant="outline" className={cn('border', levelColor)}>
-                  {nivel_atual}
+                  {user.nivel_atual}
                 </Badge>
               </DialogDescription>
             </div>
@@ -148,22 +140,22 @@ export function UserDetailsCard({
             <InfoItem
               icon={<TargetIcon className="h-5 w-5 text-emerald-500" />}
               label="Aproveitamento"
-              value={`${percentual.toFixed(1)}%`}
+              value={`${user.percentual.toFixed(1)}%`}
             />
             <InfoItem
               icon={<SparklesIcon className="h-5 w-5 text-blue-500" />}
               label="Jogos Apostados"
-              value={jogos_apostados}
+              value={user.jogos_apostados}
             />
             <InfoItem
               icon={<TrendingUpIcon className="h-5 w-5 text-orange-500" />}
               label="Total de Jogos"
-              value={total_jogos}
+              value={user.total_jogos}
             />
             <InfoItem
               icon={<GiftIcon className="h-5 w-5 text-pink-500" />}
               label="Bônus Concedido"
-              value={bonus_concedido}
+              value={user.bonus_concedido}
             />
           </div>
 
@@ -185,7 +177,7 @@ export function UserDetailsCard({
                 variant="secondary"
                 className="bg-amber-500/20 text-amber-600"
               >
-                {carta_dobro_pontos}x
+                {user.carta_dobro_pontos}x
               </Badge>
             </div>
           </div>
@@ -195,21 +187,23 @@ export function UserDetailsCard({
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Do início ao topo</span>
-                <span className="font-medium">{percentual.toFixed(1)}%</span>
+                <span className="font-medium">
+                  {user.percentual.toFixed(1)}%
+                </span>
               </div>
-              <Progress value={percentual} className="h-2" />
+              <Progress value={user.percentual} className="h-2" />
             </div>
           </div>
 
-          {proximo_nivel && (
+          {user.proximo_nivel && (
             <div className="rounded-lg border bg-card p-4">
               <h4 className="mb-3 font-medium">Progresso para Próximo Nível</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="truncate text-sm text-muted-foreground capitalize">
-                    <span>{nivel_atual.toLocaleLowerCase()}</span>
+                    <span>{user.nivel_atual.toLocaleLowerCase()}</span>
                     {' → '}
-                    <span>{proximo_nivel.nivel.toLocaleLowerCase()}</span>
+                    <span>{user.proximo_nivel.nivel.toLocaleLowerCase()}</span>
                   </span>
                   <span className="shrink-0 font-medium">
                     {progressoParaProximoNivel.toFixed(0)}%
@@ -218,10 +212,11 @@ export function UserDetailsCard({
                 <Progress value={progressoParaProximoNivel} className="h-2" />
                 <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
                   <span className="shrink-0">
-                    {percentual.toFixed(1)}% / {proximo_nivel.minimoPercentual}%
+                    {user.percentual.toFixed(1)}% /{' '}
+                    {user.proximo_nivel.minimoPercentual}%
                   </span>
                   <p className="text-xs font-medium text-muted-foreground">
-                    Bônus ao subir: +{proximo_nivel.bonusPontos} pontos
+                    Bônus ao subir: +{user.proximo_nivel.bonusPontos} pontos
                   </p>
                 </div>
               </div>
@@ -232,7 +227,7 @@ export function UserDetailsCard({
             <CalendarIcon className="h-4 w-4" />
             <span>
               Participando desde{' '}
-              {formatDate(created_at) ?? 'data não informada'}
+              {formatDate(user.created_at) ?? 'data não informada'}
             </span>
           </div>
         </div>

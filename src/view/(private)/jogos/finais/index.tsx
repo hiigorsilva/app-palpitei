@@ -98,6 +98,11 @@ function TournamentFinalGames() {
         </Button>
         Confrontos de Mata-Mata
       </TitleContainer>
+
+      <p className="text-muted-foreground">
+        Veja os confrontos das fases finais do Bolão Copa do Mundo.
+      </p>
+
       <Card className="min-h-dvh h-fit w-full p-6 bg-transparent overflow-x-auto">
         <div className="flex min-w-max items-start justify-start gap-8 p-1">
           {fases.map((fase, index) => (

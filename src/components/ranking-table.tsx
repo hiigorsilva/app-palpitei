@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import type { IRanking } from '@/services/ranking/type'
+import { Card } from './ui/card'
 
 interface RankingTableProps {
   data: IRanking[]
@@ -17,8 +18,8 @@ interface RankingTableProps {
 
 export const RankingTable = ({ data, variant = 'full' }: RankingTableProps) => {
   return (
-    <div className="w-full rounded-md border">
-      <Table className="w-full">
+    <Card className="w-full h-fit rounded-md border p-0 bg-transparent">
+      <Table className="w-full h-fit">
         <TableHeader>
           <TableRow className="bg-muted/50">
             <TableHead className="w-20 text-center">Pos.</TableHead>
@@ -32,11 +33,11 @@ export const RankingTable = ({ data, variant = 'full' }: RankingTableProps) => {
                 <TableHead className="text-right">Pts Apostas</TableHead>
                 <TableHead className="text-right">Pts Bônus</TableHead>
                 <TableHead className="text-right">Acertos</TableHead>
-                <TableHead className="text-right">Total Apostas</TableHead>
+                <TableHead className="text-right">Apostas</TableHead>
               </>
             )}
 
-            <TableHead className="text-right">Taxa Acerto</TableHead>
+            <TableHead className="text-right">Precisão</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -91,6 +92,6 @@ export const RankingTable = ({ data, variant = 'full' }: RankingTableProps) => {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   )
 }
