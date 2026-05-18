@@ -1,21 +1,18 @@
 import {
-  AwardIcon,
-  CoinsIcon,
-  GemIcon,
-  HandHelpingIcon,
+  CalendarIcon,
+  GiftIcon,
   SparklesIcon,
-  StarIcon,
   TargetIcon,
+  TrendingUpIcon,
+  TrophyIcon,
+  ZapIcon,
 } from 'lucide-react'
 import type { ComponentProps, ReactNode } from 'react'
-import { imagesUrl } from '@/helpers/strings'
+import { formatDate } from '@/helpers/date'
 import { cn } from '@/lib/utils'
-import { useListNiveisBonus } from '@/services/bonus/query'
-import { useStatistics } from '@/services/ranking/query'
 import { useGetUserId } from '@/services/users/query'
 import type { IUser } from '@/services/users/type'
 import { Badge } from './ui/badge'
-import { Card, CardContent, CardHeader } from './ui/card'
 import {
   Dialog,
   DialogContent,
@@ -29,27 +26,85 @@ type UserDetailsCardProps = ComponentProps<'div'> & {
   open: boolean
   onOpenChange: (open: boolean) => void
   user: IUser | null
+  position?: number
   className?: string
+}
+
+function getPositionStyles(position: number) {
+  switch (position) {
+    case 1:
+      return {
+        bg: 'bg-amber-500/10',
+        border: 'border-amber-500/30',
+        text: 'text-amber-500',
+        icon: 'text-amber-500',
+      }
+    case 2:
+      return {
+        bg: 'bg-slate-400/10',
+        border: 'border-slate-400/30',
+        text: 'text-slate-400',
+        icon: 'text-slate-400',
+      }
+    case 3:
+      return {
+        bg: 'bg-orange-600/10',
+        border: 'border-orange-600/30',
+        text: 'text-orange-600',
+        icon: 'text-orange-600',
+      }
+    default:
+      return {
+        bg: 'bg-muted/50',
+        border: 'border-border',
+        text: 'text-muted-foreground',
+        icon: 'text-muted-foreground',
+      }
+  }
+}
+
+function getLevelColor(nivel: string) {
+  const lowerNivel = nivel.toLowerCase()
+  if (lowerNivel.includes('lendário') || lowerNivel.includes('mestre')) {
+    return 'bg-amber-500/20 text-amber-500 border-amber-500/30'
+  }
+  if (lowerNivel.includes('expert') || lowerNivel.includes('ouro')) {
+    return 'bg-yellow-500/20 text-yellow-600 border-yellow-500/30'
+  }
+  if (lowerNivel.includes('avançado') || lowerNivel.includes('prata')) {
+    return 'bg-slate-400/20 text-slate-500 border-slate-400/30'
+  }
+  if (lowerNivel.includes('intermediário') || lowerNivel.includes('bronze')) {
+    return 'bg-orange-500/20 text-orange-600 border-orange-500/30'
+  }
+  return 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30'
 }
 
 export function UserDetailsCard({
   user: userData,
   open,
   onOpenChange: setOpen,
+  position = 1,
   className,
   ...props
 }: UserDetailsCardProps) {
   if (!userData) return <div>Carregando Usuário...</div>
 
   const { data: user } = useGetUserId(userData.id)
-  const { data: niveisBonus } = useListNiveisBonus()
-  const { data: statistics } = useStatistics(userData.id)
 
   if (!user) return <div>Carregando Usuário...</div>
-  if (!niveisBonus) return <div>Carregando Níveis de Bônus...</div>
-  if (!statistics) return <div>Carregando Estatísticas...</div>
 
-  const { name, percentual, nivel_atual, bonus_concedido, proximo_nivel } = user
+  const {
+    name,
+    percentual,
+    nivel_atual,
+    bonus_concedido,
+    carta_dobro_pontos,
+    created_at,
+    jogos_apostados,
+    proximo_nivel,
+    total_jogos,
+  } = user
 
   const progressoParaProximoNivel =
     proximo_nivel.minimoPercentual > 0
@@ -59,197 +114,164 @@ export function UserDetailsCard({
     proximo_nivel.minimoPercentual - percentual,
     0
   )
-
-  const getCorNivel = (nivel: string): string => {
-    const cores: Record<string, string> = {
-      INICIANTE: 'bg-gray-500/20 text-gray-500',
-      BRONZE: 'bg-orange-400/20 text-orange-400',
-      PRATA: 'bg-slate-400/20 text-slate-400',
-      OURO: 'bg-yellow-400/20 text-yellow-400',
-      PLATINA: 'bg-cyan-400/20 text-cyan-400',
-      DIAMANTE: 'bg-blue-400/20 text-blue-400',
-    }
-    return cores[nivel] || 'bg-gray-500/20 text-gray-500'
-  }
-
-  const getIconeNivel = (nivel: string): string => {
-    const icones: Record<string, string> = {
-      INICIANTE: '⚪',
-      BRONZE: '🥉',
-      PRATA: '🥈',
-      OURO: '🥇',
-      PLATINA: '🌀',
-      DIAMANTE: '💎',
-    }
-    return icones[nivel] || '⚪'
-  }
+  const positionStyles = getPositionStyles(position)
+  const levelColor = getLevelColor(nivel_atual)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className={cn(
-          'min-w-lg w-fit max-h-3/4 h-full flex flex-col gap-3 overflow-y-hidden',
-          className
-        )}
+        className={cn('sm:max-w-md max-h-[85vh] overflow-y-auto', className)}
         {...props}
       >
         <DialogHeader>
-          <DialogTitle className={'text-base'}>
-            Detalhes de Participante
-          </DialogTitle>
-          <DialogDescription>
-            Veja informações sobre o participante
-          </DialogDescription>
+          <div className="flex items-center gap-4">
+            <div
+              className={cn(
+                'flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl border',
+                positionStyles.bg,
+                positionStyles.border
+              )}
+            >
+              {position <= 3 && (
+                <TrophyIcon className={cn('h-6 w-6', positionStyles.icon)} />
+              )}
+              <span className={cn('text-2xl font-bold', positionStyles.text)}>
+                {position}º
+              </span>
+            </div>
+            <div className="min-w-0">
+              <DialogTitle className="truncate text-xl">{name}</DialogTitle>
+              <DialogDescription className="mt-1 flex items-center gap-2">
+                <Badge variant="outline" className={cn('border', levelColor)}>
+                  {nivel_atual}
+                </Badge>
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
-        <Card className="w-full gap-0 shadow-lg p-0 overflow-hidden overflow-y-auto">
-          <CardHeader className="relative min-h-fit bg-background p-6 overflow-hidden">
-            <div className="absolute z-10 inset-0 w-full h-full bg-background/75" />
-            <img
-              className="absolute top-0 left-0 z-0"
-              src={imagesUrl.bannerProfileCard.url}
-              alt={imagesUrl.bannerProfileCard.alt_text}
+        <div className="mt-4 space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <InfoItem
+              icon={<TargetIcon className="h-5 w-5 text-emerald-500" />}
+              label="Aproveitamento"
+              value={`${percentual.toFixed(1)}%`}
             />
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl">
-                  {getIconeNivel(nivel_atual)}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg">{name}</h3>
-                  <Badge className={`${getCorNivel(nivel_atual)} mt-1`}>
-                    {nivel_atual}
-                  </Badge>
-                </div>
-              </div>
-              {bonus_concedido > 0 && (
-                <Badge variant="secondary" className="bg-green-500 text-white">
-                  +{bonus_concedido}
-                </Badge>
-              )}
-            </div>
-          </CardHeader>
+            <InfoItem
+              icon={<SparklesIcon className="h-5 w-5 text-blue-500" />}
+              label="Jogos Apostados"
+              value={jogos_apostados}
+            />
+            <InfoItem
+              icon={<TrendingUpIcon className="h-5 w-5 text-orange-500" />}
+              label="Total de Jogos"
+              value={total_jogos}
+            />
+            <InfoItem
+              icon={<GiftIcon className="h-5 w-5 text-pink-500" />}
+              label="Bônus Concedido"
+              value={bonus_concedido}
+            />
+          </div>
 
-          <CardContent className="p-6 space-y-5">
-            {/* Progresso Total */}
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="mb-3 flex items-center gap-2 font-medium">
+              <ZapIcon className="h-4 w-4 text-amber-500" />
+              Itens Especiais
+            </h4>
+            <div className="flex items-center justify-between gap-3 rounded-md bg-amber-500/10 p-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/20">
+                  <span className="text-lg">🃏</span>
+                </div>
+                <span className="truncate text-sm font-medium">
+                  Carta Dobro de Pontos
+                </span>
+              </div>
+              <Badge
+                variant="secondary"
+                className="bg-amber-500/20 text-amber-600"
+              >
+                {carta_dobro_pontos}x
+              </Badge>
+            </div>
+          </div>
+
+          <div className="rounded-lg border bg-card p-4">
+            <h4 className="mb-3 font-medium">Progresso Total</h4>
             <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Progresso Total
-                </span>
-                <span className="text-sm font-semibold text-muted-foreground">
-                  {percentual}%
-                </span>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Do início ao topo</span>
+                <span className="font-medium">{percentual.toFixed(1)}%</span>
               </div>
               <Progress value={percentual} className="h-2" />
             </div>
+          </div>
 
-            {/* Próximo Nível */}
-            <div className="flex flex-col gap-2 bg-muted border-0 rounded-lg p-4 space-y-2">
-              {proximo_nivel.nivel !== null && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <StarIcon className="size-4 text-muted-foreground" />
-                    <span className="text-sm font-semibold text-muted-foreground">
-                      Próximo Nível
-                    </span>
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={`${getCorNivel(proximo_nivel.nivel)}`}
-                  >
-                    {proximo_nivel.nivel}
-                  </Badge>
-                </div>
-              )}
-
+          {proximo_nivel && (
+            <div className="rounded-lg border bg-card p-4">
+              <h4 className="mb-3 font-medium">
+                Progresso para Próximo Nível
+              </h4>
               <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    {percentualRestanteProximoNivel > 0
-                      ? `Faltam ${percentualRestanteProximoNivel.toFixed(1)}% para o próximo nível`
-                      : 'Próximo nível alcançado'}
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="truncate text-muted-foreground">
+                    {nivel_atual} → {proximo_nivel.nivel}
                   </span>
-                  <span className="font-medium text-muted-foreground">
+                  <span className="shrink-0 font-medium">
                     {progressoParaProximoNivel.toFixed(0)}%
                   </span>
                 </div>
-                <Progress
-                  value={progressoParaProximoNivel}
-                  className="h-1.5 bg-muted-foreground/10 rounded-full ring ring-ring/25 overflow-hidden"
-                />
-                <p className="text-xs text-muted-foreground font-medium">
-                  +{proximo_nivel.bonusPontos} pontos de bônus
+                <Progress value={progressoParaProximoNivel} className="h-2" />
+                <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                  <span>
+                    {percentualRestanteProximoNivel > 0
+                      ? `Faltam ${percentualRestanteProximoNivel.toFixed(1)}% para subir`
+                      : 'Próximo nível alcançado'}
+                  </span>
+                  <span className="shrink-0">
+                    {percentual.toFixed(1)}% /{' '}
+                    {proximo_nivel.minimoPercentual}%
+                  </span>
+                </div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Bônus ao subir: +{proximo_nivel.bonusPontos} pontos
                 </p>
               </div>
             </div>
+          )}
 
-            {/* Estatísticas de Jogos */}
-            <div className="grid grid-cols-3 gap-3">
-              <ItemStatisticsCard
-                icon={<HandHelpingIcon className="size-5 text-primary/75" />}
-                value={statistics?.total_apostas || 0}
-                label="Apostas feitas"
-              />
-              <ItemStatisticsCard
-                icon={<AwardIcon className="size-5 text-primary/75" />}
-                value={statistics.position ? `${statistics.position}º` : '-'}
-                label="Posição no Ranking"
-              />
-              <ItemStatisticsCard
-                icon={<TargetIcon className="size-5 text-primary/75" />}
-                value={statistics.acertos ? `${statistics.acertos}º` : '-'}
-                label="Total de Acertos"
-              />
-              <ItemStatisticsCard
-                icon={<CoinsIcon className="size-5 text-primary/75" />}
-                value={user.carta_dobro_pontos}
-                label="Pts Dobro Restantes"
-              />
-              <ItemStatisticsCard
-                icon={<GemIcon className="size-5 text-primary/75" />}
-                value={statistics.pontos_total || 0}
-                label="Total pontos"
-              />
-              <ItemStatisticsCard
-                icon={<SparklesIcon className="size-5 text-primary/75" />}
-                value={statistics.taxa_acerto || 0}
-                label="Taxa de Acertos"
-              />
-            </div>
-          </CardContent>
-        </Card>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <CalendarIcon className="h-4 w-4" />
+            <span>
+              Participando desde {formatDate(created_at) ?? 'data não informada'}
+            </span>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )
 }
 
-type ItemStatisticsCardProps = ComponentProps<'div'> & {
+type InfoItemProps = ComponentProps<'div'> & {
   icon: ReactNode
-  value: string | number
   label: string
+  value: string | number
 }
-function ItemStatisticsCard({
-  icon,
-  value,
-  label,
-  className,
-  ...props
-}: ItemStatisticsCardProps) {
+
+function InfoItem({ icon, label, value, className, ...props }: InfoItemProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-1 bg-muted rounded-lg p-3 text-center',
+        'flex items-center gap-3 rounded-lg bg-muted/50 p-3',
         className
       )}
       {...props}
     >
-      <div className="w-fit bg-primary/20 p-1 rounded">{icon}</div>
-      <div>
-        <p className="text-xl text-center font-semibold text-foreground">
-          {value}
-        </p>
-        <p className="text-xs text-center text-muted-foreground">{label}</p>
+      {icon}
+      <div className="min-w-0">
+        <p className="truncate text-xs text-muted-foreground">{label}</p>
+        <p className="text-lg font-semibold">{value}</p>
       </div>
     </div>
   )

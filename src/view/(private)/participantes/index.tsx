@@ -80,6 +80,7 @@ function ParticipantesPage() {
 
   const [openUserCard, setOpenUserCard] = useState(false)
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
+  const [selectedUserPosition, setSelectedUserPosition] = useState(1)
 
   const getProgressToNextLevel = (participant: IUser) => {
     if (!participant.proximo_nivel) return 100
@@ -96,8 +97,9 @@ function ParticipantesPage() {
     navigate({ to: '..' })
   }
 
-  function handleOpenUserCard(participant: IUser) {
+  function handleOpenUserCard(participant: IUser, position: number) {
     setSelectedUser(participant)
+    setSelectedUserPosition(position)
     setOpenUserCard(true)
   }
 
@@ -131,7 +133,7 @@ function ParticipantesPage() {
           return (
             <Card
               key={participant.id}
-              onClick={() => handleOpenUserCard(participant)}
+              onClick={() => handleOpenUserCard(participant, position)}
               className={cn(
                 'group relative cursor-pointer overflow-hidden border p-4 transition-all duration-300',
                 'hover:scale-[1.01] hover:shadow-lg',
@@ -212,6 +214,7 @@ function ParticipantesPage() {
         <UserDetailsCard
           onOpenChange={setOpenUserCard}
           open={openUserCard}
+          position={selectedUserPosition}
           user={selectedUser}
         />
       )}
