@@ -43,7 +43,7 @@ export const Route = createFileRoute('/(private)/jogos/')({
   head: () => ({
     meta: [
       {
-        title: 'Jogos | Palpitei',
+        title: 'Calendário de Jogos | Palpitei',
       },
     ],
   }),

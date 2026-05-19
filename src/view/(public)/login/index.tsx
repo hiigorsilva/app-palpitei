@@ -34,6 +34,13 @@ export const Route = createFileRoute('/(public)/login/')({
     }
   },
   component: LoginPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Login | Palpitei',
+      },
+    ],
+  }),
 })
 
 const loginFormSchema = z.object({

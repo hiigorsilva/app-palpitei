@@ -19,6 +19,13 @@ import type { IUser } from '@/services/users/type'
 
 export const Route = createFileRoute('/(private)/participantes/')({
   component: ParticipantesPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Participantes | Palpitei',
+      },
+    ],
+  }),
 })
 
 function getPositionStyles(position: number) {

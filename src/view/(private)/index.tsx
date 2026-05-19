@@ -18,7 +18,7 @@ export const Route = createFileRoute('/(private)/')({
   head: () => ({
     meta: [
       {
-        title: 'Palpitei | Bolão Copa do Mundo 2026',
+        title: 'Início | Palpitei',
       },
     ],
   }),

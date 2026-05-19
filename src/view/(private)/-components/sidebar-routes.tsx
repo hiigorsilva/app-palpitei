@@ -2,7 +2,7 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   CalendarIcon,
   HandHelpingIcon,
-  LayoutDashboardIcon,
+  HomeIcon,
   Settings2Icon,
   ShieldIcon,
   TrophyIcon,
@@ -19,8 +19,8 @@ export function SidebarRoutes() {
 
   const links = [
     {
-      label: 'Resumo',
-      icon: <LayoutDashboardIcon />,
+      label: 'Início',
+      icon: <HomeIcon />,
       onClick: () => navigate({ to: '/' }),
       path: '/',
     },
@@ -82,7 +82,7 @@ export function SidebarRoutes() {
       {links.map(link => (
         <Button
           key={link.label}
-          className={`min-h-10 h-fit w-full justify-start text-foreground py-3 cursor-pointer ${getStyleButtonMenu(link.path)}`}
+          className={`min-h-10 h-fit w-full justify-start py-3 text-foreground cursor-pointer ${getStyleButtonMenu(link.path)}`}
           variant="ghost"
           onClick={link.onClick}
         >

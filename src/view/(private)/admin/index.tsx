@@ -88,6 +88,13 @@ import type { IGrupo } from '@/services/grupos/type'
 
 export const Route = createFileRoute('/(private)/admin/')({
   component: AdminPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Painel do Administrador | Palpitei',
+      },
+    ],
+  }),
 })
 
 const adminFormSchema = z.object({

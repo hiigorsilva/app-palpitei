@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { IconApostaTooltip } from '@/components/icon-aposta-tooltip'
 import { Card } from '@/components/ui/card'
 import { formatDateWithoutYear } from '@/helpers/date'
@@ -92,22 +93,27 @@ export function GridFaseCard({
             }}
           >
             {complementaryGames.length > 0 && (
-              <li
+              <Link
+                key={complementaryGames[0].id}
+                to={'/jogos/$gameId'}
+                params={{ gameId: complementaryGames[0].id }}
                 aria-label="Terceiro Lugar"
                 className="absolute left-0 z-20 w-48"
                 style={{
                   top: 'calc(50% + 5rem)',
                 }}
               >
-                <h3 className="mb-2 text-xs font-semibold text-foreground">
-                  Terceiro Lugar
-                </h3>
-                <div className="space-y-3">
-                  {complementaryGames.map(game => (
-                    <div key={game.id}>{renderGameCard(game)}</div>
-                  ))}
-                </div>
-              </li>
+                <li>
+                  <h3 className="mb-2 text-xs font-semibold text-foreground">
+                    Terceiro Lugar
+                  </h3>
+                  <div className="space-y-3">
+                    {complementaryGames.map(game => (
+                      <div key={game.id}>{renderGameCard(game)}</div>
+                    ))}
+                  </div>
+                </li>
+              </Link>
             )}
             {connectorPairs.map(pair => (
               <li
@@ -127,15 +133,17 @@ export function GridFaseCard({
               </li>
             ))}
             {games.map((game, index) => (
-              <li
+              <Link
                 key={game.id}
+                to={'/jogos/$gameId'}
+                params={{ gameId: game.id }}
                 className="relative z-10 col-start-1 w-48 self-center"
                 style={{
                   gridRow: `${index * rowSpan + 1} / span ${rowSpan}`,
                 }}
               >
-                {renderGameCard(game)}
-              </li>
+                <li>{renderGameCard(game)}</li>
+              </Link>
             ))}
           </ul>
         </>

@@ -21,6 +21,13 @@ import { MiniRanking } from './-comoponents/mini-ranking'
 
 export const Route = createFileRoute('/(private)/apostas/')({
   component: ApostasPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'Minhas Apostas | Palpitei',
+      },
+    ],
+  }),
 })
 
 function ApostasPage() {
