@@ -49,6 +49,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -178,35 +179,37 @@ function AdminPage() {
       </div>
 
       {isAdminAuthenticated ? (
-        <Tabs defaultValue="get" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 sm:w-fit">
-            <TabsTrigger value="get">GET</TabsTrigger>
-            <TabsTrigger value="put">PUT</TabsTrigger>
-            <TabsTrigger value="post">POST</TabsTrigger>
-          </TabsList>
+        <Card className="mt-6 bg-transparent p-4">
+          <Tabs defaultValue="get" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 sm:w-fit">
+              <TabsTrigger value="get">Dashboard geral</TabsTrigger>
+              <TabsTrigger value="put">Editar dados</TabsTrigger>
+              <TabsTrigger value="post">Adicionar dados</TabsTrigger>
+            </TabsList>
+            <Separator />
+            <TabsContent value="get" className="mt-4">
+              <DashboardTab dashboard={dashboard} />
+            </TabsContent>
 
-          <TabsContent value="get" className="mt-4">
-            <DashboardTab dashboard={dashboard} />
-          </TabsContent>
+            <TabsContent value="put" className="mt-4">
+              <PutActionsTab
+                games={games.data ?? []}
+                isLoadingGames={games.isLoading}
+                isLoadingTeams={teams.isLoading}
+                teams={teams.data ?? []}
+              />
+            </TabsContent>
 
-          <TabsContent value="put" className="mt-4">
-            <PutActionsTab
-              games={games.data ?? []}
-              isLoadingGames={games.isLoading}
-              isLoadingTeams={teams.isLoading}
-              teams={teams.data ?? []}
-            />
-          </TabsContent>
-
-          <TabsContent value="post" className="mt-4">
-            <PostActionsTab
-              games={games.data ?? []}
-              isLoadingGames={games.isLoading}
-              isLoadingTeams={teams.isLoading}
-              teams={teams.data ?? []}
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="post" className="mt-4">
+              <PostActionsTab
+                games={games.data ?? []}
+                isLoadingGames={games.isLoading}
+                isLoadingTeams={teams.isLoading}
+                teams={teams.data ?? []}
+              />
+            </TabsContent>
+          </Tabs>
+        </Card>
       ) : (
         <LockedAdminState onLoginClick={() => setLoginOpen(true)} />
       )}
@@ -405,7 +408,7 @@ function DashboardTab({
             Consultas de informações
           </h2>
           <p className="text-sm text-muted-foreground">
-            Dados gerais retornados por `GET /admin/dashboard`.
+            Dados gerais retornados por `GET /api/admin/dashboard`.
           </p>
         </div>
         <Button
@@ -531,7 +534,7 @@ function CorrectResultCard({
   return (
     <ActionCard
       title="Corrigir resultado"
-      description="PUT /admin/resultado/:gameId"
+      description="PUT /api/admin/resultado/:gameId"
     >
       <div className="flex items-start gap-2 rounded-md border border-dashed bg-muted/30 p-3 text-sm text-muted-foreground">
         <Tooltip>
@@ -600,7 +603,7 @@ function UpdateParticipantsCard({
   return (
     <ActionCard
       title="Atualizar participantes de um jogo"
-      description="PUT /admin/jogos/:gameId/participantes"
+      description="PUT /api/admin/jogos/:gameId/participantes"
     >
       <form
         id="update-participants-form"
@@ -685,7 +688,7 @@ function BatchParticipantsCard({
   return (
     <ActionCard
       title="Atualizar participantes em lote"
-      description="PUT /admin/jogos/participantes/lote"
+      description="PUT /api/admin/jogos/participantes/lote"
       className={className}
     >
       <BatchParticipantsEditor
@@ -773,7 +776,10 @@ function OneClickActionsCard() {
   }
 
   return (
-    <ActionCard title="Atualizações de um clique" description="POST">
+    <ActionCard
+      title="Atualizações de um clique"
+      description="POST /api/admin/recalcular | POST /api/admin/popular-base"
+    >
       <div className="grid gap-3">
         <Button
           variant="outline"
@@ -826,7 +832,7 @@ function ChampionCard({
   }
 
   return (
-    <ActionCard title="Apurar campeão" description="POST /admin/campeao">
+    <ActionCard title="Apurar campeão" description="POST /api/admin/campeao">
       <form
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -875,7 +881,7 @@ function InsertResultCard({
   }
 
   return (
-    <ActionCard title="Inserir resultado" description="POST /admin/resultado">
+    <ActionCard title="Inserir resultado" description="POST /api/admin/resultado">
       <ScoreForm
         formId="insert-result-form"
         form={form}
@@ -939,7 +945,7 @@ function BatchResultsCard({
   return (
     <ActionCard
       title="Inserir múltiplos resultados"
-      description="POST /admin/resultados/lote"
+      description="POST /api/admin/resultados/lote"
     >
       <BatchResultsEditor
         games={games}
