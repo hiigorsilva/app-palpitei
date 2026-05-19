@@ -3,6 +3,7 @@ import {
   CalendarIcon,
   HandHelpingIcon,
   LayoutDashboardIcon,
+  Settings2Icon,
   ShieldIcon,
   TrophyIcon,
   UsersIcon,
@@ -52,6 +53,12 @@ export function SidebarRoutes() {
       icon: <UsersIcon />,
       onClick: () => navigate({ to: '/participantes' }),
       path: '/participantes',
+    },
+    {
+      label: 'Gerenciar',
+      icon: <Settings2Icon />,
+      onClick: () => navigate({ to: '/admin' }),
+      path: '/admin',
     },
   ]
 

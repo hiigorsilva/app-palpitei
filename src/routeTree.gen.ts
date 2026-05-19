@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './view/__root'
 import { Route as publicLayoutRouteImport } from './view/(public)/layout'
 import { Route as privateLayoutRouteImport } from './view/(private)/layout'
 import { Route as privateIndexRouteImport } from './view/(private)/index'
+import { Route as privateAdminLayoutRouteImport } from './view/(private)/admin/layout'
 import { Route as publicLoginIndexRouteImport } from './view/(public)/login/index'
 import { Route as privateParticipantesIndexRouteImport } from './view/(private)/participantes/index'
 import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
 import { Route as privateGruposIndexRouteImport } from './view/(private)/grupos/index'
 import { Route as privateApostasIndexRouteImport } from './view/(private)/apostas/index'
+import { Route as privateAdminIndexRouteImport } from './view/(private)/admin/index'
 import { Route as privateJogosFinaisIndexRouteImport } from './view/(private)/jogos/finais/index'
 import { Route as privateJogosGameIdIndexRouteImport } from './view/(private)/jogos/$gameId/index'
 
@@ -31,6 +33,11 @@ const privateLayoutRoute = privateLayoutRouteImport.update({
 const privateIndexRoute = privateIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => privateLayoutRoute,
+} as any)
+const privateAdminLayoutRoute = privateAdminLayoutRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => privateLayoutRoute,
 } as any)
 const publicLoginIndexRoute = publicLoginIndexRouteImport.update({
@@ -59,6 +66,11 @@ const privateApostasIndexRoute = privateApostasIndexRouteImport.update({
   path: '/apostas/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
+const privateAdminIndexRoute = privateAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => privateAdminLayoutRoute,
+} as any)
 const privateJogosFinaisIndexRoute = privateJogosFinaisIndexRouteImport.update({
   id: '/jogos/finais/',
   path: '/jogos/finais/',
@@ -71,7 +83,9 @@ const privateJogosGameIdIndexRoute = privateJogosGameIdIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/admin': typeof privateAdminLayoutRouteWithChildren
   '/': typeof privateIndexRoute
+  '/admin/': typeof privateAdminIndexRoute
   '/apostas/': typeof privateApostasIndexRoute
   '/grupos/': typeof privateGruposIndexRoute
   '/jogos/': typeof privateJogosIndexRoute
@@ -82,6 +96,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
+  '/admin': typeof privateAdminIndexRoute
   '/apostas': typeof privateApostasIndexRoute
   '/grupos': typeof privateGruposIndexRoute
   '/jogos': typeof privateJogosIndexRoute
@@ -94,7 +109,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(private)': typeof privateLayoutRouteWithChildren
   '/(public)': typeof publicLayoutRouteWithChildren
+  '/(private)/admin': typeof privateAdminLayoutRouteWithChildren
   '/(private)/': typeof privateIndexRoute
+  '/(private)/admin/': typeof privateAdminIndexRoute
   '/(private)/apostas/': typeof privateApostasIndexRoute
   '/(private)/grupos/': typeof privateGruposIndexRoute
   '/(private)/jogos/': typeof privateJogosIndexRoute
@@ -106,7 +123,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/admin'
     | '/'
+    | '/admin/'
     | '/apostas/'
     | '/grupos/'
     | '/jogos/'
@@ -117,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/apostas'
     | '/grupos'
     | '/jogos'
@@ -128,7 +148,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(private)'
     | '/(public)'
+    | '/(private)/admin'
     | '/(private)/'
+    | '/(private)/admin/'
     | '/(private)/apostas/'
     | '/(private)/grupos/'
     | '/(private)/jogos/'
@@ -166,6 +188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
+    '/(private)/admin': {
+      id: '/(private)/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof privateAdminLayoutRouteImport
+      parentRoute: typeof privateLayoutRoute
+    }
     '/(public)/login/': {
       id: '/(public)/login/'
       path: '/login'
@@ -201,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateApostasIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
+    '/(private)/admin/': {
+      id: '/(private)/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof privateAdminIndexRouteImport
+      parentRoute: typeof privateAdminLayoutRoute
+    }
     '/(private)/jogos/finais/': {
       id: '/(private)/jogos/finais/'
       path: '/jogos/finais'
@@ -218,7 +254,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface privateAdminLayoutRouteChildren {
+  privateAdminIndexRoute: typeof privateAdminIndexRoute
+}
+
+const privateAdminLayoutRouteChildren: privateAdminLayoutRouteChildren = {
+  privateAdminIndexRoute: privateAdminIndexRoute,
+}
+
+const privateAdminLayoutRouteWithChildren =
+  privateAdminLayoutRoute._addFileChildren(privateAdminLayoutRouteChildren)
+
 interface privateLayoutRouteChildren {
+  privateAdminLayoutRoute: typeof privateAdminLayoutRouteWithChildren
   privateIndexRoute: typeof privateIndexRoute
   privateApostasIndexRoute: typeof privateApostasIndexRoute
   privateGruposIndexRoute: typeof privateGruposIndexRoute
@@ -229,6 +277,7 @@ interface privateLayoutRouteChildren {
 }
 
 const privateLayoutRouteChildren: privateLayoutRouteChildren = {
+  privateAdminLayoutRoute: privateAdminLayoutRouteWithChildren,
   privateIndexRoute: privateIndexRoute,
   privateApostasIndexRoute: privateApostasIndexRoute,
   privateGruposIndexRoute: privateGruposIndexRoute,
