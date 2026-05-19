@@ -98,13 +98,12 @@ function LoginPage() {
                       autoComplete="off"
                       autoFocus
                     />
-                    <FieldDescription>
-                      Este será o nome que você usará para fazer login e
-                      participar do bolão.
-                    </FieldDescription>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                    <FieldDescription>
+                      Sempre utilize o mesmo nome cadastrado para fazer login.
+                    </FieldDescription>
                   </Field>
                 )}
               />
