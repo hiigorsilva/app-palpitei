@@ -4,14 +4,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   ArrowRightIcon,
   DatabaseIcon,
+  HelpCircleIcon,
   Loader2Icon,
   LockKeyholeIcon,
   LogOutIcon,
   RefreshCcwIcon,
   ShieldCheckIcon,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import type { ComponentProps, Dispatch, ReactNode, SetStateAction } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   type Control,
   Controller,
@@ -49,9 +50,23 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useAuth } from '@/contexts/auth'
 import { ErrorResponseApi } from '@/helpers/error'
+import { getFaseName } from '@/helpers/games'
 import { cn } from '@/lib/utils'
 import { getAdminDashboard } from '@/services/admin/api'
 import {
@@ -66,6 +81,10 @@ import {
   useRecalcularPontuacao,
 } from '@/services/admin/query'
 import type { IAdminBatchResponse } from '@/services/admin/type'
+import { useListGames } from '@/services/games/query'
+import type { IGame } from '@/services/games/type'
+import { useListGrupos } from '@/services/grupos/query'
+import type { IGrupo } from '@/services/grupos/type'
 
 export const Route = createFileRoute('/(private)/admin/')({
   component: AdminPage,
@@ -99,37 +118,14 @@ const championSchema = z.object({
 })
 type ChampionFormData = z.infer<typeof championSchema>
 
-const jsonSchema = z.object({
-  payload: z.string().min(1, 'Informe o JSON da requisição'),
-})
-type JsonFormData = z.infer<typeof jsonSchema>
-
-const batchParticipantsExample = `{
-  "jogos": [
-    {
-      "gameId": "",
-      "team_a": "",
-      "team_b": ""
-    }
-  ]
-}`
-
-const batchResultsExample = `{
-  "resultados": [
-    {
-      "gameId": "",
-      "gols_a": 0,
-      "gols_b": 0
-    }
-  ]
-}`
-
 function AdminPage() {
   const queryClient = useQueryClient()
-  const { adminLogout, isAdminAuthenticated } = useAuth()
+  const { adminLogout, isAdminAuthenticated, user } = useAuth()
   const [loginOpen, setLoginOpen] = useState(false)
 
   const dashboard = useAdminDashboard(isAdminAuthenticated)
+  const games = useListGames(user?.id)
+  const teams = useListGrupos(user?.id)
 
   useEffect(() => {
     if (!isAdminAuthenticated) {
@@ -187,11 +183,21 @@ function AdminPage() {
           </TabsContent>
 
           <TabsContent value="put" className="mt-4">
-            <PutActionsTab />
+            <PutActionsTab
+              games={games.data ?? []}
+              isLoadingGames={games.isLoading}
+              isLoadingTeams={teams.isLoading}
+              teams={teams.data ?? []}
+            />
           </TabsContent>
 
           <TabsContent value="post" className="mt-4">
-            <PostActionsTab />
+            <PostActionsTab
+              games={games.data ?? []}
+              isLoadingGames={games.isLoading}
+              isLoadingTeams={teams.isLoading}
+              teams={teams.data ?? []}
+            />
           </TabsContent>
         </Tabs>
       ) : (
@@ -438,7 +444,19 @@ function DashboardTab({
   )
 }
 
-function PutActionsTab() {
+function PutActionsTab({
+  games,
+  isLoadingGames,
+  isLoadingTeams,
+  teams,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+  isLoadingTeams: boolean
+  teams: IGrupo[]
+}) {
+  const knockoutGames = useMemo(() => games.filter(isKnockoutGame), [games])
+
   return (
     <div className="space-y-4">
       <div>
@@ -451,15 +469,32 @@ function PutActionsTab() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <CorrectResultCard />
-        <UpdateParticipantsCard />
-        <BatchParticipantsCard className="lg:col-span-2" />
+        <CorrectResultCard games={games} isLoadingGames={isLoadingGames} />
+        <UpdateParticipantsCard
+          games={knockoutGames}
+          isLoadingGames={isLoadingGames}
+          isLoadingTeams={isLoadingTeams}
+          teams={teams}
+        />
+        <BatchParticipantsCard
+          className="lg:col-span-2"
+          games={knockoutGames}
+          isLoadingGames={isLoadingGames}
+          isLoadingTeams={isLoadingTeams}
+          teams={teams}
+        />
       </div>
     </div>
   )
 }
 
-function CorrectResultCard() {
+function CorrectResultCard({
+  games,
+  isLoadingGames,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+}) {
   const mutation = useCorrigirResultado()
   const form = useForm<CorrectResultFormData>({
     resolver: zodResolver(correctResultSchema),
@@ -491,18 +526,44 @@ function CorrectResultCard() {
       title="Corrigir resultado"
       description="PUT /admin/resultado/:gameId"
     >
+      <div className="flex items-start gap-2 rounded-md border border-dashed bg-muted/30 p-3 text-sm text-muted-foreground">
+        <Tooltip>
+          <TooltipTrigger className="mt-0.5 inline-flex text-foreground">
+            <HelpCircleIcon className="size-4" />
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>
+              Este endpoint corrige apenas jogos já encerrados. Para jogos
+              pendentes, use Inserir resultado na aba POST.
+            </p>
+          </TooltipContent>
+        </Tooltip>
+        <span>O seletor mostra somente jogos encerrados.</span>
+      </div>
       <ScoreForm
         formId="correct-result-form"
         form={form}
         submitLabel="Corrigir resultado"
         isPending={mutation.isPending}
         onSubmit={onSubmit}
+        games={games.filter(game => game.finish_game)}
+        isLoadingGames={isLoadingGames}
       />
     </ActionCard>
   )
 }
 
-function UpdateParticipantsCard() {
+function UpdateParticipantsCard({
+  games,
+  isLoadingGames,
+  isLoadingTeams,
+  teams,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+  isLoadingTeams: boolean
+  teams: IGrupo[]
+}) {
   const mutation = useAtualizarParticipantesJogo()
   const form = useForm<ParticipantsFormData>({
     resolver: zodResolver(participantsSchema),
@@ -540,25 +601,28 @@ function UpdateParticipantsCard() {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FieldGroup>
-          <TextInputField
+          <GameSelectField
             control={form.control}
+            games={games}
+            isLoading={isLoadingGames}
             name="gameId"
-            label="Game ID"
-            placeholder="ID do jogo"
+            label="Jogo"
           />
         </FieldGroup>
         <div className="grid gap-4 sm:grid-cols-2">
-          <TextInputField
+          <TeamSelectField
             control={form.control}
+            isLoading={isLoadingTeams}
             name="team_a"
             label="Seleção A"
-            placeholder="Brasil"
+            teams={teams}
           />
-          <TextInputField
+          <TeamSelectField
             control={form.control}
+            isLoading={isLoadingTeams}
             name="team_b"
             label="Seleção B"
-            placeholder="França"
+            teams={teams}
           />
         </div>
         <Button type="submit" disabled={mutation.isPending}>
@@ -569,20 +633,41 @@ function UpdateParticipantsCard() {
   )
 }
 
-function BatchParticipantsCard({ className }: { className?: string }) {
+function BatchParticipantsCard({
+  className,
+  games,
+  isLoadingGames,
+  isLoadingTeams,
+  teams,
+}: {
+  className?: string
+  games: IGame[]
+  isLoadingGames: boolean
+  isLoadingTeams: boolean
+  teams: IGrupo[]
+}) {
   const mutation = useAtualizarParticipantesLote()
   const [result, setResult] = useState<IAdminBatchResponse | null>(null)
-  const form = useForm<JsonFormData>({
-    resolver: zodResolver(jsonSchema),
-    defaultValues: {
-      payload: batchParticipantsExample,
-    },
-  })
+  const [rows, setRows] = useState<Record<string, ParticipantsBatchRow>>({})
 
-  async function onSubmit(data: JsonFormData) {
+  async function onSubmit() {
     try {
-      const payload = JSON.parse(data.payload)
-      const response = await mutation.mutateAsync(payload)
+      const jogos = games
+        .map(game => ({
+          gameId: game.id,
+          team_a: rows[game.id]?.team_a ?? '',
+          team_b: rows[game.id]?.team_b ?? '',
+          enabled: rows[game.id]?.enabled ?? false,
+        }))
+        .filter(row => row.enabled && row.team_a && row.team_b)
+        .map(({ gameId, team_a, team_b }) => ({ gameId, team_a, team_b }))
+
+      if (jogos.length === 0) {
+        toast.error('Selecione ao menos um jogo completo para atualizar.')
+        return
+      }
+
+      const response = await mutation.mutateAsync({ jogos })
       setResult(response)
       toast.success('Participantes atualizados em lote.')
     } catch (error) {
@@ -596,19 +681,31 @@ function BatchParticipantsCard({ className }: { className?: string }) {
       description="PUT /admin/jogos/participantes/lote"
       className={className}
     >
-      <JsonPayloadForm
-        formId="batch-participants-form"
-        form={form}
+      <BatchParticipantsEditor
+        games={games}
         isPending={mutation.isPending}
-        submitLabel="Atualizar lote"
+        isLoading={isLoadingGames || isLoadingTeams}
         onSubmit={onSubmit}
+        rows={rows}
+        setRows={setRows}
+        teams={teams}
       />
       <BatchResult result={result} />
     </ActionCard>
   )
 }
 
-function PostActionsTab() {
+function PostActionsTab({
+  games,
+  isLoadingGames,
+  isLoadingTeams,
+  teams,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+  isLoadingTeams: boolean
+  teams: IGrupo[]
+}) {
   return (
     <div className="space-y-4">
       <div>
@@ -620,11 +717,19 @@ function PostActionsTab() {
         </p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-3 gap-3">
         <OneClickActionsCard />
-        <ChampionCard />
-        <InsertResultCard />
-        <BatchResultsCard />
+        <ChampionCard isLoadingTeams={isLoadingTeams} teams={teams} />
+        <InsertResultCard
+          games={games.filter(game => !game.finish_game)}
+          isLoadingGames={isLoadingGames}
+        />
+        <div className="col-span-3">
+          <BatchResultsCard
+            games={games.filter(game => !game.finish_game)}
+            isLoadingGames={isLoadingGames}
+          />
+        </div>
       </div>
     </div>
   )
@@ -686,7 +791,13 @@ function OneClickActionsCard() {
   )
 }
 
-function ChampionCard() {
+function ChampionCard({
+  isLoadingTeams,
+  teams,
+}: {
+  isLoadingTeams: boolean
+  teams: IGrupo[]
+}) {
   const mutation = useApurarCampeao()
   const form = useForm<ChampionFormData>({
     resolver: zodResolver(championSchema),
@@ -713,11 +824,13 @@ function ChampionCard() {
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <TextInputField
+        <TeamSelectField
           control={form.control}
+          isLoading={isLoadingTeams}
           name="teamId"
-          label="Team ID"
-          placeholder="ID da seleção campeã"
+          label="Seleção campeã"
+          teams={teams}
+          valueMode="id"
         />
         <Button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? 'Apurando...' : 'Apurar palpites de campeão'}
@@ -727,7 +840,13 @@ function ChampionCard() {
   )
 }
 
-function InsertResultCard() {
+function InsertResultCard({
+  games,
+  isLoadingGames,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+}) {
   const mutation = useInserirResultado()
   const form = useForm<ScoreFormData>({
     resolver: zodResolver(scoreSchema),
@@ -756,25 +875,53 @@ function InsertResultCard() {
         submitLabel="Inserir resultado"
         isPending={mutation.isPending}
         onSubmit={onSubmit}
+        games={games}
+        isLoadingGames={isLoadingGames}
       />
     </ActionCard>
   )
 }
 
-function BatchResultsCard() {
+function BatchResultsCard({
+  games,
+  isLoadingGames,
+}: {
+  games: IGame[]
+  isLoadingGames: boolean
+}) {
   const mutation = useInserirResultadosLote()
   const [result, setResult] = useState<IAdminBatchResponse | null>(null)
-  const form = useForm<JsonFormData>({
-    resolver: zodResolver(jsonSchema),
-    defaultValues: {
-      payload: batchResultsExample,
-    },
-  })
+  const [rows, setRows] = useState<Record<string, ResultBatchRow>>({})
 
-  async function onSubmit(data: JsonFormData) {
+  async function onSubmit() {
     try {
-      const payload = JSON.parse(data.payload)
-      const response = await mutation.mutateAsync(payload)
+      const resultados = games
+        .map(game => ({
+          gameId: game.id,
+          gols_a: rows[game.id]?.gols_a,
+          gols_b: rows[game.id]?.gols_b,
+          enabled: rows[game.id]?.enabled ?? false,
+        }))
+        .filter(
+          row =>
+            row.enabled &&
+            Number.isInteger(row.gols_a) &&
+            Number.isInteger(row.gols_b) &&
+            Number(row.gols_a) >= 0 &&
+            Number(row.gols_b) >= 0
+        )
+        .map(({ gameId, gols_a, gols_b }) => ({
+          gameId,
+          gols_a: Number(gols_a),
+          gols_b: Number(gols_b),
+        }))
+
+      if (resultados.length === 0) {
+        toast.error('Selecione ao menos um jogo com placar completo.')
+        return
+      }
+
+      const response = await mutation.mutateAsync({ resultados })
       setResult(response)
       toast.success('Resultados inseridos em lote.')
     } catch (error) {
@@ -787,12 +934,13 @@ function BatchResultsCard() {
       title="Inserir múltiplos resultados"
       description="POST /admin/resultados/lote"
     >
-      <JsonPayloadForm
-        formId="batch-results-form"
-        form={form}
+      <BatchResultsEditor
+        games={games}
         isPending={mutation.isPending}
-        submitLabel="Inserir resultados"
+        isLoading={isLoadingGames}
         onSubmit={onSubmit}
+        rows={rows}
+        setRows={setRows}
       />
       <BatchResult result={result} />
     </ActionCard>
@@ -824,12 +972,16 @@ function ActionCard({
 function ScoreForm({
   form,
   formId,
+  games,
+  isLoadingGames,
   submitLabel,
   isPending,
   onSubmit,
 }: {
   form: UseFormReturn<ScoreFormData>
   formId: string
+  games: IGame[]
+  isLoadingGames: boolean
   submitLabel: string
   isPending: boolean
   onSubmit: (data: ScoreFormData) => void | Promise<void>
@@ -840,11 +992,12 @@ function ScoreForm({
       className="flex flex-col gap-4"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <TextInputField
+      <GameSelectField
         control={form.control}
+        games={games}
+        isLoading={isLoadingGames}
         name="gameId"
-        label="Game ID"
-        placeholder="ID do jogo"
+        label="Jogo"
       />
       <div className="grid grid-cols-2 gap-4">
         <TextInputField
@@ -869,47 +1022,395 @@ function ScoreForm({
   )
 }
 
-function JsonPayloadForm({
-  form,
-  formId,
-  submitLabel,
+type ResultBatchRow = {
+  enabled: boolean
+  gols_a?: number
+  gols_b?: number
+}
+
+type ParticipantsBatchRow = {
+  enabled: boolean
+  team_a?: string
+  team_b?: string
+}
+
+function BatchResultsEditor({
+  games,
+  isLoading,
   isPending,
   onSubmit,
+  rows,
+  setRows,
 }: {
-  form: ReturnType<typeof useForm<JsonFormData>>
-  formId: string
-  submitLabel: string
+  games: IGame[]
+  isLoading: boolean
   isPending: boolean
-  onSubmit: (data: JsonFormData) => void | Promise<void>
+  onSubmit: () => void | Promise<void>
+  rows: Record<string, ResultBatchRow>
+  setRows: Dispatch<SetStateAction<Record<string, ResultBatchRow>>>
+}) {
+  if (isLoading) {
+    return <Skeleton className="h-48 w-full" />
+  }
+
+  if (games.length === 0) {
+    return <EmptyActionMessage message="Não há jogos pendentes para apurar." />
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="overflow-auto rounded-md border">
+        <Table className="w-full min-w-180 text-sm">
+          <TableHeader className="bg-muted/50 text-left">
+            <TableRow>
+              <TableHead className="w-16 px-3 py-2 font-medium">
+                Incluir
+              </TableHead>
+              <TableHead className="px-3 py-2 font-medium">Jogo</TableHead>
+              <TableHead className="w-28 px-3 py-2 font-medium">
+                Gols A
+              </TableHead>
+              <TableHead className="w-28 px-3 py-2 font-medium">
+                Gols B
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {games.map(game => (
+              <TableRow key={game.id} className="border-t">
+                <TableCell className="px-3 py-2">
+                  <input
+                    type="checkbox"
+                    className="size-4 accent-primary"
+                    checked={rows[game.id]?.enabled ?? false}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: event.target.checked,
+                        },
+                      }))
+                    }
+                  />
+                </TableCell>
+                <TableCell className="px-3 py-2">
+                  <GameSummary game={game} />
+                </TableCell>
+                <TableCell className="px-3 py-2">
+                  <Input
+                    min={0}
+                    type="number"
+                    value={rows[game.id]?.gols_a ?? ''}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: true,
+                          gols_a: event.target.valueAsNumber,
+                        },
+                      }))
+                    }
+                  />
+                </TableCell>
+                <TableCell className="px-3 py-2">
+                  <Input
+                    min={0}
+                    type="number"
+                    value={rows[game.id]?.gols_b ?? ''}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: true,
+                          gols_b: event.target.valueAsNumber,
+                        },
+                      }))
+                    }
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <Button onClick={onSubmit} disabled={isPending}>
+        {isPending ? 'Inserindo...' : 'Inserir resultados selecionados'}
+      </Button>
+    </div>
+  )
+}
+
+function BatchParticipantsEditor({
+  games,
+  isLoading,
+  isPending,
+  onSubmit,
+  rows,
+  setRows,
+  teams,
+}: {
+  games: IGame[]
+  isLoading: boolean
+  isPending: boolean
+  onSubmit: () => void | Promise<void>
+  rows: Record<string, ParticipantsBatchRow>
+  setRows: Dispatch<SetStateAction<Record<string, ParticipantsBatchRow>>>
+  teams: IGrupo[]
+}) {
+  if (isLoading) {
+    return <Skeleton className="h-48 w-full" />
+  }
+
+  if (games.length === 0) {
+    return (
+      <EmptyActionMessage message="Não há jogos de mata-mata disponíveis." />
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="overflow-auto rounded-md border">
+        <table className="w-full min-w-215 text-sm">
+          <thead className="bg-muted/50 text-left">
+            <tr>
+              <th className="w-16 px-3 py-2 font-medium">Incluir</th>
+              <th className="px-3 py-2 font-medium">Jogo</th>
+              <th className="w-56 px-3 py-2 font-medium">Seleção A</th>
+              <th className="w-56 px-3 py-2 font-medium">Seleção B</th>
+            </tr>
+          </thead>
+          <tbody>
+            {games.map(game => (
+              <tr key={game.id} className="border-t">
+                <td className="px-3 py-2">
+                  <input
+                    type="checkbox"
+                    className="size-4 accent-primary"
+                    checked={rows[game.id]?.enabled ?? false}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: event.target.checked,
+                        },
+                      }))
+                    }
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <GameSummary game={game} />
+                </td>
+                <td className="px-3 py-2">
+                  <NativeSelect
+                    value={rows[game.id]?.team_a ?? ''}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: true,
+                          team_a: event.target.value,
+                        },
+                      }))
+                    }
+                  >
+                    <option value="">Seleção A</option>
+                    {teams.map(team => (
+                      <option key={team.id} value={team.name}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </td>
+                <td className="px-3 py-2">
+                  <NativeSelect
+                    value={rows[game.id]?.team_b ?? ''}
+                    onChange={event =>
+                      setRows(current => ({
+                        ...current,
+                        [game.id]: {
+                          ...current[game.id],
+                          enabled: true,
+                          team_b: event.target.value,
+                        },
+                      }))
+                    }
+                  >
+                    <option value="">Seleção B</option>
+                    {teams.map(team => (
+                      <option key={team.id} value={team.name}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Button onClick={onSubmit} disabled={isPending}>
+        {isPending ? 'Atualizando...' : 'Atualizar participantes selecionados'}
+      </Button>
+    </div>
+  )
+}
+
+function GameSelectField<T extends FieldValues>({
+  control,
+  games,
+  isLoading,
+  label,
+  name,
+}: {
+  control: Control<T>
+  games: IGame[]
+  isLoading: boolean
+  label: string
+  name: Path<T>
 }) {
   return (
-    <form
-      id={formId}
-      className="flex flex-col gap-4"
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
-      <Controller
-        name="payload"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={formId}>Body JSON</FieldLabel>
-            <textarea
-              {...field}
-              id={formId}
-              aria-invalid={fieldState.invalid}
-              className="min-h-48 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
-              spellCheck={false}
-            />
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
-      />
-      <Button type="submit" disabled={isPending}>
-        {isPending ? 'Processando...' : submitLabel}
-      </Button>
-    </form>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+          <NativeSelect
+            id={name}
+            name={field.name}
+            ref={field.ref}
+            value={String(field.value ?? '')}
+            disabled={isLoading || games.length === 0}
+            onBlur={field.onBlur}
+            onChange={event => field.onChange(event.target.value)}
+          >
+            <option value="">
+              {isLoading ? 'Carregando jogos...' : 'Selecione um jogo'}
+            </option>
+            {games.map(game => (
+              <option key={game.id} value={game.id}>
+                {formatGameLabel(game)}
+              </option>
+            ))}
+          </NativeSelect>
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
   )
+}
+
+function TeamSelectField<T extends FieldValues>({
+  control,
+  isLoading,
+  label,
+  name,
+  teams,
+  valueMode = 'name',
+}: {
+  control: Control<T>
+  isLoading: boolean
+  label: string
+  name: Path<T>
+  teams: IGrupo[]
+  valueMode?: 'id' | 'name'
+}) {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid}>
+          <FieldLabel htmlFor={name}>{label}</FieldLabel>
+          <NativeSelect
+            id={name}
+            name={field.name}
+            ref={field.ref}
+            value={String(field.value ?? '')}
+            disabled={isLoading || teams.length === 0}
+            onBlur={field.onBlur}
+            onChange={event => field.onChange(event.target.value)}
+          >
+            <option value="">
+              {isLoading ? 'Carregando seleções...' : 'Selecione uma seleção'}
+            </option>
+            {teams.map(team => (
+              <option
+                key={team.id}
+                value={valueMode === 'id' ? team.id : team.name}
+              >
+                {team.name}
+              </option>
+            ))}
+          </NativeSelect>
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
+  )
+}
+
+const selectClassName =
+  'h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20'
+
+const NativeSelect = ({ className, ...props }: ComponentProps<'select'>) => (
+  <select className={cn(selectClassName, className)} {...props} />
+)
+
+function GameSummary({ game }: { game: IGame }) {
+  return (
+    <div className="space-y-1">
+      <div className="font-medium">{formatGameTeams(game)}</div>
+      <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+        <span>{getFaseName(game.fase)}</span>
+        <span>{formatGameDate(game.data_hora)}</span>
+        {game.finish_game && (
+          <Badge variant="outline" className="h-5">
+            Encerrado
+          </Badge>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function EmptyActionMessage({ message }: { message: string }) {
+  return (
+    <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
+      {message}
+    </div>
+  )
+}
+
+function formatGameLabel(game: IGame) {
+  return `${formatGameTeams(game)} - ${getFaseName(game.fase)} - ${formatGameDate(game.data_hora)}`
+}
+
+function formatGameTeams(game: IGame) {
+  const score =
+    game.gols_a !== null && game.gols_b !== null
+      ? ` ${game.gols_a} x ${game.gols_b} `
+      : ' x '
+
+  return `${game.team_a}${score}${game.team_b}`
+}
+
+function formatGameDate(date: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    month: '2-digit',
+  }).format(new Date(date))
+}
+
+function isKnockoutGame(game: IGame) {
+  return game.fase !== 'GRUPOS'
 }
 
 function TextInputField<T extends FieldValues>({
