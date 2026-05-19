@@ -55,7 +55,7 @@ export function SidebarRoutes() {
       path: '/participantes',
     },
     {
-      label: 'Gerenciar',
+      label: 'Painel do Admin',
       icon: <Settings2Icon />,
       onClick: () => navigate({ to: '/admin' }),
       path: '/admin',

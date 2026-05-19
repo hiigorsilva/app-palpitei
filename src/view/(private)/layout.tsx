@@ -75,7 +75,7 @@ function PrivateLayout() {
           </div>
           <Button
             onClick={handleLogout}
-            variant="ghost"
+            variant="outline"
             className="text-sm text-red-500 transition hover:text-red-600 cursor-pointer"
           >
             <LogOutIcon className="text-red-500" /> Sair

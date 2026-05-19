@@ -21,12 +21,18 @@ import type { IUser } from '@/services/users/type'
 
 export interface IAuthContext {
   user: IUser | null
+  admin: {
+    username: string
+    password: string
+  } | null
   isAuthenticated: boolean
+  isAdminAuthenticated: boolean
   login: (data: ILogin) => Promise<IUser>
   adminLogin: (data: {
     username: string
     password: string
   }) => Promise<{ username: string; password: string }>
+  adminLogout: () => void
   logout: () => void
 }
 
@@ -69,6 +75,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [queryClient]
   )
 
+  const adminLogout = useCallback(() => {
+    removeStorageAdminAuth()
+    setAdmin(null)
+    queryClient.invalidateQueries({ queryKey: ['admin'] })
+  }, [queryClient])
+
   const logout = useCallback(() => {
     removeStorageAuth()
     removeStorageAdminAuth()
@@ -85,9 +97,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAdminAuthenticated: Boolean(admin),
       login,
       adminLogin,
+      adminLogout,
       logout,
     }),
-    [user, admin, login, adminLogin, logout]
+    [user, admin, login, adminLogin, adminLogout, logout]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
