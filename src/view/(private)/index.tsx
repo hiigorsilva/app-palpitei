@@ -54,15 +54,16 @@ function HomePage() {
         um resumo dos jogos do dia.
       </p>
 
+      <div className="w-full h-full flex flex-col gap-2">
+        <TitleContainer>Próximos Jogos</TitleContainer>
+        <Card className="bg-transparent p-2 overflow-hidden">
+          <NextGames nextGames={nextGames.data} />
+        </Card>
+      </div>
+
       <div className="grid grid-cols-5 gap-6">
         {/* LEFTSIDE */}
         <div className="col-span-3 w-full flex flex-col gap-6">
-          <div className="w-full h-full flex flex-col gap-2">
-            <TitleContainer>Próximos Jogos</TitleContainer>
-            <Card className="bg-transparent p-2 overflow-hidden">
-              <NextGames nextGames={nextGames.data} />
-            </Card>
-          </div>
           <div className="flex flex-col gap-2">
             <TitleContainer>Ranking do Bolão</TitleContainer>
             <RankingTable variant="full" data={ranking.data} />
