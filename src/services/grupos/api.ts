@@ -1,9 +1,9 @@
 import { api } from '@/lib/api'
-import type { IGrupo } from './type'
+import type { IListTeamsResponse } from './type'
 
 export async function listGrupos(userId: string) {
   try {
-    const res = await api.get<IGrupo[]>('/teams', {
+    const res = await api.get<IListTeamsResponse>('/teams', {
       params: { userId },
     })
     return res.data

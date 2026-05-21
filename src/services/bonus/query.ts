@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { listNiveisBonus } from './api'
-import type { INivelBonus } from './type'
+import type { IListBonusNiveisResponse } from './type'
 
 export function useListNiveisBonus() {
-  return useQuery<INivelBonus[], Error>({
+  return useQuery<IListBonusNiveisResponse, Error>({
     queryKey: ['bonusNiveis'],
     queryFn: () => listNiveisBonus(),
   })

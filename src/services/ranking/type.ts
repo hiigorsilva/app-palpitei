@@ -1,4 +1,4 @@
-export interface RankingData {
+export interface IRankingItem {
   position: number
   userId: string
   name: string
@@ -9,25 +9,25 @@ export interface RankingData {
   acertos: number
   total_apostas: number
   taxa_acerto: number
-  palpite_campeao: {
-    teamId: string
-    name: string
-    code: string
-    flag: string
-    acertou: boolean
-    pontos: number
-  }
 }
 
-export interface IRanking {
+export type IRankingPontosResponse = IRankingItem[]
+export type IRankingTaxaResponse = IRankingItem[]
+
+export interface IRankingUserPositionResponse {
   position: number
-  userId: string
+  total_usuarios: number
+}
+
+export interface IPalpiteCampeaoStats {
+  teamId: string
   name: string
-  pontos_total: number
-  pontos_apostas: number
-  pontos_bonus: number
-  pontos_campeao: number
-  acertos: number
-  total_apostas: number
-  taxa_acerto: number
+  code: string | null
+  flag: string | null
+  acertou: boolean
+  pontos: number
+}
+
+export interface IRankingUserStatsResponse extends IRankingItem {
+  palpite_campeao: IPalpiteCampeaoStats | null
 }

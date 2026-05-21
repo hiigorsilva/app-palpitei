@@ -23,11 +23,11 @@ import {
   useGetBetsByUserId,
   useUpdateGameBet,
 } from '@/services/bets/query'
-import type { IBet } from '@/services/bets/type'
+import type { IBetExpanded } from '@/services/bets/type'
 import type { IGame } from '@/services/games/type'
 import { useGetUserId } from '@/services/users/query'
 
-type PalpiteValue = IBet['palpite']
+type PalpiteValue = IBetExpanded['palpite']
 
 const palpiteOptions = [
   'A',
@@ -45,7 +45,7 @@ const createApostaFormSchema = z.object({
 type CreateApostaFormData = z.infer<typeof createApostaFormSchema>
 
 type CreateApostaDrawerProps = ComponentProps<'div'> & {
-  bet: IBet | IGame
+  bet: IBetExpanded | IGame
   mode: 'create' | 'edit'
 }
 
@@ -72,7 +72,7 @@ export function CreateApostaDrawer({
 
   const { data: bets } = useGetBetsByUserId(userId!)
   const mutationCreate = useCreateGameBet(userId!, gameId)
-  const mutationEdit = useUpdateGameBet(userId!, bet.id)
+  const mutationEdit = useUpdateGameBet(userId!, String(bet.id))
 
   const betDataFiltered = bets?.find(bet => bet.gameId === gameId) ?? null
 

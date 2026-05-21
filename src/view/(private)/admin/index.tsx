@@ -81,11 +81,11 @@ import {
   usePopularBaseLocal,
   useRecalcularPontuacao,
 } from '@/services/admin/query'
-import type { IAdminBatchResponse } from '@/services/admin/type'
+import type { ILoteResponse } from '@/services/admin/type'
 import { useListGames } from '@/services/games/query'
 import type { IGame } from '@/services/games/type'
 import { useListGrupos } from '@/services/grupos/query'
-import type { IGrupo } from '@/services/grupos/type'
+import type { ITeam } from '@/services/grupos/type'
 
 export const Route = createFileRoute('/(private)/admin/')({
   component: AdminPage,
@@ -463,7 +463,7 @@ function PutActionsTab({
   games: IGame[]
   isLoadingGames: boolean
   isLoadingTeams: boolean
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   const knockoutGames = useMemo(() => games.filter(isKnockoutGame), [games])
 
@@ -572,7 +572,7 @@ function UpdateParticipantsCard({
   games: IGame[]
   isLoadingGames: boolean
   isLoadingTeams: boolean
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   const mutation = useAtualizarParticipantesJogo()
   const form = useForm<ParticipantsFormData>({
@@ -654,10 +654,10 @@ function BatchParticipantsCard({
   games: IGame[]
   isLoadingGames: boolean
   isLoadingTeams: boolean
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   const mutation = useAtualizarParticipantesLote()
-  const [result, setResult] = useState<IAdminBatchResponse | null>(null)
+  const [result, setResult] = useState<ILoteResponse | null>(null)
   const [rows, setRows] = useState<Record<string, ParticipantsBatchRow>>({})
 
   async function onSubmit() {
@@ -714,7 +714,7 @@ function PostActionsTab({
   games: IGame[]
   isLoadingGames: boolean
   isLoadingTeams: boolean
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   return (
     <div className="space-y-4">
@@ -809,7 +809,7 @@ function ChampionCard({
   teams,
 }: {
   isLoadingTeams: boolean
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   const mutation = useApurarCampeao()
   const form = useForm<ChampionFormData>({
@@ -881,7 +881,10 @@ function InsertResultCard({
   }
 
   return (
-    <ActionCard title="Inserir resultado" description="POST /api/admin/resultado">
+    <ActionCard
+      title="Inserir resultado"
+      description="POST /api/admin/resultado"
+    >
       <ScoreForm
         formId="insert-result-form"
         form={form}
@@ -903,7 +906,7 @@ function BatchResultsCard({
   isLoadingGames: boolean
 }) {
   const mutation = useInserirResultadosLote()
-  const [result, setResult] = useState<IAdminBatchResponse | null>(null)
+  const [result, setResult] = useState<ILoteResponse | null>(null)
   const [rows, setRows] = useState<Record<string, ResultBatchRow>>({})
 
   async function onSubmit() {
@@ -1171,7 +1174,7 @@ function BatchParticipantsEditor({
   onSubmit: () => void | Promise<void>
   rows: Record<string, ParticipantsBatchRow>
   setRows: Dispatch<SetStateAction<Record<string, ParticipantsBatchRow>>>
-  teams: IGrupo[]
+  teams: ITeam[]
 }) {
   if (isLoading) {
     return <Skeleton className="h-48 w-full" />
@@ -1330,7 +1333,7 @@ function TeamSelectField<T extends FieldValues>({
   isLoading: boolean
   label: string
   name: Path<T>
-  teams: IGrupo[]
+  teams: ITeam[]
   valueMode?: 'id' | 'name'
 }) {
   return (
@@ -1476,7 +1479,7 @@ function TextInputField<T extends FieldValues>({
   )
 }
 
-function BatchResult({ result }: { result: IAdminBatchResponse | null }) {
+function BatchResult({ result }: { result: ILoteResponse | null }) {
   if (!result) return null
 
   return (

@@ -1,9 +1,13 @@
 import { api } from '@/lib/api'
-import type { CreateBetInput, IBet, ICreateBet } from './type'
+import type {
+  ICreateBetPayload,
+  ICreateBetResponse,
+  IListUserBetsResponse,
+} from './type'
 
 export async function listBetsByUserId(userId: string) {
   try {
-    const res = await api.get<IBet[]>(`/users/${userId}/bets`)
+    const res = await api.get<IListUserBetsResponse>(`/users/${userId}/bets`)
     return res.data
   } catch (error) {
     console.error('Error listing bets by user ID:', error)
@@ -14,10 +18,10 @@ export async function listBetsByUserId(userId: string) {
 export async function createGameBet(
   userId: string,
   gameId: string,
-  payload: CreateBetInput
+  payload: ICreateBetPayload
 ) {
   try {
-    const res = await api.post<ICreateBet>(
+    const res = await api.post<ICreateBetResponse>(
       `/users/${userId}/games/${gameId}/bets`,
       payload
     )
@@ -31,10 +35,10 @@ export async function createGameBet(
 export async function updateGameBet(
   userId: string,
   betId: string,
-  payload: CreateBetInput
+  payload: ICreateBetPayload
 ) {
   try {
-    const res = await api.put<ICreateBet>(
+    const res = await api.put<ICreateBetResponse>(
       `bets/${betId}/users/${userId}`,
       payload
     )

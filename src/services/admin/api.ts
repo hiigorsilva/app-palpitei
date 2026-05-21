@@ -1,15 +1,18 @@
 import { api } from '@/lib/api'
 import type {
-  IAdminBatchResponse,
-  IAdminDashboard,
-  IAdminMessageResponse,
-  IApurarCampeaoResponse,
+  IAdminCampeaoResponse,
+  IAdminCorrigirResultadoResponse,
+  IAdminDashboardResponse,
+  IAdminParticipantesLoteResponse,
+  IAdminParticipantesResponse,
+  IAdminPopularBaseResponse,
+  IAdminRecalcularResponse,
+  IAdminResultadoResponse,
+  IAdminResultadosLoteResponse,
   IAtualizarParticipantesLotePayload,
   IAtualizarParticipantesPayload,
   ICorrigirResultadoPayload,
   ILoteResultadosPayload,
-  IPopularBaseResponse,
-  IRecalcularPontuacaoResponse,
   IResultadoPayload,
 } from './type'
 
@@ -18,7 +21,7 @@ const adminHeaders = {
 }
 
 export async function getAdminDashboard() {
-  const res = await api.get<IAdminDashboard>('/admin/dashboard', {
+  const res = await api.get<IAdminDashboardResponse>('/admin/dashboard', {
     headers: adminHeaders,
   })
 
@@ -29,7 +32,7 @@ export async function corrigirResultado(
   gameId: string,
   payload: ICorrigirResultadoPayload
 ) {
-  const res = await api.put<IAdminMessageResponse>(
+  const res = await api.put<IAdminCorrigirResultadoResponse>(
     `/admin/resultado/${gameId}`,
     payload,
     { headers: adminHeaders }
@@ -42,7 +45,7 @@ export async function atualizarParticipantesJogo(
   gameId: string,
   payload: IAtualizarParticipantesPayload
 ) {
-  const res = await api.put<IAdminMessageResponse>(
+  const res = await api.put<IAdminParticipantesResponse>(
     `/admin/jogos/${gameId}/participantes`,
     payload,
     { headers: adminHeaders }
@@ -54,7 +57,7 @@ export async function atualizarParticipantesJogo(
 export async function atualizarParticipantesLote(
   payload: IAtualizarParticipantesLotePayload
 ) {
-  const res = await api.put<IAdminBatchResponse>(
+  const res = await api.put<IAdminParticipantesLoteResponse>(
     '/admin/jogos/participantes/lote',
     payload,
     { headers: adminHeaders }
@@ -64,7 +67,7 @@ export async function atualizarParticipantesLote(
 }
 
 export async function recalcularPontuacao() {
-  const res = await api.post<IRecalcularPontuacaoResponse>(
+  const res = await api.post<IAdminRecalcularResponse>(
     '/admin/recalcular',
     undefined,
     { headers: adminHeaders }
@@ -74,7 +77,7 @@ export async function recalcularPontuacao() {
 }
 
 export async function apurarCampeao(teamId: string) {
-  const res = await api.post<IApurarCampeaoResponse>(
+  const res = await api.post<IAdminCampeaoResponse>(
     '/admin/campeao',
     { teamId },
     { headers: adminHeaders }
@@ -84,7 +87,7 @@ export async function apurarCampeao(teamId: string) {
 }
 
 export async function inserirResultadosLote(payload: ILoteResultadosPayload) {
-  const res = await api.post<IAdminBatchResponse>(
+  const res = await api.post<IAdminResultadosLoteResponse>(
     '/admin/resultados/lote',
     payload,
     { headers: adminHeaders }
@@ -94,7 +97,7 @@ export async function inserirResultadosLote(payload: ILoteResultadosPayload) {
 }
 
 export async function inserirResultado(payload: IResultadoPayload) {
-  const res = await api.post<IAdminMessageResponse>(
+  const res = await api.post<IAdminResultadoResponse>(
     '/admin/resultado',
     payload,
     { headers: adminHeaders }
@@ -104,7 +107,7 @@ export async function inserirResultado(payload: IResultadoPayload) {
 }
 
 export async function popularBaseLocal() {
-  const res = await api.post<IPopularBaseResponse>(
+  const res = await api.post<IAdminPopularBaseResponse>(
     '/admin/popular-base',
     undefined,
     { headers: adminHeaders }

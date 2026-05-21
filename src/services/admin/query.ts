@@ -11,21 +11,24 @@ import {
   recalcularPontuacao,
 } from './api'
 import type {
-  IAdminBatchResponse,
-  IAdminDashboard,
-  IAdminMessageResponse,
-  IApurarCampeaoResponse,
+  IAdminCampeaoResponse,
+  IAdminCorrigirResultadoResponse,
+  IAdminDashboardResponse,
+  IAdminParticipantesLoteResponse,
+  IAdminParticipantesResponse,
+  IAdminPopularBaseResponse,
+  IAdminRecalcularResponse,
+  IAdminResultadoResponse,
+  IAdminResultadosLoteResponse,
   IAtualizarParticipantesLotePayload,
   IAtualizarParticipantesPayload,
   ICorrigirResultadoPayload,
   ILoteResultadosPayload,
-  IPopularBaseResponse,
-  IRecalcularPontuacaoResponse,
   IResultadoPayload,
 } from './type'
 
 export function useAdminDashboard(enabled: boolean) {
-  return useQuery<IAdminDashboard, Error>({
+  return useQuery<IAdminDashboardResponse, Error>({
     queryKey: ['admin', 'dashboard'],
     queryFn: getAdminDashboard,
     enabled,
@@ -36,7 +39,7 @@ export function useCorrigirResultado() {
   const queryClient = useQueryClient()
 
   return useMutation<
-    IAdminMessageResponse,
+    IAdminCorrigirResultadoResponse,
     Error,
     { gameId: string; payload: ICorrigirResultadoPayload }
   >({
@@ -53,7 +56,7 @@ export function useAtualizarParticipantesJogo() {
   const queryClient = useQueryClient()
 
   return useMutation<
-    IAdminMessageResponse,
+    IAdminParticipantesResponse,
     Error,
     { gameId: string; payload: IAtualizarParticipantesPayload }
   >({
@@ -70,7 +73,7 @@ export function useAtualizarParticipantesLote() {
   const queryClient = useQueryClient()
 
   return useMutation<
-    IAdminBatchResponse,
+    IAdminParticipantesLoteResponse,
     Error,
     IAtualizarParticipantesLotePayload
   >({
@@ -85,7 +88,7 @@ export function useAtualizarParticipantesLote() {
 export function useRecalcularPontuacao() {
   const queryClient = useQueryClient()
 
-  return useMutation<IRecalcularPontuacaoResponse, Error>({
+  return useMutation<IAdminRecalcularResponse, Error>({
     mutationFn: recalcularPontuacao,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin'] })
@@ -98,7 +101,7 @@ export function useRecalcularPontuacao() {
 export function useApurarCampeao() {
   const queryClient = useQueryClient()
 
-  return useMutation<IApurarCampeaoResponse, Error, string>({
+  return useMutation<IAdminCampeaoResponse, Error, string>({
     mutationFn: apurarCampeao,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin'] })
@@ -111,7 +114,11 @@ export function useApurarCampeao() {
 export function useInserirResultadosLote() {
   const queryClient = useQueryClient()
 
-  return useMutation<IAdminBatchResponse, Error, ILoteResultadosPayload>({
+  return useMutation<
+    IAdminResultadosLoteResponse,
+    Error,
+    ILoteResultadosPayload
+  >({
     mutationFn: inserirResultadosLote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin'] })
@@ -124,7 +131,7 @@ export function useInserirResultadosLote() {
 export function useInserirResultado() {
   const queryClient = useQueryClient()
 
-  return useMutation<IAdminMessageResponse, Error, IResultadoPayload>({
+  return useMutation<IAdminResultadoResponse, Error, IResultadoPayload>({
     mutationFn: inserirResultado,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin'] })
@@ -137,7 +144,7 @@ export function useInserirResultado() {
 export function usePopularBaseLocal() {
   const queryClient = useQueryClient()
 
-  return useMutation<IPopularBaseResponse, Error>({
+  return useMutation<IAdminPopularBaseResponse, Error>({
     mutationFn: popularBaseLocal,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin'] })

@@ -8,11 +8,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
-import type { IRanking } from '@/services/ranking/type'
+import type { IRankingItem } from '@/services/ranking/type'
 import { Card } from './ui/card'
 
 interface RankingTableProps {
-  data: IRanking[]
+  data: IRankingItem[]
   variant?: 'summary' | 'full'
 }
 

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/tooltip'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
-import type { IGrupo } from '@/services/grupos/type'
+import type { ITeam } from '@/services/grupos/type'
 
 // Root: Controla o Grid
 interface GroupGridProps {
@@ -44,7 +44,7 @@ const GroupRoot = ({ children, title }: GroupRootProps) => (
 
 // Item: A linha do time
 interface GroupTeamProps {
-  team: IGrupo
+  team: ITeam
 }
 const GroupTeam = ({ team }: GroupTeamProps) => {
   const flagCode = team.flag_icon

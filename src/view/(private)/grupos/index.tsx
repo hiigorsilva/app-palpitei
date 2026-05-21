@@ -22,7 +22,7 @@ import { getStorageAuth } from '@/helpers/auth'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import { useListGrupos } from '@/services/grupos/query'
-import type { IGrupo } from '@/services/grupos/type'
+import type { ITeam } from '@/services/grupos/type'
 import { useUpdatePalpiteCampeao } from '@/services/users/query'
 import { Group } from './-components/grid-teams'
 
@@ -39,7 +39,7 @@ export const Route = createFileRoute('/(private)/grupos/')({
 
 function GruposPage() {
   const [open, setOpen] = useState(false)
-  const [selectedTeam, setSelectedTeam] = useState<IGrupo | null>(null)
+  const [selectedTeam, setSelectedTeam] = useState<ITeam | null>(null)
 
   const userId = getStorageAuth()?.id
   const grupos = useListGrupos(userId)
@@ -54,7 +54,7 @@ function GruposPage() {
         else acc.push({ group: current.group, teams: [current] })
         return acc
       },
-      [] as { group: string; teams: IGrupo[] }[]
+      [] as { group: string; teams: ITeam[] }[]
     )
   }
 
@@ -70,7 +70,7 @@ function GruposPage() {
     }
   }
 
-  function handleOpenFavoriteTeamDialog(team: IGrupo) {
+  function handleOpenFavoriteTeamDialog(team: ITeam) {
     setSelectedTeam(team)
     setOpen(true)
   }
@@ -129,7 +129,7 @@ type FavoriteTeamFormData = z.infer<typeof favoriteTeamSchema>
 type FavoriteTeamToChampionProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  team: IGrupo | null
+  team: ITeam | null
   className?: string
 }
 

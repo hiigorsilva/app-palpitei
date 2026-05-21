@@ -17,11 +17,11 @@ import {
 import { formatDateWithoutYear } from '@/helpers/date'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
-import type { IBet } from '@/services/bets/type'
+import type { IBetExpanded } from '@/services/bets/type'
 import { CreateApostaDrawer } from './create-aposta-drawer'
 
 type ApostaCardItemProps = ComponentProps<'div'> & {
-  bet: IBet
+  bet: IBetExpanded
 }
 
 export function ApostaCardItem({

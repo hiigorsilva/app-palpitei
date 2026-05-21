@@ -90,13 +90,14 @@ export function UserDetailsCard({
   const { data: user } = useGetUserId(userData?.id)
   if (!user) return null
 
-  const progressoParaProximoNivel =
-    user.proximo_nivel.minimoPercentual > 0
+  const progressoParaProximoNivel = user.proximo_nivel
+    ? user.proximo_nivel.minimoPercentual > 0
       ? Math.min(
           (user.percentual / user.proximo_nivel.minimoPercentual) * 100,
           100
         )
       : 0
+    : 0
 
   const positionStyles = getPositionStyles(position)
   const levelColor = getLevelColor(user.nivel_atual)
@@ -227,7 +228,9 @@ export function UserDetailsCard({
             <CalendarIcon className="h-4 w-4" />
             <span>
               Participando desde{' '}
-              {formatDate(user.created_at) ?? 'data não informada'}
+              {user.created_at
+                ? formatDate(user.created_at)
+                : 'data não informada'}
             </span>
           </div>
         </div>
