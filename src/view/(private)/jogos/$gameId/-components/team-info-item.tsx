@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
+import { cn } from '@/lib/utils'
 import type { IGame } from '@/services/games/type'
 
 type TeamInfoItemProps = ComponentProps<'li'> & {
@@ -7,7 +8,12 @@ type TeamInfoItemProps = ComponentProps<'li'> & {
   team: 'a' | 'b'
 }
 
-export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
+export function TeamInfoItem({
+  game,
+  team,
+  className,
+  ...props
+}: TeamInfoItemProps) {
   const teamInfo = team === 'a' ? game.team_a_info : game.team_b_info
   const flagCode = teamInfo?.flag_icon
     ? getCountryCodeFromEmoji(teamInfo.flag_icon)
@@ -15,9 +21,14 @@ export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
   const teamName = team === 'a' ? game.team_a : game.team_b
 
   return (
-    <li className="relative flex flex-col justify-start items-center gap-2">
-      {/* FLAG */}
-      <div className="relative aspect-video w-48 h-auto bg-muted rounded ring-1 ring-ring">
+    <li
+      className={cn(
+        'relative flex min-w-0 flex-col items-center justify-start gap-2 text-center',
+        className
+      )}
+      {...props}
+    >
+      <div className="relative aspect-video min-w-40 w-fit h-auto overflow-hidden rounded-md bg-muted ring-1 ring-ring/40 shadow-sm">
         <img
           className="absolute object-cover w-full h-full"
           src={
@@ -28,7 +39,7 @@ export function TeamInfoItem({ game, team }: TeamInfoItemProps) {
           alt={teamName}
         />
       </div>
-      <h2 className="font-semibold text-lg text-foreground text-nowrap">
+      <h2 className="max-w-full truncate font-semibold text-base text-foreground sm:text-lg">
         {teamName}
       </h2>
     </li>

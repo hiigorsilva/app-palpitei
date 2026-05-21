@@ -7,6 +7,10 @@ export const imagesUrl = {
     url: 'https://media.istockphoto.com/id/1980276924/vector/no-photo-thumbnail-graphic-element-no-found-or-available-image-in-the-gallery-or-album-flat.jpg?s=612x612&w=0&k=20&c=ZBE3NqfzIeHGDPkyvulUw14SaWfDj2rZtyiKv3toItk=',
     alt_text: 'Bandeira placeholder',
   },
+  bannerDetailsGame: {
+    url: 'https://fistf.com/wp-content/uploads/2017/08/cropped-UEFA-Champions-League-Stadium-Wallpaper.jpg',
+    alt_text: 'Banner de detalhes do jogo',
+  },
 }
 
 export function getCountryCodeFromEmoji(emoji: string): string {
@@ -23,22 +27,3 @@ export function getCountryCodeFromEmoji(emoji: string): string {
     .join('')
     .toLowerCase()
 }
-
-// export function getFaseTitle(fase: string) {
-//   switch (fase) {
-//     case '16_AVOS':
-//       return 'Fase 16 Avos'
-//     case 'OITAVAS':
-//       return 'Oitavas de Final'
-//     case 'QUARTAS':
-//       return 'Quartas de Final'
-//     case 'SEMI':
-//       return 'Semi de Final'
-//     case 'FINAL':
-//       return 'Finais'
-//     case 'TERCEIRO':
-//       return 'Terceiro Lugar'
-//     default:
-//       return ''
-//   }
-// }
