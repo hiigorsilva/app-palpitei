@@ -1,10 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { TrophyIcon } from 'lucide-react'
+import {
+  CalendarDaysIcon,
+  MedalIcon,
+  TrophyIcon,
+  UsersRoundIcon,
+} from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Loading } from '@/components/loading'
 import { NextGames } from '@/components/next-games'
 import { RankingTable } from '@/components/ranking-table'
 import { TitleContainer } from '@/components/title-container'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Users } from '@/components/users'
 import { getStorageAuth } from '@/helpers/auth'
@@ -24,6 +30,36 @@ export const Route = createFileRoute('/(private)/')({
   }),
 })
 
+type MetricCardProps = {
+  icon: ReactNode
+  label: string
+  value: ReactNode
+  helper: string
+}
+
+function MetricCard({ icon, label, value, helper }: MetricCardProps) {
+  return (
+    <Card className="gap-3 rounded-lg p-4">
+      <div className="flex items-center justify-start gap-3">
+        <span className="flex size-9 items-center justify-center rounded-md bg-primary/15 text-primary">
+          {icon}
+        </span>
+        <span className="text-xs font-medium text-muted-foreground">
+          {label}
+        </span>
+      </div>
+      <div className="space-y-1">
+        <strong className="block truncate text-2xl text-center font-semibold leading-none text-foreground">
+          {value}
+        </strong>
+        <span className="block truncate text-xs text-center text-muted-foreground">
+          {helper}
+        </span>
+      </div>
+    </Card>
+  )
+}
+
 function HomePage() {
   const userId = getStorageAuth()?.id
   const games = useListDailyGames(userId)
@@ -36,50 +72,80 @@ function HomePage() {
   if (!games.data) return <Loading />
   if (!ranking.data) return <Loading />
 
+  const leader = ranking.data[0]
+
   return (
-    <section className="min-w-0 w-full flex flex-col gap-6">
-      <TitleContainer>
-        <Button
-          className={'bg-muted cursor-auto hover:bg-muted'}
-          size={'icon'}
-          type="button"
-        >
-          <TrophyIcon />
-        </Button>
-        Dashboard do Bolão Copa do Mundo 2026
-      </TitleContainer>
+    <section className="flex min-w-0 w-full flex-col gap-6">
+      <div className="rounded-xl border bg-card p-5 shadow-xs sm:p-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0 space-y-3">
+            <Badge
+              variant="secondary"
+              className="h-7 gap-1.5 rounded-md px-2.5 text-xs"
+            >
+              <TrophyIcon className="size-3.5" />
+              Copa do Mundo FIFA 2026
+            </Badge>
+            <div className="space-y-2">
+              <h1 className="text-2xl font-semibold tracking-normal text-foreground sm:text-3xl">
+                Dashboard do Bolão
+              </h1>
+              <p className="max-w-2xl text-sm text-pretty leading-6 text-muted-foreground">
+                Acompanhe os próximos jogos, veja os palpites ativos e siga a
+                disputa entre os participantes em um só lugar.
+              </p>
+            </div>
+          </div>
 
-      <p className="text-muted-foreground">
-        Acompanhe os próximos jogos, confira o ranking dos participantes e veja
-        um resumo dos jogos do dia.
-      </p>
-
-      <div className="w-full h-full flex flex-col gap-2">
-        <TitleContainer>Próximos Jogos</TitleContainer>
-        <Card className="bg-transparent p-2 overflow-hidden">
-          <NextGames nextGames={nextGames.data} />
-        </Card>
+          <div className="grid gap-3 sm:grid-cols-3 lg:min-w-130">
+            <MetricCard
+              icon={<CalendarDaysIcon className="size-4" />}
+              label="Hoje"
+              value={games.data.length}
+              helper="jogos programados"
+            />
+            <MetricCard
+              icon={<UsersRoundIcon className="size-4" />}
+              label="Participantes"
+              value={users.data.length}
+              helper="no bolão"
+            />
+            <MetricCard
+              icon={<MedalIcon className="size-4" />}
+              label="Líder"
+              value={leader?.name ?? 'Sem ranking'}
+              helper={
+                leader ? `${leader.pontos_total} pontos` : 'aguardando dados'
+              }
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-6">
-        {/* LEFTSIDE */}
-        <div className="col-span-3 w-full flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
+      <section className="flex min-w-0 flex-col gap-2">
+        <TitleContainer>Próximos Jogos</TitleContainer>
+        <div className="min-w-0 overflow-hidden rounded-lg border bg-card p-2 shadow-xs">
+          <NextGames nextGames={nextGames.data} />
+        </div>
+      </section>
+
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
+        <div className="flex min-w-0 flex-col gap-6">
+          <section className="flex min-w-0 flex-col gap-2">
             <TitleContainer>Ranking do Bolão</TitleContainer>
             <RankingTable variant="full" data={ranking.data} />
-          </div>
+          </section>
 
-          <div className="flex flex-col gap-2">
+          <section className="flex min-w-0 flex-col gap-2">
             <TitleContainer>Participantes</TitleContainer>
             <Users users={users.data} />
-          </div>
+          </section>
         </div>
 
-        {/* RIGHTSIDE */}
-        <div className="col-span-2 w-full h-full flex flex-col gap-2">
+        <aside className="flex min-w-0 flex-col gap-2">
           <TitleContainer>Jogos do Dia</TitleContainer>
           <DailyMatchesSummary matches={games.data} />
-        </div>
+        </aside>
       </div>
     </section>
   )
