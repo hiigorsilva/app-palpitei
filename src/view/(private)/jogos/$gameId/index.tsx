@@ -53,7 +53,8 @@ function GameIdPage() {
 
       <DisplayGame game={game.data} />
 
-      <div className="min-w-0 w-full">
+      <div className="min-w-0 w-full flex flex-col gap-2">
+        <TitleContainer>Próximos Jogos</TitleContainer>
         <NextGames nextGames={nextGames.data} />
       </div>
     </section>

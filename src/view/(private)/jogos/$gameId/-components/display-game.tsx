@@ -32,12 +32,12 @@ export function DisplayGame({ game }: DisplayGameProps) {
     return null
   }
 
-  function getStatusGame(finishGame: boolean) {
+  function getStatusGameColor(finishGame: boolean) {
     if (finishGame) {
-      return 'bg-primary/15 text-primary border border-primary/20'
+      return 'bg-red-400/15 text-red-400 border border-red-400/20'
     }
     if (!finishGame) {
-      return 'bg-red-400/15 text-red-400 border border-red-400/20'
+      return 'bg-primary/15 text-primary border border-primary/20'
     }
     return ''
   }
@@ -77,7 +77,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
               </span>
             </Badge>
             <Badge
-              className={`h-7 gap-1.5 ${getStatusGame(game.finish_game)} rounded-md px-2.5 text-xs`}
+              className={`h-7 gap-1.5 ${getStatusGameColor(game.finish_game)} rounded-md px-2.5 text-xs`}
             >
               <ClockIcon className="size-3.5" />
               {statusLabel}
