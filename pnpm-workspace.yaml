@@ -1,0 +1,3 @@
+allowBuilds:
+  git-commit-msg-linter: true
+  msw: true
