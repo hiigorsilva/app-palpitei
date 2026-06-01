@@ -121,6 +121,11 @@ export function UserDetailsCard({
       (a, b) =>
         new Date(b.data_hora).getTime() - new Date(a.data_hora).getTime()
     )
+  const totalAcertos = finishedBets.filter(bet => bet.acertou).length
+  const aproveitamento =
+    finishedBets.length > 0
+      ? Math.round((totalAcertos / finishedBets.length) * 100)
+      : 0
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -160,7 +165,7 @@ export function UserDetailsCard({
           <div className="grid grid-cols-2 gap-3">
             <InfoItem
               icon={<TargetIcon className="h-5 w-5 text-emerald-500" />}
-              label="Aproveitamento"
+              label="Cobertura de Apostas"
               value={`${user.percentual.toFixed(1)}%`}
             />
             <InfoItem
@@ -169,9 +174,18 @@ export function UserDetailsCard({
               value={user.jogos_apostados}
             />
             <InfoItem
+              icon={<CheckCircle2Icon className="h-5 w-5 text-green-500" />}
+              label="Aproveitamento"
+              value={
+                finishedBets.length > 0
+                  ? `${aproveitamento}%`
+                  : 'Sem jogos encerrados'
+              }
+            />
+            <InfoItem
               icon={<TrendingUpIcon className="h-5 w-5 text-orange-500" />}
-              label="Total de Jogos"
-              value={user.total_jogos}
+              label="Acertos"
+              value={`${totalAcertos}/${finishedBets.length}`}
             />
             <InfoItem
               icon={<GiftIcon className="h-5 w-5 text-pink-500" />}
