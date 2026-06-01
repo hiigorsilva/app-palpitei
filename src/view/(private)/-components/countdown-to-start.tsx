@@ -15,7 +15,13 @@ export function CountdownToStart({
   className,
   ...props
 }: CountdownToStartProps) {
-  const [open, setOpen] = useState(true)
+  // atribuir true quando for a página inicial, para mostrar o modal
+  function isHomePage() {
+    if (typeof window === 'undefined') return false
+    return window.location.pathname === '/'
+  }
+
+  const [open, setOpen] = useState(isHomePage())
   const [now, setNow] = useState(() => DateNow())
 
   const firstGameDate = '2026-06-09T16:00:00-03:00'

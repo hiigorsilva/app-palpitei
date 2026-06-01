@@ -29,7 +29,11 @@ export function NextGames({ nextGames, className, ...props }: NextGamesProps) {
           className="group/link block min-fit focus-visible:outline-none"
         >
           <Card className="relative h-full gap-3 rounded-lg p-4 transition group-hover/link:-translate-y-0.5 group-hover/link:ring-primary/30 group-hover/link:shadow-sm group-focus-visible/link:ring-3 group-focus-visible/link:ring-ring/50">
-            {game.has_palpite && <IconApostaTooltip />}
+            {game.has_palpite && (
+              <IconApostaTooltip
+                usouCartaDobroPontos={game.usou_carta_dobro_pontos}
+              />
+            )}
 
             <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
               <CalendarDaysIcon className="size-3.5 shrink-0" />

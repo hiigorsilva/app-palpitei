@@ -3,6 +3,7 @@ import type {
   ICreateBetPayload,
   ICreateBetResponse,
   IListUserBetsResponse,
+  IUpdateBetPayload,
 } from './type'
 
 export async function listBetsByUserId(userId: string) {
@@ -35,7 +36,7 @@ export async function createGameBet(
 export async function updateGameBet(
   userId: string,
   betId: string,
-  payload: ICreateBetPayload
+  payload: IUpdateBetPayload
 ) {
   try {
     const res = await api.put<ICreateBetResponse>(

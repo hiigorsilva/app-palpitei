@@ -110,7 +110,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
               </Badge>
             )}
 
-            <div className="flex w-full flex-col items-center gap-2 sm:flex-row sm:justify-center">
+            <div className="flex w-full flex-col items-center gap-2">
               <CreateApostaDrawer
                 bet={gameBet ?? game}
                 mode={hasBet ? 'edit' : 'create'}
@@ -124,7 +124,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
               </CreateApostaDrawer>
 
               {game.finish_game && (
-                <span className="text-center text-xs text-muted-foreground">
+                <span className="block text-center text-xs text-muted-foreground">
                   Apostas encerradas para esta partida.
                 </span>
               )}

@@ -15,7 +15,11 @@ export function GameItemCard({ game, className, ...props }: Props) {
       className={cn('relative w-48 min-w-0 gap-2 p-3', className)}
       {...props}
     >
-      {game.has_palpite && <IconApostaTooltip />}
+      {game.has_palpite && (
+        <IconApostaTooltip
+          usouCartaDobroPontos={game.usou_carta_dobro_pontos}
+        />
+      )}
       <h3 className="text-xs text-muted-foreground">
         {formatDateWithoutYear(game.data_hora)}
       </h3>

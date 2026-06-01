@@ -49,6 +49,7 @@ export interface ICartaHistoricoItem {
   team_b: string
   data_hora: string
   palpite: TPalpite
+  usou_carta_dobro_pontos: boolean
   acertou: boolean
   pontos: number
 }

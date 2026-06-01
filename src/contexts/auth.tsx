@@ -17,17 +17,17 @@ import {
 } from '@/helpers/auth'
 import { createUser } from '@/services/login/api'
 import type { ILogin } from '@/services/login/type'
-import type { IUser } from '@/services/users/type'
+import type { IUserBasic } from '@/services/users/type'
 
 export interface IAuthContext {
-  user: IUser | null
+  user: IUserBasic | null
   admin: {
     username: string
     password: string
   } | null
   isAuthenticated: boolean
   isAdminAuthenticated: boolean
-  login: (data: ILogin) => Promise<IUser>
+  login: (data: ILogin) => Promise<IUserBasic>
   adminLogin: (data: {
     username: string
     password: string
@@ -40,7 +40,7 @@ const AuthContext = createContext<IAuthContext | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
-  const [user, setUser] = useState<IUser | null>(() => getStorageAuth())
+  const [user, setUser] = useState<IUserBasic | null>(() => getStorageAuth())
   const [admin, setAdmin] = useState<{
     username: string
     password: string

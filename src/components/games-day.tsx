@@ -28,7 +28,11 @@ const MatchHeader = ({ match }: MatchHeaderProps) => (
     <Badge
       className={`${match.has_palpite ? 'bg-primary/10 text-primary' : 'bg-foreground/10 text-muted-foreground'} mx-auto`}
     >
-      {match.has_palpite ? 'Possui aposta' : 'Nenhuma aposta'}
+      {match.has_palpite
+        ? match.usou_carta_dobro_pontos
+          ? 'Aposta 2x'
+          : 'Possui aposta'
+        : 'Nenhuma aposta'}
     </Badge>
 
     <div className="flex justify-end items-center text-xs text-muted-foreground">

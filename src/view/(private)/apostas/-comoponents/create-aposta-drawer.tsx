@@ -16,6 +16,7 @@ import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getStorageAuth } from '@/helpers/auth'
+import { ErrorResponseApi } from '@/helpers/error'
 import { getCountryCodeFromEmoji } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import {
@@ -39,7 +40,7 @@ const createApostaFormSchema = z.object({
   palpite: z.enum(palpiteOptions, {
     error: 'Selecione um palpite para confirmar sua aposta.',
   }),
-  useDoublePoints: z.boolean(),
+  usar_carta_dobro_pontos: z.boolean(),
 })
 
 type CreateApostaFormData = z.infer<typeof createApostaFormSchema>
@@ -62,7 +63,7 @@ export function CreateApostaDrawer({
     mode: 'onChange',
     defaultValues: {
       palpite: undefined,
-      useDoublePoints: false,
+      usar_carta_dobro_pontos: false,
     },
   })
 
@@ -80,21 +81,29 @@ export function CreateApostaDrawer({
 
   const flagTeamA = `/country-flags/${getCountryCodeFromEmoji(bet.team_a_info?.flag_icon || '').toLowerCase()}.webp`
   const flagTeamB = `/country-flags/${getCountryCodeFromEmoji(bet.team_b_info?.flag_icon || '').toLowerCase()}.webp`
+  const canShowDoublePointsOption = Boolean(
+    user &&
+      (user.carta_dobro_pontos > 0 || betDataFiltered?.usou_carta_dobro_pontos)
+  )
 
   async function onSubmit(data: CreateApostaFormData) {
     const payload = {
       palpite: data.palpite,
-      usou_carta_dobro_pontos: data.useDoublePoints,
+      usar_carta_dobro_pontos: data.usar_carta_dobro_pontos,
     }
 
-    if (mode === 'edit' && betDataFiltered) {
-      await mutationEdit.mutateAsync(payload)
+    try {
+      if (mode === 'edit' && betDataFiltered) {
+        await mutationEdit.mutateAsync(payload)
+      }
+      if (mode === 'create' && !betDataFiltered) {
+        await mutationCreate.mutateAsync(payload)
+      }
+      setOpen(false)
+      form.reset()
+    } catch (error) {
+      ErrorResponseApi(error)
     }
-    if (mode === 'create' && !betDataFiltered) {
-      await mutationCreate.mutateAsync(payload)
-    }
-    setOpen(false)
-    form.reset()
   }
 
   function handleOpenChange(nextOpen: boolean) {
@@ -113,7 +122,10 @@ export function CreateApostaDrawer({
   useEffect(() => {
     if (betDataFiltered) {
       form.setValue('palpite', betDataFiltered.palpite)
-      form.setValue('useDoublePoints', betDataFiltered.usou_carta_dobro_pontos)
+      form.setValue(
+        'usar_carta_dobro_pontos',
+        betDataFiltered.usou_carta_dobro_pontos
+      )
     }
   }, [betDataFiltered, form])
 
@@ -191,7 +203,7 @@ export function CreateApostaDrawer({
                 )}
               />
 
-              {user && user.carta_dobro_pontos > 0 && (
+              {canShowDoublePointsOption && user && (
                 <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
@@ -201,14 +213,16 @@ export function CreateApostaDrawer({
                       <p className="text-sm text-muted-foreground">
                         Você possui {user.carta_dobro_pontos}{' '}
                         {user.carta_dobro_pontos === 1 ? 'carta' : 'cartas'}{' '}
-                        disponível
+                        {user.carta_dobro_pontos === 1
+                          ? 'disponível'
+                          : 'disponíveis'}
                       </p>
                     </div>
                   </div>
 
                   <FormField
                     control={form.control}
-                    name="useDoublePoints"
+                    name="usar_carta_dobro_pontos"
                     render={({ field }) => (
                       <FormItem>
                         <RadioGroup

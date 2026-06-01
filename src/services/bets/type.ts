@@ -16,10 +16,12 @@ export interface IBetSimple {
 
 export interface ICreateBetPayload {
   palpite: TPalpite
-  usou_carta_dobro_pontos: boolean
+  usar_carta_dobro_pontos?: boolean
 }
 
-/** PUT /api/games/{id}/users/{userId}/palpite — 200 */
+export type IUpdateBetPayload = ICreateBetPayload
+
+/** POST /api/users/{userId}/games/{gameId}/bets — 201 */
 export type ICreateBetResponse = IBetSimple
 
 /** Aposta expandida com dados do jogo (usada em listagens) */

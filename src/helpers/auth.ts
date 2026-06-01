@@ -1,9 +1,9 @@
-import type { IUser } from '@/services/users/type'
+import type { IUserBasic } from '@/services/users/type'
 
 const STORAGE_KEY = '@palpitei:auth'
 const ADMIN_STORAGE_KEY = '@palpitei:admin-auth'
 
-type AuthUser = IUser
+type AuthUser = IUserBasic
 
 type AdminAuthData = {
   username: string
