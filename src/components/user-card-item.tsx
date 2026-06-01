@@ -1,5 +1,7 @@
 import {
   CalendarIcon,
+  CheckCircle2Icon,
+  ClockIcon,
   GiftIcon,
   SparklesIcon,
   TargetIcon,
@@ -9,6 +11,8 @@ import {
 import type { ComponentProps, ReactNode } from 'react'
 import { formatDate } from '@/helpers/date'
 import { cn } from '@/lib/utils'
+import { useGetBetsByUserId } from '@/services/bets/query'
+import type { IBetExpanded } from '@/services/bets/type'
 import { useGetUserId } from '@/services/users/query'
 import type { IUser } from '@/services/users/type'
 import { Badge } from './ui/badge'
@@ -20,6 +24,8 @@ import {
   DialogTitle,
 } from './ui/dialog'
 import { Progress } from './ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 type UserDetailsCardProps = ComponentProps<'div'> & {
   open: boolean
@@ -88,6 +94,7 @@ export function UserDetailsCard({
   ...props
 }: UserDetailsCardProps) {
   const { data: user } = useGetUserId(userData?.id)
+  const bets = useGetBetsByUserId(userData?.id)
   if (!user) return null
 
   const progressoParaProximoNivel = user.proximo_nivel
@@ -101,6 +108,19 @@ export function UserDetailsCard({
 
   const positionStyles = getPositionStyles(position)
   const levelColor = getLevelColor(user.nivel_atual)
+  const userBets = bets.data ?? []
+  const upcomingBets = userBets
+    .filter(bet => !bet.finish_game)
+    .sort(
+      (a, b) =>
+        new Date(a.data_hora).getTime() - new Date(b.data_hora).getTime()
+    )
+  const finishedBets = userBets
+    .filter(bet => bet.finish_game)
+    .sort(
+      (a, b) =>
+        new Date(b.data_hora).getTime() - new Date(a.data_hora).getTime()
+    )
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -224,6 +244,48 @@ export function UserDetailsCard({
             </div>
           )}
 
+          <div className="rounded-lg border bg-card p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h4 className="font-medium">Apostas realizadas</h4>
+              <Badge variant="secondary">{userBets.length}</Badge>
+            </div>
+
+            <Tabs defaultValue="upcoming" className="gap-3">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="upcoming">
+                  <ClockIcon className="size-4" />
+                  Futuras
+                  <Badge variant="secondary" className="ml-1 px-1.5">
+                    {upcomingBets.length}
+                  </Badge>
+                </TabsTrigger>
+                <TabsTrigger value="finished">
+                  <CheckCircle2Icon className="size-4" />
+                  Encerradas
+                  <Badge variant="secondary" className="ml-1 px-1.5">
+                    {finishedBets.length}
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="upcoming" className="mt-0">
+                <ParticipantBetsList
+                  bets={upcomingBets}
+                  emptyMessage="Nenhuma aposta futura realizada."
+                  isLoading={bets.isLoading}
+                />
+              </TabsContent>
+
+              <TabsContent value="finished" className="mt-0">
+                <ParticipantBetsList
+                  bets={finishedBets}
+                  emptyMessage="Nenhuma aposta encerrada ainda."
+                  isLoading={bets.isLoading}
+                />
+              </TabsContent>
+            </Tabs>
+          </div>
+
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarIcon className="h-4 w-4" />
             <span>
@@ -237,6 +299,116 @@ export function UserDetailsCard({
       </DialogContent>
     </Dialog>
   )
+}
+
+type ParticipantBetsListProps = {
+  bets: IBetExpanded[]
+  emptyMessage: string
+  isLoading: boolean
+}
+
+function ParticipantBetsList({
+  bets,
+  emptyMessage,
+  isLoading,
+}: ParticipantBetsListProps) {
+  if (isLoading) {
+    return (
+      <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
+        Carregando apostas...
+      </div>
+    )
+  }
+
+  if (bets.length === 0) {
+    return (
+      <div className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
+        {emptyMessage}
+      </div>
+    )
+  }
+
+  return (
+    <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+      {bets.map(bet => (
+        <ParticipantBetItem key={bet.id} bet={bet} />
+      ))}
+    </div>
+  )
+}
+
+type ParticipantBetItemProps = {
+  bet: IBetExpanded
+}
+
+function ParticipantBetItem({ bet }: ParticipantBetItemProps) {
+  const palpiteLabel = getPalpiteLabel(bet)
+
+  return (
+    <div className="rounded-md border bg-muted/30 p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <p className="truncate text-sm font-medium">
+            {bet.team_a} x {bet.team_b}
+          </p>
+        </div>
+        {bet.usou_carta_dobro_pontos && (
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                variant="outline"
+                className="shrink-0 border-amber-500/30 bg-amber-500/10 text-amber-600"
+              >
+                <SparklesIcon className="size-3" />
+                2x
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Carta de dobro de pontos ativada</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">Palpite:</span>
+          <Badge
+            variant="outline"
+            className="border-primary/30 bg-primary/10 text-primary"
+          >
+            {palpiteLabel}
+          </Badge>
+        </div>
+
+        {bet.finish_game ? (
+          <Badge
+            variant="outline"
+            className={cn(
+              bet.acertou
+                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600'
+                : 'border-red-500/30 bg-red-500/10 text-red-600'
+            )}
+          >
+            {bet.acertou ? `+${bet.pontos} pts` : '0 pts'}
+          </Badge>
+        ) : (
+          <Badge
+            variant="outline"
+            className="border-blue-500/30 bg-blue-500/10 text-blue-600"
+          >
+            Em breve
+          </Badge>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function getPalpiteLabel(bet: IBetExpanded) {
+  if (bet.palpite === 'A') return bet.team_a
+  if (bet.palpite === 'B') return bet.team_b
+  return 'Empate'
 }
 
 type InfoItemProps = ComponentProps<'div'> & {
