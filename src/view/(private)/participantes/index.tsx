@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { UserDetailsCard } from '@/components/user-card-item'
 import { cn } from '@/lib/utils'
+import { useRanking } from '@/services/ranking/query'
 import { useListUsers } from '@/services/users/query'
 import type { IUser } from '@/services/users/type'
 
@@ -85,6 +86,7 @@ function getLevelColor(nivel: string) {
 function ParticipantesPage() {
   const navigate = Route.useNavigate()
   const participantes = useListUsers()
+  const ranking = useRanking()
 
   const [openUserCard, setOpenUserCard] = useState(false)
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
@@ -112,6 +114,22 @@ function ParticipantesPage() {
   }
 
   if (!participantes.data) return <Loading />
+  if (!ranking.data) return <Loading />
+
+  const rankingByUserId = new Map(
+    ranking.data.map(item => [item.userId, item] as const)
+  )
+
+  const orderedParticipants = participantes.data.slice().sort((a, b) => {
+    const rankingA = rankingByUserId.get(a.id)
+    const rankingB = rankingByUserId.get(b.id)
+
+    if (rankingA && rankingB) return rankingA.position - rankingB.position
+    if (rankingA) return -1
+    if (rankingB) return 1
+
+    return a.name.localeCompare(b.name, 'pt-BR')
+  })
 
   return (
     <section className="flex flex-col gap-6">
@@ -132,8 +150,9 @@ function ParticipantesPage() {
       </p>
 
       <div className="flex flex-col gap-3">
-        {participantes.data.map((participant, index) => {
-          const position = index + 1
+        {orderedParticipants.map((participant, index) => {
+          const participantRanking = rankingByUserId.get(participant.id)
+          const position = participantRanking?.position ?? index + 1
           const positionStyles = getPositionStyles(position)
           const levelColor = getLevelColor(participant.nivel_atual)
           const progressToNextLevel = getProgressToNextLevel(participant)
@@ -186,6 +205,12 @@ function ParticipantesPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <TrophyIcon className="h-4 w-4" />
+                      <span className="font-medium">
+                        {participantRanking?.pontos_total ?? 0} pts
+                      </span>
+                    </div>
                     <div className="flex items-center gap-1.5">
                       <TargetIcon className="h-4 w-4" />
                       <span className="font-medium">

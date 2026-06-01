@@ -72,9 +72,11 @@ export function CreateApostaDrawer({
 
   const { data: bets } = useGetBetsByUserId(userId!)
   const mutationCreate = useCreateGameBet(userId!, gameId)
-  const mutationEdit = useUpdateGameBet(userId!, String(bet.id))
-
   const betDataFiltered = bets?.find(bet => bet.gameId === gameId) ?? null
+  const mutationEdit = useUpdateGameBet(
+    userId!,
+    String(betDataFiltered?.id ?? bet.id)
+  )
 
   const flagTeamA = `/country-flags/${getCountryCodeFromEmoji(bet.team_a_info?.flag_icon || '').toLowerCase()}.webp`
   const flagTeamB = `/country-flags/${getCountryCodeFromEmoji(bet.team_b_info?.flag_icon || '').toLowerCase()}.webp`
@@ -259,7 +261,8 @@ export function CreateApostaDrawer({
                   disabled={
                     !form.formState.isValid ||
                     mutationCreate.isPending ||
-                    mutationEdit.isPending
+                    mutationEdit.isPending ||
+                    (mode === 'edit' && !betDataFiltered)
                   }
                 >
                   {mutationCreate.isPending || mutationEdit.isPending

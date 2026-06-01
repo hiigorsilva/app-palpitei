@@ -1,16 +1,18 @@
 import { Medal, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { IUser } from '@/services/users/type'
+import type { IRankingItem } from '@/services/ranking/type'
 
 interface MiniRankingProps {
-  users: IUser[]
+  ranking: IRankingItem[]
   currentUserId: string
 }
 
-export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
-  const top3 = users.slice(0, 3)
-  const currentUser = users.find(u => u.id === currentUserId)
-  const currentUserInTop3 = top3.some(u => u.id === currentUserId)
+export function MiniRanking({ ranking, currentUserId }: MiniRankingProps) {
+  const sortedRanking = ranking.slice().sort((a, b) => a.position - b.position)
+
+  const top3 = sortedRanking.slice(0, 3)
+  const currentUser = sortedRanking.find(item => item.userId === currentUserId)
+  const currentUserInTop3 = top3.some(item => item.userId === currentUserId)
 
   const getPositionStyle = (posicao: number) => {
     switch (posicao) {
@@ -45,10 +47,10 @@ export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
       <div className="flex flex-col gap-2">
         {top3.map(user => (
           <div
-            key={user.id}
+            key={user.userId}
             className={cn(
               'flex items-center gap-3 p-2.5 rounded-lg transition-colors',
-              user.id === currentUserId
+              user.userId === currentUserId
                 ? 'bg-primary/5 border border-primary/20'
                 : 'hover:bg-muted/50'
             )}
@@ -56,20 +58,22 @@ export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
             <div
               className={cn(
                 'flex items-center justify-center size-7 rounded-full border',
-                getPositionStyle(47)
+                getPositionStyle(user.position)
               )}
             >
-              {getPositionIcon(47)}
+              {getPositionIcon(user.position)}
             </div>
             <div className="flex-1 min-w-0">
               <p
                 className={cn(
                   'text-sm font-medium truncate',
-                  user.id === currentUserId ? 'text-primary' : 'text-foreground'
+                  user.userId === currentUserId
+                    ? 'text-primary'
+                    : 'text-foreground'
                 )}
               >
                 {user.name}
-                {user.id === currentUserId && (
+                {user.userId === currentUserId && (
                   <span className="text-xs text-muted-foreground ml-1">
                     (você)
                   </span>
@@ -77,7 +81,7 @@ export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
               </p>
             </div>
             <span className="text-sm font-semibold text-foreground">
-              {47}
+              {user.pontos_total}
               <span className="text-xs text-muted-foreground ml-0.5">pts</span>
             </span>
           </div>
@@ -95,10 +99,10 @@ export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
               <div
                 className={cn(
                   'flex items-center justify-center size-7 rounded-full border',
-                  getPositionStyle(1)
+                  getPositionStyle(currentUser.position)
                 )}
               >
-                {getPositionIcon(1)}
+                {getPositionIcon(currentUser.position)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate text-primary">
@@ -109,7 +113,7 @@ export function MiniRanking({ users, currentUserId }: MiniRankingProps) {
                 </p>
               </div>
               <span className="text-sm font-semibold text-foreground">
-                {47}
+                {currentUser.pontos_total}
                 <span className="text-xs text-muted-foreground ml-0.5">
                   pts
                 </span>

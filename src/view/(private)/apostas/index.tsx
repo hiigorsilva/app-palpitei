@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getStorageAuth } from '@/helpers/auth'
 import { useGetBetsByUserId } from '@/services/bets/query'
-import { useListUsers } from '@/services/users/query'
+import { useRanking } from '@/services/ranking/query'
 import { ApostaCardItem } from './-comoponents/aposta-card-item'
 import { MiniRanking } from './-comoponents/mini-ranking'
 
@@ -34,11 +34,12 @@ function ApostasPage() {
   const navigate = Route.useNavigate()
   const user = getStorageAuth()
   const bets = useGetBetsByUserId(user?.id)
-  const users = useListUsers()
+  const ranking = useRanking()
 
   if (!user) return <Loading />
 
   if (!bets.data) return <Loading />
+  if (!ranking.data) return <Loading />
 
   const finishedBets = bets.data.filter(bet => bet.finish_game)
   const upcomingBets = bets.data.filter(bet => !bet.finish_game)
@@ -171,7 +172,7 @@ function ApostasPage() {
 
         {/* RIGHTSIDE */}
         <div className="w-full h-full flex flex-col gap-6">
-          <MiniRanking currentUserId={user.id} users={users.data || []} />
+          <MiniRanking currentUserId={user.id} ranking={ranking.data} />
 
           <div className="rounded-lg border bg-card p-4">
             <h4 className="mb-3 flex items-center gap-2 font-medium">

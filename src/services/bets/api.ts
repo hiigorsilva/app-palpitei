@@ -39,7 +39,7 @@ export async function updateGameBet(
 ) {
   try {
     const res = await api.put<ICreateBetResponse>(
-      `bets/${betId}/users/${userId}`,
+      `/bets/${betId}/users/${userId}`,
       payload
     )
     return res.data
