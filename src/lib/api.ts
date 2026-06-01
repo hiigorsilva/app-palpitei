@@ -1,8 +1,9 @@
 import axios, { type AxiosError } from 'axios'
 import { getStorageAdminAuth } from '@/helpers/auth'
+import { env } from '@/services/env'
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
