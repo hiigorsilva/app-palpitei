@@ -13,7 +13,7 @@ type AdminAuthData = {
 export function getStorageAuth(): AuthUser | null {
   if (typeof window === 'undefined') return null
 
-  const data = localStorage.getItem(STORAGE_KEY)
+  const data = sessionStorage.getItem(STORAGE_KEY)
   if (!data) return null
 
   try {
@@ -24,11 +24,11 @@ export function getStorageAuth(): AuthUser | null {
 }
 
 export function setStorageAuth(data: AuthUser) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }
 
 export function removeStorageAuth() {
-  localStorage.removeItem(STORAGE_KEY)
+  sessionStorage.removeItem(STORAGE_KEY)
 }
 
 export function getStorageAdminAuth(): AdminAuthData | null {
