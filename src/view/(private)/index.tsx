@@ -73,6 +73,9 @@ function HomePage() {
   if (!ranking.data) return <Loading />
 
   const leader = ranking.data[0]
+  const positionsByUserId = new Map(
+    ranking.data.map(item => [item.userId, item.position] as const)
+  )
 
   return (
     <section className="flex min-w-0 w-full flex-col gap-6">
@@ -138,7 +141,7 @@ function HomePage() {
 
           <section className="flex min-w-0 flex-col gap-2">
             <TitleContainer>Participantes</TitleContainer>
-            <Users users={users.data} />
+            <Users users={users.data} positionsByUserId={positionsByUserId} />
           </section>
         </div>
 

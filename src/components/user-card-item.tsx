@@ -31,7 +31,7 @@ type UserDetailsCardProps = ComponentProps<'div'> & {
   open: boolean
   onOpenChange: (open: boolean) => void
   user: IUser | null
-  position?: number
+  position: number
   className?: string
 }
 
@@ -89,7 +89,7 @@ export function UserDetailsCard({
   user: userData,
   open,
   onOpenChange: setOpen,
-  position = 1,
+  position,
   className,
   ...props
 }: UserDetailsCardProps) {

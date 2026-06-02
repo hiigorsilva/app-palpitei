@@ -89,8 +89,10 @@ function ParticipantesPage() {
   const ranking = useRanking()
 
   const [openUserCard, setOpenUserCard] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
-  const [selectedUserPosition, setSelectedUserPosition] = useState(1)
+  const [selectedParticipant, setSelectedParticipant] = useState<{
+    user: IUser
+    position: number
+  } | null>(null)
 
   const getProgressToNextLevel = (participant: IUser) => {
     if (!participant.proximo_nivel) return 100
@@ -108,8 +110,7 @@ function ParticipantesPage() {
   }
 
   function handleOpenUserCard(participant: IUser, position: number) {
-    setSelectedUser(participant)
-    setSelectedUserPosition(position)
+    setSelectedParticipant({ user: participant, position })
     setOpenUserCard(true)
   }
 
@@ -243,12 +244,12 @@ function ParticipantesPage() {
         })}
       </div>
 
-      {selectedUser && (
+      {selectedParticipant && (
         <UserDetailsCard
           onOpenChange={setOpenUserCard}
           open={openUserCard}
-          position={selectedUserPosition}
-          user={selectedUser}
+          position={selectedParticipant.position}
+          user={selectedParticipant.user}
         />
       )}
     </section>
