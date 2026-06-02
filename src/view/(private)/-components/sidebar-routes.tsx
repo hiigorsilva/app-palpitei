@@ -1,6 +1,7 @@
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 import {
   CalendarIcon,
+  CircleHelpIcon,
   HandHelpingIcon,
   HomeIcon,
   Settings2Icon,
@@ -41,6 +42,12 @@ export function SidebarRoutes() {
       icon: <HandHelpingIcon />,
       onClick: () => navigate({ to: '/apostas' }),
       path: '/apostas',
+    },
+    {
+      label: 'Como pontuar',
+      icon: <CircleHelpIcon />,
+      onClick: () => navigate({ to: '/como-pontuar' }),
+      path: '/como-pontuar',
     },
     {
       label: 'Mata-Mata',

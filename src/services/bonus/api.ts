@@ -1,5 +1,15 @@
 import { api } from '@/lib/api'
-import type { IListBonusNiveisResponse } from './type'
+import type { IGetBonusResponse, IListBonusNiveisResponse } from './type'
+
+export async function getBonusUser(userId: string) {
+  try {
+    const res = await api.get<IGetBonusResponse>(`/bonus/users/${userId}`)
+    return res.data
+  } catch (error) {
+    console.error('Error getting bonus progress:', error)
+    throw error
+  }
+}
 
 export async function listNiveisBonus() {
   try {

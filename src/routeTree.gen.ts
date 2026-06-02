@@ -17,6 +17,7 @@ import { Route as publicLoginIndexRouteImport } from './view/(public)/login/inde
 import { Route as privateParticipantesIndexRouteImport } from './view/(private)/participantes/index'
 import { Route as privateJogosIndexRouteImport } from './view/(private)/jogos/index'
 import { Route as privateGruposIndexRouteImport } from './view/(private)/grupos/index'
+import { Route as privateComoPontuarIndexRouteImport } from './view/(private)/como-pontuar/index'
 import { Route as privateApostasIndexRouteImport } from './view/(private)/apostas/index'
 import { Route as privateAdminIndexRouteImport } from './view/(private)/admin/index'
 import { Route as privateJogosFinaisIndexRouteImport } from './view/(private)/jogos/finais/index'
@@ -61,6 +62,11 @@ const privateGruposIndexRoute = privateGruposIndexRouteImport.update({
   path: '/grupos/',
   getParentRoute: () => privateLayoutRoute,
 } as any)
+const privateComoPontuarIndexRoute = privateComoPontuarIndexRouteImport.update({
+  id: '/como-pontuar/',
+  path: '/como-pontuar/',
+  getParentRoute: () => privateLayoutRoute,
+} as any)
 const privateApostasIndexRoute = privateApostasIndexRouteImport.update({
   id: '/apostas/',
   path: '/apostas/',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof privateIndexRoute
   '/admin/': typeof privateAdminIndexRoute
   '/apostas/': typeof privateApostasIndexRoute
+  '/como-pontuar/': typeof privateComoPontuarIndexRoute
   '/grupos/': typeof privateGruposIndexRoute
   '/jogos/': typeof privateJogosIndexRoute
   '/participantes/': typeof privateParticipantesIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/': typeof privateIndexRoute
   '/admin': typeof privateAdminIndexRoute
   '/apostas': typeof privateApostasIndexRoute
+  '/como-pontuar': typeof privateComoPontuarIndexRoute
   '/grupos': typeof privateGruposIndexRoute
   '/jogos': typeof privateJogosIndexRoute
   '/participantes': typeof privateParticipantesIndexRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/(private)/': typeof privateIndexRoute
   '/(private)/admin/': typeof privateAdminIndexRoute
   '/(private)/apostas/': typeof privateApostasIndexRoute
+  '/(private)/como-pontuar/': typeof privateComoPontuarIndexRoute
   '/(private)/grupos/': typeof privateGruposIndexRoute
   '/(private)/jogos/': typeof privateJogosIndexRoute
   '/(private)/participantes/': typeof privateParticipantesIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/'
     | '/apostas/'
+    | '/como-pontuar/'
     | '/grupos/'
     | '/jogos/'
     | '/participantes/'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/apostas'
+    | '/como-pontuar'
     | '/grupos'
     | '/jogos'
     | '/participantes'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/(private)/'
     | '/(private)/admin/'
     | '/(private)/apostas/'
+    | '/(private)/como-pontuar/'
     | '/(private)/grupos/'
     | '/(private)/jogos/'
     | '/(private)/participantes/'
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateGruposIndexRouteImport
       parentRoute: typeof privateLayoutRoute
     }
+    '/(private)/como-pontuar/': {
+      id: '/(private)/como-pontuar/'
+      path: '/como-pontuar'
+      fullPath: '/como-pontuar/'
+      preLoaderRoute: typeof privateComoPontuarIndexRouteImport
+      parentRoute: typeof privateLayoutRoute
+    }
     '/(private)/apostas/': {
       id: '/(private)/apostas/'
       path: '/apostas'
@@ -269,6 +288,7 @@ interface privateLayoutRouteChildren {
   privateAdminLayoutRoute: typeof privateAdminLayoutRouteWithChildren
   privateIndexRoute: typeof privateIndexRoute
   privateApostasIndexRoute: typeof privateApostasIndexRoute
+  privateComoPontuarIndexRoute: typeof privateComoPontuarIndexRoute
   privateGruposIndexRoute: typeof privateGruposIndexRoute
   privateJogosIndexRoute: typeof privateJogosIndexRoute
   privateParticipantesIndexRoute: typeof privateParticipantesIndexRoute
@@ -280,6 +300,7 @@ const privateLayoutRouteChildren: privateLayoutRouteChildren = {
   privateAdminLayoutRoute: privateAdminLayoutRouteWithChildren,
   privateIndexRoute: privateIndexRoute,
   privateApostasIndexRoute: privateApostasIndexRoute,
+  privateComoPontuarIndexRoute: privateComoPontuarIndexRoute,
   privateGruposIndexRoute: privateGruposIndexRoute,
   privateJogosIndexRoute: privateJogosIndexRoute,
   privateParticipantesIndexRoute: privateParticipantesIndexRoute,
