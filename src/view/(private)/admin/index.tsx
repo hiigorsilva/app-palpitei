@@ -183,8 +183,8 @@ function AdminPage() {
           <Tabs defaultValue="get" className="w-full">
             <TabsList className="grid w-full grid-cols-3 sm:w-fit">
               <TabsTrigger value="get">Dashboard geral</TabsTrigger>
-              <TabsTrigger value="put">Editar dados</TabsTrigger>
-              <TabsTrigger value="post">Adicionar dados</TabsTrigger>
+              <TabsTrigger value="put">Ajustar jogos</TabsTrigger>
+              <TabsTrigger value="post">Registrar resultados</TabsTrigger>
             </TabsList>
             <Separator />
             <TabsContent value="get" className="mt-4">
@@ -408,7 +408,8 @@ function DashboardTab({
             Consultas de informações
           </h2>
           <p className="text-sm text-muted-foreground">
-            Dados gerais retornados por `GET /api/admin/dashboard`.
+            Acompanhe o volume atual de usuários, apostas e jogos cadastrados no
+            sistema.
           </p>
         </div>
         <Button
@@ -471,10 +472,11 @@ function PutActionsTab({
     <div className="space-y-4">
       <div>
         <h2 className="font-heading text-lg font-semibold">
-          Atualizações com dados
+          Ajustes de jogos existentes
         </h2>
         <p className="text-sm text-muted-foreground">
-          Operações `PUT` que recebem parâmetros e corpo da requisição.
+          Corrija placares já encerrados e defina participantes de jogos de
+          mata-mata.
         </p>
       </div>
 
@@ -516,6 +518,8 @@ function CorrectResultCard({
   })
 
   async function onSubmit(data: CorrectResultFormData) {
+    if (mutation.isPending) return
+
     try {
       const result = await mutation.mutateAsync({
         gameId: data.gameId,
@@ -533,8 +537,8 @@ function CorrectResultCard({
 
   return (
     <ActionCard
-      title="Corrigir resultado"
-      description="PUT /api/admin/resultado/:gameId"
+      title="Corrigir placar encerrado"
+      description="Atualize o placar de uma partida já finalizada e recalcule os dados relacionados."
     >
       <div className="flex items-start gap-2 rounded-md border border-dashed bg-muted/30 p-3 text-sm text-muted-foreground">
         <Tooltip>
@@ -543,8 +547,8 @@ function CorrectResultCard({
           </TooltipTrigger>
           <TooltipContent side="right">
             <p>
-              Este endpoint corrige apenas jogos já encerrados. Para jogos
-              pendentes, use Inserir resultado na aba POST.
+              Esta ação corrige apenas jogos já encerrados. Para jogos
+              pendentes, use Registrar placar na aba Registrar resultados.
             </p>
           </TooltipContent>
         </Tooltip>
@@ -553,7 +557,7 @@ function CorrectResultCard({
       <ScoreForm
         formId="correct-result-form"
         form={form}
-        submitLabel="Corrigir resultado"
+        submitLabel="Corrigir placar"
         isPending={mutation.isPending}
         onSubmit={onSubmit}
         games={games.filter(game => game.finish_game)}
@@ -585,6 +589,8 @@ function UpdateParticipantsCard({
   })
 
   async function onSubmit(data: ParticipantsFormData) {
+    if (mutation.isPending) return
+
     try {
       const result = await mutation.mutateAsync({
         gameId: data.gameId,
@@ -602,8 +608,8 @@ function UpdateParticipantsCard({
 
   return (
     <ActionCard
-      title="Atualizar participantes de um jogo"
-      description="PUT /api/admin/jogos/:gameId/participantes"
+      title="Definir participantes de um jogo"
+      description="Escolha as duas seleções que disputarão uma partida de mata-mata."
     >
       <form
         id="update-participants-form"
@@ -615,6 +621,7 @@ function UpdateParticipantsCard({
             control={form.control}
             games={games}
             isLoading={isLoadingGames}
+            disabled={mutation.isPending}
             name="gameId"
             label="Jogo"
           />
@@ -623,6 +630,7 @@ function UpdateParticipantsCard({
           <TeamSelectField
             control={form.control}
             isLoading={isLoadingTeams}
+            disabled={mutation.isPending}
             name="team_a"
             label="Seleção A"
             teams={teams}
@@ -630,13 +638,14 @@ function UpdateParticipantsCard({
           <TeamSelectField
             control={form.control}
             isLoading={isLoadingTeams}
+            disabled={mutation.isPending}
             name="team_b"
             label="Seleção B"
             teams={teams}
           />
         </div>
         <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Atualizando...' : 'Atualizar participantes'}
+          {mutation.isPending ? 'Salvando...' : 'Salvar participantes'}
         </Button>
       </form>
     </ActionCard>
@@ -661,6 +670,8 @@ function BatchParticipantsCard({
   const [rows, setRows] = useState<Record<string, ParticipantsBatchRow>>({})
 
   async function onSubmit() {
+    if (mutation.isPending) return
+
     try {
       const jogos = games
         .map(game => ({
@@ -687,8 +698,8 @@ function BatchParticipantsCard({
 
   return (
     <ActionCard
-      title="Atualizar participantes em lote"
-      description="PUT /api/admin/jogos/participantes/lote"
+      title="Definir participantes em lote"
+      description="Preencha vários confrontos de mata-mata de uma só vez."
       className={className}
     >
       <BatchParticipantsEditor
@@ -720,10 +731,10 @@ function PostActionsTab({
     <div className="space-y-4">
       <div>
         <h2 className="font-heading text-lg font-semibold">
-          Ações de execução
+          Registros e rotinas
         </h2>
         <p className="text-sm text-muted-foreground">
-          Operações `POST` para apuração, resultados e manutenção da base.
+          Registre novos placares, apure bônus e execute rotinas de manutenção.
         </p>
       </div>
 
@@ -748,8 +759,11 @@ function PostActionsTab({
 function OneClickActionsCard() {
   const recalculate = useRecalcularPontuacao()
   const populate = usePopularBaseLocal()
+  const isPending = recalculate.isPending || populate.isPending
 
   async function handleRecalculate() {
+    if (isPending) return
+
     try {
       const result = await recalculate.mutateAsync()
       toast.success(result.message)
@@ -759,8 +773,10 @@ function OneClickActionsCard() {
   }
 
   async function handlePopulate() {
+    if (isPending) return
+
     const confirmed = window.confirm(
-      'Deseja popular/resetar as informações da base local?'
+      'Deseja restaurar as informações da base local?'
     )
 
     if (!confirmed) return
@@ -777,27 +793,31 @@ function OneClickActionsCard() {
 
   return (
     <ActionCard
-      title="Atualizações de um clique"
-      description="POST /api/admin/recalcular | POST /api/admin/popular-base"
+      title="Rotinas administrativas"
+      description="Recalcule pontuações ou restaure a base local quando for necessário sincronizar os dados."
     >
       <div className="grid gap-3">
         <Button
           variant="outline"
           onClick={handleRecalculate}
-          disabled={recalculate.isPending}
+          disabled={isPending}
         >
           <RefreshCcwIcon
             className={cn('size-4', recalculate.isPending && 'animate-spin')}
           />
-          Recalcular toda a pontuação
+          {recalculate.isPending
+            ? 'Recalculando pontuação...'
+            : 'Recalcular toda a pontuação'}
         </Button>
         <Button
           variant="destructive"
           onClick={handlePopulate}
-          disabled={populate.isPending}
+          disabled={isPending}
         >
-          <DatabaseIcon className="size-4" />
-          Popular banco de dados
+          <DatabaseIcon
+            className={cn('size-4', populate.isPending && 'animate-pulse')}
+          />
+          {populate.isPending ? 'Atualizando base...' : 'Restaurar base local'}
         </Button>
       </div>
     </ActionCard>
@@ -820,6 +840,8 @@ function ChampionCard({
   })
 
   async function onSubmit(data: ChampionFormData) {
+    if (mutation.isPending) return
+
     try {
       const result = await mutation.mutateAsync(data.teamId)
       toast.success(
@@ -832,7 +854,10 @@ function ChampionCard({
   }
 
   return (
-    <ActionCard title="Apurar campeão" description="POST /api/admin/campeao">
+    <ActionCard
+      title="Apurar campeão"
+      description="Selecione a campeã do torneio para conceder os pontos dos palpites corretos."
+    >
       <form
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -840,6 +865,7 @@ function ChampionCard({
         <TeamSelectField
           control={form.control}
           isLoading={isLoadingTeams}
+          disabled={mutation.isPending}
           name="teamId"
           label="Seleção campeã"
           teams={teams}
@@ -871,6 +897,8 @@ function InsertResultCard({
   })
 
   async function onSubmit(data: ScoreFormData) {
+    if (mutation.isPending) return
+
     try {
       const result = await mutation.mutateAsync(data)
       toast.success(result.message)
@@ -882,13 +910,13 @@ function InsertResultCard({
 
   return (
     <ActionCard
-      title="Inserir resultado"
-      description="POST /api/admin/resultado"
+      title="Registrar placar"
+      description="Informe o resultado de uma partida pendente para encerrar o jogo e apurar as apostas."
     >
       <ScoreForm
         formId="insert-result-form"
         form={form}
-        submitLabel="Inserir resultado"
+        submitLabel="Registrar placar"
         isPending={mutation.isPending}
         onSubmit={onSubmit}
         games={games}
@@ -910,6 +938,8 @@ function BatchResultsCard({
   const [rows, setRows] = useState<Record<string, ResultBatchRow>>({})
 
   async function onSubmit() {
+    if (mutation.isPending) return
+
     try {
       const resultados = games
         .map(game => ({
@@ -947,8 +977,8 @@ function BatchResultsCard({
 
   return (
     <ActionCard
-      title="Inserir múltiplos resultados"
-      description="POST /api/admin/resultados/lote"
+      title="Registrar placares em lote"
+      description="Selecione várias partidas pendentes e registre seus placares em uma única operação."
     >
       <BatchResultsEditor
         games={games}
@@ -1012,6 +1042,7 @@ function ScoreForm({
         control={form.control}
         games={games}
         isLoading={isLoadingGames}
+        disabled={isPending}
         name="gameId"
         label="Jogo"
       />
@@ -1022,6 +1053,7 @@ function ScoreForm({
           label="Gols A"
           placeholder="0"
           type="number"
+          disabled={isPending}
         />
         <TextInputField
           control={form.control}
@@ -1029,6 +1061,7 @@ function ScoreForm({
           label="Gols B"
           placeholder="0"
           type="number"
+          disabled={isPending}
         />
       </div>
       <Button type="submit" disabled={isPending}>
@@ -1099,6 +1132,7 @@ function BatchResultsEditor({
                     type="checkbox"
                     className="size-4 accent-primary"
                     checked={rows[game.id]?.enabled ?? false}
+                    disabled={isPending}
                     onChange={event =>
                       setRows(current => ({
                         ...current,
@@ -1117,6 +1151,7 @@ function BatchResultsEditor({
                   <Input
                     min={0}
                     type="number"
+                    disabled={isPending}
                     value={rows[game.id]?.gols_a ?? ''}
                     onChange={event =>
                       setRows(current => ({
@@ -1134,6 +1169,7 @@ function BatchResultsEditor({
                   <Input
                     min={0}
                     type="number"
+                    disabled={isPending}
                     value={rows[game.id]?.gols_b ?? ''}
                     onChange={event =>
                       setRows(current => ({
@@ -1153,7 +1189,7 @@ function BatchResultsEditor({
         </Table>
       </div>
       <Button onClick={onSubmit} disabled={isPending}>
-        {isPending ? 'Inserindo...' : 'Inserir resultados selecionados'}
+        {isPending ? 'Registrando...' : 'Registrar placares selecionados'}
       </Button>
     </div>
   )
@@ -1206,6 +1242,7 @@ function BatchParticipantsEditor({
                     type="checkbox"
                     className="size-4 accent-primary"
                     checked={rows[game.id]?.enabled ?? false}
+                    disabled={isPending}
                     onChange={event =>
                       setRows(current => ({
                         ...current,
@@ -1223,6 +1260,7 @@ function BatchParticipantsEditor({
                 <td className="px-3 py-2">
                   <NativeSelect
                     value={rows[game.id]?.team_a ?? ''}
+                    disabled={isPending}
                     onChange={event =>
                       setRows(current => ({
                         ...current,
@@ -1245,6 +1283,7 @@ function BatchParticipantsEditor({
                 <td className="px-3 py-2">
                   <NativeSelect
                     value={rows[game.id]?.team_b ?? ''}
+                    disabled={isPending}
                     onChange={event =>
                       setRows(current => ({
                         ...current,
@@ -1270,7 +1309,7 @@ function BatchParticipantsEditor({
         </table>
       </div>
       <Button onClick={onSubmit} disabled={isPending}>
-        {isPending ? 'Atualizando...' : 'Atualizar participantes selecionados'}
+        {isPending ? 'Salvando...' : 'Salvar participantes selecionados'}
       </Button>
     </div>
   )
@@ -1278,12 +1317,14 @@ function BatchParticipantsEditor({
 
 function GameSelectField<T extends FieldValues>({
   control,
+  disabled = false,
   games,
   isLoading,
   label,
   name,
 }: {
   control: Control<T>
+  disabled?: boolean
   games: IGame[]
   isLoading: boolean
   label: string
@@ -1301,7 +1342,7 @@ function GameSelectField<T extends FieldValues>({
             name={field.name}
             ref={field.ref}
             value={String(field.value ?? '')}
-            disabled={isLoading || games.length === 0}
+            disabled={disabled || isLoading || games.length === 0}
             onBlur={field.onBlur}
             onChange={event => field.onChange(event.target.value)}
           >
@@ -1323,6 +1364,7 @@ function GameSelectField<T extends FieldValues>({
 
 function TeamSelectField<T extends FieldValues>({
   control,
+  disabled = false,
   isLoading,
   label,
   name,
@@ -1330,6 +1372,7 @@ function TeamSelectField<T extends FieldValues>({
   valueMode = 'name',
 }: {
   control: Control<T>
+  disabled?: boolean
   isLoading: boolean
   label: string
   name: Path<T>
@@ -1348,7 +1391,7 @@ function TeamSelectField<T extends FieldValues>({
             name={field.name}
             ref={field.ref}
             value={String(field.value ?? '')}
-            disabled={isLoading || teams.length === 0}
+            disabled={disabled || isLoading || teams.length === 0}
             onBlur={field.onBlur}
             onChange={event => field.onChange(event.target.value)}
           >
@@ -1431,12 +1474,14 @@ function isKnockoutGame(game: IGame) {
 
 function TextInputField<T extends FieldValues>({
   control,
+  disabled = false,
   name,
   label,
   placeholder,
   type = 'text',
 }: {
   control: Control<T>
+  disabled?: boolean
   name: Path<T>
   label: string
   placeholder: string
@@ -1468,6 +1513,7 @@ function TextInputField<T extends FieldValues>({
             }
             id={name}
             aria-invalid={fieldState.invalid}
+            disabled={disabled}
             placeholder={placeholder}
             type={type}
             autoComplete="off"
