@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import z from 'zod'
 import { TitleContainer } from '@/components/title-container'
 import { Badge } from '@/components/ui/badge'
@@ -19,6 +20,7 @@ import {
 import { Form } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
 import { getStorageAuth } from '@/helpers/auth'
+import { ErrorResponseApi } from '@/helpers/error'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
 import { cn } from '@/lib/utils'
 import { useListGrupos } from '@/services/grupos/query'
@@ -158,10 +160,13 @@ export function FavoriteTeamToChampion({
 
   async function onSubmit(data: FavoriteTeamFormData) {
     try {
-      await mutation.mutateAsync(data.teamId)
+      const res = await mutation.mutateAsync(data.teamId)
+      if (res) {
+        toast.success('Palpite salvo com sucesso!')
+      }
       setOpen(false)
     } catch (error) {
-      console.error('Erro ao salvar palpite de campeão:', error)
+      ErrorResponseApi(error)
     }
   }
 

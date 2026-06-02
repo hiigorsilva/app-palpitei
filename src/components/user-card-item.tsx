@@ -166,7 +166,7 @@ export function UserDetailsCard({
             <InfoItem
               icon={<TargetIcon className="h-5 w-5 text-emerald-500" />}
               label="Cobertura de Apostas"
-              value={`${user.percentual.toFixed(1)}%`}
+              value={`${user.percentual.toFixed(0)}%`}
             />
             <InfoItem
               icon={<SparklesIcon className="h-5 w-5 text-blue-500" />}
@@ -223,7 +223,7 @@ export function UserDetailsCard({
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Do início ao topo</span>
                 <span className="font-medium">
-                  {user.percentual.toFixed(1)}%
+                  {user.percentual.toFixed(0)}%
                 </span>
               </div>
               <Progress value={user.percentual} className="h-2" />
@@ -247,7 +247,7 @@ export function UserDetailsCard({
                 <Progress value={progressoParaProximoNivel} className="h-2" />
                 <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
                   <span className="shrink-0">
-                    {user.percentual.toFixed(1)}% /{' '}
+                    {user.percentual.toFixed(0)}% /{' '}
                     {user.proximo_nivel.minimoPercentual}%
                   </span>
                   <p className="text-xs font-medium text-muted-foreground">

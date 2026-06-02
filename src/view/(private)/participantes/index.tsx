@@ -214,7 +214,7 @@ function ParticipantesPage() {
                     <div className="flex items-center gap-1.5">
                       <TargetIcon className="h-4 w-4" />
                       <span className="font-medium">
-                        {participant.percentual.toFixed(1)}%
+                        {participant.percentual.toFixed(0)}%
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">

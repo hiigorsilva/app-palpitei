@@ -1,5 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type ComponentProps, useEffect, useState } from 'react'
+import {
+  type ComponentProps,
+  type ReactElement,
+  useEffect,
+  useState,
+} from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -48,6 +53,7 @@ type CreateApostaFormData = z.infer<typeof createApostaFormSchema>
 type CreateApostaDrawerProps = ComponentProps<'div'> & {
   bet: IBetExpanded | IGame
   mode: 'create' | 'edit'
+  children: ReactElement
 }
 
 export function CreateApostaDrawer({
@@ -131,7 +137,7 @@ export function CreateApostaDrawer({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger render={children} />
       <DialogContent className={cn('', className)} {...props}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
