@@ -44,12 +44,6 @@ export function SidebarRoutes() {
       path: '/apostas',
     },
     {
-      label: 'Como pontuar',
-      icon: <CircleHelpIcon />,
-      onClick: () => navigate({ to: '/como-pontuar' }),
-      path: '/como-pontuar',
-    },
-    {
       label: 'Mata-Mata',
       icon: <TrophyIcon />,
       onClick: () => navigate({ to: '/jogos/finais' }),
@@ -66,6 +60,12 @@ export function SidebarRoutes() {
       icon: <Settings2Icon />,
       onClick: () => navigate({ to: '/admin' }),
       path: '/admin',
+    },
+    {
+      label: 'Como pontuar',
+      icon: <CircleHelpIcon />,
+      onClick: () => navigate({ to: '/como-pontuar' }),
+      path: '/como-pontuar',
     },
   ]
 

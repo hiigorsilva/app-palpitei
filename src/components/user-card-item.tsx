@@ -176,11 +176,7 @@ export function UserDetailsCard({
             <InfoItem
               icon={<CheckCircle2Icon className="h-5 w-5 text-green-500" />}
               label="Aproveitamento"
-              value={
-                finishedBets.length > 0
-                  ? `${aproveitamento}%`
-                  : 'Sem jogos encerrados'
-              }
+              value={finishedBets.length > 0 ? `${aproveitamento}%` : '0'}
             />
             <InfoItem
               icon={<TrendingUpIcon className="h-5 w-5 text-orange-500" />}
