@@ -12,7 +12,7 @@ type Props = ComponentProps<typeof Card> & {
 export function GameItemCard({ game, className, ...props }: Props) {
   return (
     <Card
-      className={cn('relative w-48 min-w-0 gap-2 p-3', className)}
+      className={cn('relative w-full min-w-0 gap-2 p-3 sm:w-48', className)}
       {...props}
     >
       {game.has_palpite && (
