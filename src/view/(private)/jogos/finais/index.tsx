@@ -86,7 +86,7 @@ function TournamentFinalGames() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6 px-5 sm:px-0">
       <TitleContainer>
         <Button
           size={'icon'}
@@ -103,8 +103,8 @@ function TournamentFinalGames() {
         Veja os confrontos das fases finais do Bolão Copa do Mundo.
       </p>
 
-      <Card className="min-h-dvh h-fit w-full p-6 bg-transparent overflow-x-auto">
-        <div className="flex min-w-max items-start justify-start gap-8 p-1">
+      <Card className="min-h-dvh h-fit w-full bg-transparent p-4 sm:p-6 overflow-x-auto overscroll-x-contain scrollbar-thin">
+        <div className="flex w-max min-w-full items-start justify-start gap-6 p-1 sm:gap-8">
           {fases.map((fase, index) => (
             <GridFaseCard
               key={fase.fase}

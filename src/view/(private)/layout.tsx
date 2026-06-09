@@ -65,7 +65,8 @@ function PrivateLayout() {
   return (
     <>
       {isMobile ? (
-        <header className="relative top-0 left-0 right-0 z-50 w-full flex justify-end items-center bg-background p-5 border-b border-border">
+        <header className="relative top-0 left-0 right-0 z-50 w-full flex justify-between items-center bg-background p-5 border-b border-border">
+          <TitleContainer>Palpitei</TitleContainer>
           <Sheet open={openMenuMobile} onOpenChange={setOpenMenuMobile}>
             <SheetTrigger
               render={() => (
@@ -85,7 +86,7 @@ function PrivateLayout() {
               <SidebarRoutes
                 onOpenMenuMobile={() => setOpenMenuMobile(false)}
               />
-              <div className="mt-auto">
+              <div className="mt-auto flex flex-col items-start gap-3">
                 <div className="w-full flex items-center gap-2">
                   <Avatar>
                     <AvatarBadge className="bg-green-400 animate-pulse" />
