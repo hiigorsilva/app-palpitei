@@ -138,7 +138,10 @@ export function CreateApostaDrawer({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger render={children} />
-      <DialogContent className={cn('', className)} {...props}>
+      <DialogContent
+        className={cn('max-w-[calc(100vw-2rem)] sm:max-w-2xl', className)}
+        {...props}
+      >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
@@ -155,16 +158,18 @@ export function CreateApostaDrawer({
                     <RadioGroup
                       value={field.value}
                       onValueChange={field.onChange}
-                      className="grid grid-cols-3 gap-3"
+                      className="grid grid-cols-1 gap-3 sm:grid-cols-3"
                     >
                       <Label
                         htmlFor={`palpite-${bet.id}-A`}
-                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+                        className="group flex cursor-pointer items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-left transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50 sm:flex-col sm:text-center"
                       >
-                        <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
+                        <div className="relative z-0 aspect-video w-18 rounded overflow-hidden ring-1 ring-border bg-muted sm:w-28 lg:w-32">
                           <img src={flagTeamA} alt={`Bandeira ${bet.team_a}`} />
                         </div>
-                        <h2>{bet.team_a}</h2>
+                        <h2 className="text-sm font-medium leading-tight sm:text-base">
+                          {bet.team_a}
+                        </h2>
                         <RadioGroupItem
                           value="A"
                           id={`palpite-${bet.id}-A`}
@@ -173,16 +178,18 @@ export function CreateApostaDrawer({
                       </Label>
                       <Label
                         htmlFor={`palpite-${bet.id}-EMPATE`}
-                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+                        className="group flex cursor-pointer items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-left transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50 sm:flex-col sm:text-center"
                       >
-                        <div className="relative z-0 flex justify-center items-center aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
+                        <div className="relative z-0 flex aspect-video w-18 items-center justify-center rounded overflow-hidden ring-1 ring-border bg-muted sm:w-28 lg:w-32">
                           <img
                             className="w-full"
                             src="/icons/ball.svg"
                             alt="Empate"
                           />
                         </div>
-                        <h2>Empate</h2>
+                        <h2 className="text-sm font-medium leading-tight sm:text-base">
+                          Empate
+                        </h2>
                         <RadioGroupItem
                           value="EMPATE"
                           id={`palpite-${bet.id}-EMPATE`}
@@ -191,12 +198,14 @@ export function CreateApostaDrawer({
                       </Label>
                       <Label
                         htmlFor={`palpite-${bet.id}-B`}
-                        className="group flex cursor-pointer flex-col items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-center transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+                        className="group flex cursor-pointer items-center gap-2 overflow-hidden rounded-md border bg-muted-background p-2 text-left transition-all has-data-checked:border-primary has-data-checked:bg-primary/10 has-data-checked:text-primary has-focus-visible:ring-3 has-focus-visible:ring-ring/50 sm:flex-col sm:text-center"
                       >
-                        <div className="relative z-0 aspect-video w-32 h-auto rounded overflow-hidden ring-1 ring-border bg-muted">
+                        <div className="relative z-0 aspect-video w-18 rounded overflow-hidden ring-1 ring-border bg-muted sm:w-28 lg:w-32">
                           <img src={flagTeamB} alt={`Bandeira ${bet.team_b}`} />
                         </div>
-                        <h2>{bet.team_b}</h2>
+                        <h2 className="text-sm font-medium leading-tight sm:text-base">
+                          {bet.team_b}
+                        </h2>
                         <RadioGroupItem
                           value="B"
                           id={`palpite-${bet.id}-B`}
@@ -274,10 +283,10 @@ export function CreateApostaDrawer({
                 </div>
               )}
 
-              <DialogFooter className="w-full flex justify-center items-center">
+              <DialogFooter className="w-full flex flex-col-reverse justify-center items-center gap-2 sm:flex-row">
                 <Button
                   type="submit"
-                  className={'flex-1'}
+                  className={'h-10 w-full sm:h-11 sm:flex-1'}
                   disabled={
                     !form.formState.isValid ||
                     mutationCreate.isPending ||
@@ -292,7 +301,7 @@ export function CreateApostaDrawer({
                 <Button
                   type="button"
                   variant={'outline'}
-                  className={'flex-1'}
+                  className={'h-10 w-full sm:h-11 sm:flex-1'}
                   onClick={handleCancel}
                   disabled={mutationCreate.isPending || mutationEdit.isPending}
                 >

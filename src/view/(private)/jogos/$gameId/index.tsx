@@ -38,7 +38,7 @@ function GameIdPage() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6 px-0">
       <TitleContainer>
         <Button
           size={'icon'}
