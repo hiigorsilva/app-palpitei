@@ -11,7 +11,11 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export function SidebarRoutes() {
+type SidebarRoutesProps = {
+  onOpenMenuMobile: () => void
+}
+
+export function SidebarRoutes({ onOpenMenuMobile }: SidebarRoutesProps) {
   const navigate = useNavigate()
   const currentPath = useRouterState({
     select: state => state.location.pathname,
@@ -91,7 +95,12 @@ export function SidebarRoutes() {
           key={link.label}
           className={`min-h-10 h-fit w-full justify-start py-3 text-foreground cursor-pointer ${getStyleButtonMenu(link.path)}`}
           variant="ghost"
-          onClick={link.onClick}
+          onClick={() => {
+            link.onClick()
+            if (onOpenMenuMobile) {
+              onOpenMenuMobile()
+            }
+          }}
         >
           {link.icon}
           {link.label}

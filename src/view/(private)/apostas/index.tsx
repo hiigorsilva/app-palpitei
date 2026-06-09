@@ -57,7 +57,7 @@ function ApostasPage() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6 px-5 sm:px-0">
       <TitleContainer>
         <Button
           size={'icon'}
@@ -75,7 +75,7 @@ function ApostasPage() {
       </p>
 
       {/* Estatísticas Resumidas */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         <div className="flex flex-col items-center justify-center p-4 bg-card border rounded-xl">
           <TrophyIcon className="size-5 text-amber-500 mb-1.5" />
           <span className="text-xl font-bold text-foreground">
@@ -100,8 +100,8 @@ function ApostasPage() {
       </div>
 
       {/* LEFTSIDE */}
-      <div className="w-full grid grid-cols-3 gap-4">
-        <Tabs defaultValue="upcoming" className="w-full col-span-2">
+      <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-3">
+        <Tabs defaultValue="upcoming" className="w-full lg:col-span-2">
           <TabsList className="w-full grid grid-cols-2 mb-4">
             <TabsTrigger value="upcoming" className="gap-2">
               <ClockIcon className="size-4" />
@@ -171,7 +171,7 @@ function ApostasPage() {
         </Tabs>
 
         {/* RIGHTSIDE */}
-        <div className="w-full h-full flex flex-col gap-6">
+        <div className="h-full w-full space-y-4 lg:space-y-6">
           <MiniRanking currentUserId={user.id} ranking={ranking.data} />
 
           <div className="rounded-lg border bg-card p-4">

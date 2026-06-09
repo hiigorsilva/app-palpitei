@@ -148,7 +148,7 @@ function AdminPage() {
   }
 
   return (
-    <Container className="flex-1 gap-6 px-4 py-6 sm:px-6">
+    <Container className="flex-1 gap-6 py-6 sm:px-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -163,14 +163,21 @@ function AdminPage() {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
           {isAdminAuthenticated ? (
-            <Button variant="outline" onClick={handleAdminLogout}>
+            <Button
+              variant="outline"
+              onClick={handleAdminLogout}
+              className="w-full sm:w-auto"
+            >
               <LogOutIcon className="size-4" />
               Sair do admin
             </Button>
           ) : (
-            <Button onClick={() => setLoginOpen(true)}>
+            <Button
+              onClick={() => setLoginOpen(true)}
+              className="w-full sm:w-auto"
+            >
               <LockKeyholeIcon className="size-4" />
               Entrar como admin
             </Button>
@@ -181,10 +188,25 @@ function AdminPage() {
       {isAdminAuthenticated ? (
         <Card className="mt-6 bg-transparent p-4">
           <Tabs defaultValue="get" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 sm:w-fit">
-              <TabsTrigger value="get">Dashboard geral</TabsTrigger>
-              <TabsTrigger value="put">Ajustar jogos</TabsTrigger>
-              <TabsTrigger value="post">Registrar resultados</TabsTrigger>
+            <TabsList className="grid h-fit w-full grid-cols-1 sm:grid-cols-3">
+              <TabsTrigger
+                className="h-fit whitespace-normal py-2 text-center leading-tight"
+                value="get"
+              >
+                Dashboard geral
+              </TabsTrigger>
+              <TabsTrigger
+                className="h-fit whitespace-normal py-2 text-center leading-tight"
+                value="put"
+              >
+                Ajustar jogos
+              </TabsTrigger>
+              <TabsTrigger
+                className="h-fit whitespace-normal py-2 text-center leading-tight"
+                value="post"
+              >
+                Registrar resultados
+              </TabsTrigger>
             </TabsList>
             <Separator />
             <TabsContent value="get" className="mt-4">
@@ -251,7 +273,7 @@ function LockedAdminState({ onLoginClick }: { onLoginClick: () => void }) {
         </CardDescription>
       </CardHeader>
       <CardFooter>
-        <Button onClick={onLoginClick}>
+        <Button onClick={onLoginClick} className="w-full sm:w-auto">
           Entrar como admin
           <ArrowRightIcon className="size-4" />
         </Button>
@@ -357,16 +379,22 @@ function AdminLoginDialog({
           />
         </form>
 
-        <DialogFooter>
+        <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"
             onClick={() => form.reset()}
             disabled={isPending}
+            className="w-full sm:w-auto"
           >
             Limpar
           </Button>
-          <Button type="submit" form="admin-login-form" disabled={isPending}>
+          <Button
+            type="submit"
+            form="admin-login-form"
+            disabled={isPending}
+            className="w-full sm:w-auto"
+          >
             {isPending ? (
               <>
                 <Loader2Icon className="size-4 animate-spin" />
@@ -402,7 +430,7 @@ function DashboardTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <h2 className="font-heading text-lg font-semibold">
             Consultas de informações
@@ -416,6 +444,7 @@ function DashboardTab({
           variant="outline"
           onClick={() => dashboard.refetch()}
           disabled={dashboard.isFetching}
+          className="w-full sm:w-auto"
         >
           <RefreshCcwIcon
             className={cn('size-4', dashboard.isFetching && 'animate-spin')}
@@ -738,14 +767,14 @@ function PostActionsTab({
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <OneClickActionsCard />
         <ChampionCard isLoadingTeams={isLoadingTeams} teams={teams} />
         <InsertResultCard
           games={games.filter(game => !game.finish_game)}
           isLoadingGames={isLoadingGames}
         />
-        <div className="col-span-3">
+        <div className="sm:col-span-2 xl:col-span-3">
           <BatchResultsCard
             games={games.filter(game => !game.finish_game)}
             isLoadingGames={isLoadingGames}
@@ -1046,7 +1075,7 @@ function ScoreForm({
         name="gameId"
         label="Jogo"
       />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextInputField
           control={form.control}
           name="gols_a"

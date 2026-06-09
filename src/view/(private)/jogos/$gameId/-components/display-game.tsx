@@ -66,7 +66,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap justify-between items-center gap-2">
             <Badge
               variant="secondary"
               className="h-7 gap-1.5 rounded-md bg-background/80 px-2.5 text-xs text-foreground ring-1 ring-border"
@@ -85,16 +85,20 @@ export function DisplayGame({ game }: DisplayGameProps) {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-center gap-6 px-4 py-8 sm:px-6 lg:px-10">
-          <ul className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-3 sm:gap-6">
+        <div className="flex flex-1 flex-col justify-center gap-6 px-3 py-6 sm:px-6 sm:py-8 lg:px-10">
+          <ul className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 sm:gap-6">
             <TeamInfoItem game={game} team="a" className="justify-self-end" />
-            <li className="flex min-w-20 flex-col items-center justify-center gap-2 rounded-lg border border-border/70 bg-card/75 px-3 py-4 shadow-sm backdrop-blur-sm sm:min-w-32 sm:px-5">
-              <div className="flex items-center gap-2 text-3xl font-bold leading-none text-foreground sm:text-5xl">
-                <span className="text-4xl">{scoreA}</span>
-                <span className="text-xl font-normal text-muted-foreground sm:text-3xl">
+            <li className="flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-lg border border-border/70 bg-card/75 px-2 py-3 shadow-sm backdrop-blur-sm sm:min-w-28 sm:gap-2 sm:px-4 sm:py-4 lg:min-w-32 lg:px-5">
+              <div className="flex items-center gap-1.5 text-2xl font-bold leading-none text-foreground sm:gap-2 sm:text-4xl lg:text-5xl">
+                <span className="text-3xl sm:text-4xl lg:text-5xl">
+                  {scoreA}
+                </span>
+                <span className="text-lg font-normal text-muted-foreground sm:text-2xl lg:text-3xl">
                   x
                 </span>
-                <span className="text-4xl">{scoreB}</span>
+                <span className="text-3xl sm:text-4xl lg:text-5xl">
+                  {scoreB}
+                </span>
               </div>
               <span className="text-xs font-medium text-muted-foreground">
                 Placar
@@ -116,7 +120,7 @@ export function DisplayGame({ game }: DisplayGameProps) {
                 mode={hasBet ? 'edit' : 'create'}
               >
                 <Button
-                  className="w-full sm:w-auto"
+                  className="h-10 w-full text-sm sm:h-11 sm:w-auto sm:text-base"
                   disabled={game.finish_game || isLoadingBets}
                 >
                   {hasBet ? 'Editar aposta' : 'Fazer aposta'}

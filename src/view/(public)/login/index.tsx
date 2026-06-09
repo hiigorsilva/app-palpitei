@@ -78,7 +78,7 @@ function LoginPage() {
   }
 
   return (
-    <Container className="flex-1 flex justify-center items-center">
+    <Container className="flex-1 flex justify-center items-center px-5">
       <Card className="w-full sm:max-w-md">
         <CardHeader>
           <CardTitle>Fazer Login</CardTitle>

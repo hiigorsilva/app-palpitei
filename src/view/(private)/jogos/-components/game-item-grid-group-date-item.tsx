@@ -16,7 +16,7 @@ export function GameItemGridGroupDateItem({
     <Card
       key={group.date}
       className={cn(
-        'w-full flex flex-row justify-start items-center gap-2 p-1 ring-0 shadow-none bg-transparent',
+        'w-full flex flex-col justify-start items-stretch gap-3 p-1 ring-0 shadow-none bg-transparent',
         className
       )}
       {...props}

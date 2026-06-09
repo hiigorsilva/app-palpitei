@@ -70,7 +70,7 @@ function GamesPage() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-6 px-0">
       <TitleContainer>
         <Button
           size={'icon'}
@@ -88,39 +88,47 @@ function GamesPage() {
         competição.
       </p>
 
-      <Card className="p-6 bg-transparent">
+      <Card className="bg-transparent p-4 sm:p-6">
         <Tabs
           className="gap-6"
           value={activeTab}
           onValueChange={handleTabChange}
         >
-          <TabsList
-            className={'w-full bg-primary/10 overflow-hidden p-1'}
-            variant="line"
-            style={{ borderRadius: '0.625rem' }}
-          >
-            <TabsTrigger className={'leading-none'} value="group">
-              Fase de Grupos
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="16_avos">
-              Fase 16 Avos
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="oitavas">
-              Oitavas de Final
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="quartas">
-              Quartas de Final
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="semifinais">
-              Semifinais
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="terceiro_lugar">
-              Terceiro Lugar
-            </TabsTrigger>
-            <TabsTrigger className={'leading-none'} value="final">
-              Final
-            </TabsTrigger>
-          </TabsList>
+          <div className="w-full overflow-x-auto overscroll-x-contain scrollbar-thin">
+            <TabsList
+              className={'w-max min-w-full bg-primary/10 p-1'}
+              variant="line"
+              style={{ borderRadius: '0.625rem' }}
+            >
+              <TabsTrigger className={'leading-none flex-none'} value="group">
+                Fase de Grupos
+              </TabsTrigger>
+              <TabsTrigger className={'leading-none flex-none'} value="16_avos">
+                Fase 16 Avos
+              </TabsTrigger>
+              <TabsTrigger className={'leading-none flex-none'} value="oitavas">
+                Oitavas de Final
+              </TabsTrigger>
+              <TabsTrigger className={'leading-none flex-none'} value="quartas">
+                Quartas de Final
+              </TabsTrigger>
+              <TabsTrigger
+                className={'leading-none flex-none'}
+                value="semifinais"
+              >
+                Semifinais
+              </TabsTrigger>
+              <TabsTrigger
+                className={'leading-none flex-none'}
+                value="terceiro_lugar"
+              >
+                Terceiro Lugar
+              </TabsTrigger>
+              <TabsTrigger className={'leading-none flex-none'} value="final">
+                Final
+              </TabsTrigger>
+            </TabsList>
+          </div>
           <TabsContent value="group">
             <GroupGamesTab userId={userId} />
           </TabsContent>
@@ -192,7 +200,7 @@ export function GroupGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -239,7 +247,7 @@ export function SixteenAvosGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -286,7 +294,7 @@ export function OitavasGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -333,7 +341,7 @@ export function QuartasGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -380,7 +388,7 @@ export function SemiGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -427,7 +435,7 @@ export function TerceiroGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>
@@ -474,7 +482,7 @@ export function FinalsGamesTab({ userId }: GamesTabProps) {
                     to={'/jogos/$gameId'}
                     params={{ gameId: game.id }}
                   >
-                    <GameItemCard className="w-2xs" key={game.id} game={game} />
+                    <GameItemCard key={game.id} game={game} />
                   </Link>
                 ))}
               </GameItemCardGrid>

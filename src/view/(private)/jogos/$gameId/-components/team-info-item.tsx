@@ -28,7 +28,7 @@ export function TeamInfoItem({
       )}
       {...props}
     >
-      <div className="relative aspect-video min-w-40 w-fit h-auto overflow-hidden rounded-md bg-muted ring-1 ring-ring/40 shadow-sm">
+      <div className="relative aspect-video w-24 overflow-hidden rounded-md bg-muted ring-1 ring-ring/40 shadow-sm sm:w-32 lg:w-40">
         <img
           className="absolute object-cover w-full h-full"
           src={
@@ -39,7 +39,7 @@ export function TeamInfoItem({
           alt={teamName}
         />
       </div>
-      <h2 className="max-w-full truncate font-semibold text-base text-foreground sm:text-lg">
+      <h2 className="max-w-full truncate font-semibold text-sm text-foreground sm:text-base lg:text-lg">
         {teamName}
       </h2>
     </li>
