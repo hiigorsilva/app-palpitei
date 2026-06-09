@@ -62,74 +62,35 @@ function PrivateLayout() {
     setOpenMenuMobile(prev => !prev)
   }
 
-  return (
+  const mainContent = (
+    <main className="relative min-w-0 flex-1 flex flex-col p-4">
+      <CountdownToStart />
+      <Outlet />
+    </main>
+  )
+
+  return isMobile ? (
     <>
-      {isMobile ? (
-        <header className="relative top-0 left-0 right-0 z-50 w-full flex justify-between items-center bg-background p-5 border-b border-border">
-          <TitleContainer>Palpitei</TitleContainer>
-          <Sheet open={openMenuMobile} onOpenChange={setOpenMenuMobile}>
-            <SheetTrigger
-              render={() => (
-                <Button
-                  variant={'outline'}
-                  size={'icon'}
-                  onClick={handleOpenMenuMobile}
-                >
-                  <MenuIcon />
-                </Button>
-              )}
-            />
-            <SheetContent className={'max-h-dvh h-full gap-1 pb-3 px-3'}>
-              <SheetHeader>
-                <SheetTitle>Palpitei</SheetTitle>
-              </SheetHeader>
-              <SidebarRoutes
-                onOpenMenuMobile={() => setOpenMenuMobile(false)}
-              />
-              <div className="mt-auto flex flex-col items-start gap-3">
-                <div className="w-full flex items-center gap-2">
-                  <Avatar>
-                    <AvatarBadge className="bg-green-400 animate-pulse" />
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className="w-full flex justify-between items-center gap-1">
-                    <h2 className="font-semibold text-sm text-foreground">
-                      {user.name}
-                    </h2>
-                    <Badge className="text-xs text-primary bg-primary/10 capitalize">
-                      {user.nivel_atual.toLocaleLowerCase()}
-                    </Badge>
-                  </div>
-                </div>
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  className="w-full text-sm text-red-500 transition hover:text-red-600 cursor-pointer"
-                >
-                  <LogOutIcon className="text-red-500" /> Sair
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </header>
-      ) : (
-        <SidebarProvider>
-          <Sidebar>
-            <SidebarHeader className="px-6 py-4">
-              <TitleContainer>Palpitei</TitleContainer>
-            </SidebarHeader>
-            <Separator />
-
-            <SidebarContent className="w-full">
-              <SidebarGroup>
-                <SidebarRoutes
-                  onOpenMenuMobile={() => setOpenMenuMobile(false)}
-                />
-              </SidebarGroup>
-            </SidebarContent>
-
-            <Separator />
-            <SidebarFooter>
+      <header className="relative top-0 left-0 right-0 z-50 w-full flex justify-between items-center bg-background p-5 border-b border-border">
+        <TitleContainer>Palpitei</TitleContainer>
+        <Sheet open={openMenuMobile} onOpenChange={setOpenMenuMobile}>
+          <SheetTrigger
+            render={() => (
+              <Button
+                variant={'outline'}
+                size={'icon'}
+                onClick={handleOpenMenuMobile}
+              >
+                <MenuIcon />
+              </Button>
+            )}
+          />
+          <SheetContent className={'max-h-dvh h-full gap-1 pb-3 px-3'}>
+            <SheetHeader>
+              <SheetTitle>Palpitei</SheetTitle>
+            </SheetHeader>
+            <SidebarRoutes onOpenMenuMobile={() => setOpenMenuMobile(false)} />
+            <div className="mt-auto flex flex-col items-start gap-3">
               <div className="w-full flex items-center gap-2">
                 <Avatar>
                   <AvatarBadge className="bg-green-400 animate-pulse" />
@@ -147,18 +108,56 @@ function PrivateLayout() {
               <Button
                 onClick={handleLogout}
                 variant="outline"
-                className="text-sm text-red-500 transition hover:text-red-600 cursor-pointer"
+                className="w-full text-sm text-red-500 transition hover:text-red-600 cursor-pointer"
               >
                 <LogOutIcon className="text-red-500" /> Sair
               </Button>
-            </SidebarFooter>
-          </Sidebar>
-        </SidebarProvider>
-      )}
-      <main className="relative min-w-0 flex-1 flex flex-col p-4">
-        <CountdownToStart />
-        <Outlet />
-      </main>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </header>
+      {mainContent}
     </>
+  ) : (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader className="px-6 py-4">
+          <TitleContainer>Palpitei</TitleContainer>
+        </SidebarHeader>
+        <Separator />
+
+        <SidebarContent className="w-full">
+          <SidebarGroup>
+            <SidebarRoutes onOpenMenuMobile={() => setOpenMenuMobile(false)} />
+          </SidebarGroup>
+        </SidebarContent>
+
+        <Separator />
+        <SidebarFooter>
+          <div className="w-full flex items-center gap-2">
+            <Avatar>
+              <AvatarBadge className="bg-green-400 animate-pulse" />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="w-full flex justify-between items-center gap-1">
+              <h2 className="font-semibold text-sm text-foreground">
+                {user.name}
+              </h2>
+              <Badge className="text-xs text-primary bg-primary/10 capitalize">
+                {user.nivel_atual.toLocaleLowerCase()}
+              </Badge>
+            </div>
+          </div>
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="text-sm text-red-500 transition hover:text-red-600 cursor-pointer"
+          >
+            <LogOutIcon className="text-red-500" /> Sair
+          </Button>
+        </SidebarFooter>
+      </Sidebar>
+      {mainContent}
+    </SidebarProvider>
   )
 }

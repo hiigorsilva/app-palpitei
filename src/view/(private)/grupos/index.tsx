@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Form } from '@/components/ui/form'
-import { Separator } from '@/components/ui/separator'
 import { getStorageAuth } from '@/helpers/auth'
 import { ErrorResponseApi } from '@/helpers/error'
 import { getCountryCodeFromEmoji, imagesUrl } from '@/helpers/strings'
@@ -176,68 +175,87 @@ export function FavoriteTeamToChampion({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className={cn('min-w-lg w-fit', className)}>
+      <DialogContent
+        className={cn('w-full max-w-[calc(100vw-2rem)] sm:max-w-lg', className)}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-5"
           >
-            <DialogHeader>
-              <DialogTitle>Palpite do Campeão</DialogTitle>
-              <DialogDescription>
+            <DialogHeader className="space-y-1">
+              <DialogTitle className="text-center sm:text-left">
+                Palpite do Campeão
+              </DialogTitle>
+              <DialogDescription className="text-center sm:text-left">
                 Você poderá alterar esse palpite até 1h antes da Final.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="w-full flex justify-center items-center">
-              <Badge
-                className="uppercase text-xs tracking-widest bg-primary/10 text-primary"
-                variant={'secondary'}
-              >
-                {team?.name}
-              </Badge>
-            </div>
+            <div className="rounded-xl border bg-muted/20 p-3 sm:p-4">
+              <div className="flex flex-col items-center gap-3 sm:gap-4">
+                <Badge
+                  className="max-w-full truncate uppercase text-xs tracking-widest bg-primary/10 text-primary"
+                  variant={'secondary'}
+                >
+                  {team?.name}
+                </Badge>
 
-            <div className="flex justify-center items-center">
-              <div className="relative aspect-video w-1/2 h-auto overflow-hidden ring-0 border-0 rounded-md">
-                <img
-                  className="absolute object-cover w-full h-full ring-0 border-0 rounded-md overflow-hidden"
-                  src={
-                    flagCode
-                      ? `/country-flags/${flagCode}.webp`
-                      : imagesUrl.flagPlaceholder.url
-                  }
-                  alt={team?.name}
-                />
+                <div className="relative aspect-video w-44 overflow-hidden rounded-md ring-1 ring-border sm:w-56">
+                  <img
+                    className="absolute h-full w-full object-cover"
+                    src={
+                      flagCode
+                        ? `/country-flags/${flagCode}.webp`
+                        : imagesUrl.flagPlaceholder.url
+                    }
+                    alt={team?.name}
+                  />
+                </div>
+
+                <p className="text-center text-xs text-muted-foreground">
+                  Revise as informações da seleção antes de confirmar seu
+                  palpite.
+                </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 justify-center items-center place-content-center gap-2">
-              <span className="inline-flex place-self-center font-semibold text-sm">
-                Grupo
-              </span>
-              <span className="inline-flex place-self-center font-semibold text-sm">
-                Federação
-              </span>
-              <span className="inline-flex place-self-center font-semibold text-sm">
-                Continente
-              </span>
-              <Separator className={'col-span-3'} />
-              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
-                Grupo {team?.group}
-              </span>
-              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
-                {team?.confed}
-              </span>
-              <span className="inline-flex place-self-center font-semibold text-sm text-muted-foreground">
-                {team?.continent}
-              </span>
+            <div className="rounded-xl border p-3 sm:p-4">
+              <h3 className="mb-3 text-sm font-semibold text-foreground">
+                Informacoes da selecao
+              </h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-3 rounded-md bg-muted/30 px-3 py-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Grupo
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">
+                    Grupo {team?.group}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3 rounded-md bg-muted/30 px-3 py-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Federacao
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {team?.confed}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-3 rounded-md bg-muted/30 px-3 py-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Continente
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {team?.continent}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <DialogFooter className="w-full flex justify-center items-center">
+            <DialogFooter className="w-full flex flex-col-reverse justify-center items-center gap-2 sm:flex-row">
               <Button
                 type="submit"
-                className={'flex-1'}
+                className={'h-10 w-full sm:h-11 sm:flex-1'}
                 disabled={mutation.isPending}
               >
                 {mutation.isPending ? 'Salvando...' : 'Salvar palpite'}
@@ -247,7 +265,7 @@ export function FavoriteTeamToChampion({
                   <Button
                     type="button"
                     variant={'outline'}
-                    className={'flex-1'}
+                    className={'h-10 w-full sm:h-11 sm:flex-1'}
                   />
                 }
               >
