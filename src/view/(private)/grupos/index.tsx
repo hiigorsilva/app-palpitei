@@ -176,7 +176,10 @@ export function FavoriteTeamToChampion({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className={cn('w-full max-w-[calc(100vw-2rem)] sm:max-w-lg', className)}
+        className={cn(
+          'w-full h-fit max-w-[calc(100vw-2rem)] max-h-[calc(100vh-4rem)] sm:max-w-lg overflow-y-scroll',
+          className
+        )}
       >
         <Form {...form}>
           <form
@@ -212,11 +215,6 @@ export function FavoriteTeamToChampion({
                     alt={team?.name}
                   />
                 </div>
-
-                <p className="text-center text-xs text-muted-foreground">
-                  Revise as informações da seleção antes de confirmar seu
-                  palpite.
-                </p>
               </div>
             </div>
 
