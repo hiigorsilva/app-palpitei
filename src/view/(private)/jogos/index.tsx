@@ -96,7 +96,7 @@ function GamesPage() {
         >
           <div className="w-full overflow-x-auto overscroll-x-contain scrollbar-thin">
             <TabsList
-              className={'w-max min-w-full bg-primary/10 p-1'}
+              className={'w-max min-w-full sm:justify-start bg-primary/10 p-1'}
               variant="line"
               style={{ borderRadius: '0.625rem' }}
             >
