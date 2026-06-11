@@ -43,6 +43,13 @@ export function DisplayGame({ game }: DisplayGameProps) {
   }
 
   const betLabel = getBetLabel()
+  const isBetDisabled = (data_hora: string, finish_game: boolean) => {
+    const gameTime = new Date(data_hora).getTime()
+    const currentTime = Date.now()
+    const fifteenMinutesInMs = 15 * 60 * 1000
+
+    return finish_game || currentTime >= gameTime - fifteenMinutesInMs
+  }
 
   return (
     <Card className="relative min-h-105 justify-between gap-0 overflow-hidden p-0">
@@ -121,13 +128,17 @@ export function DisplayGame({ game }: DisplayGameProps) {
               >
                 <Button
                   className="h-10 w-full text-sm sm:h-11 sm:w-auto sm:text-base"
-                  disabled={game.finish_game || isLoadingBets}
+                  disabled={
+                    isBetDisabled(game.data_hora, game.finish_game) ||
+                    isLoadingBets
+                  }
                 >
                   {hasBet ? 'Editar aposta' : 'Fazer aposta'}
                 </Button>
               </CreateApostaDrawer>
 
-              {game.finish_game && (
+              {/* Encerrar apostas quando o jogo terminar ou quando já tiver faltando 15 minutos para o horário do jogo (dentro da data) */}
+              {isBetDisabled(game.data_hora, game.finish_game) && (
                 <span className="block text-center text-xs text-muted-foreground">
                   Apostas encerradas para esta partida.
                 </span>
