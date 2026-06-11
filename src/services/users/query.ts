@@ -1,6 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { listUserId, listUsers, updatePalpiteCampeao } from './api'
-import type { IPalpiteCampeaoResponse, IUser } from './type'
+import {
+  listCartaHistorico,
+  listUserId,
+  listUsers,
+  updatePalpiteCampeao,
+} from './api'
+import type {
+  ICartaHistoricoResponse,
+  IPalpiteCampeaoResponse,
+  IUser,
+} from './type'
 
 export function useListUsers() {
   return useQuery<IUser[], Error>({
@@ -13,6 +22,14 @@ export function useGetUserId(userId: string | undefined) {
   return useQuery<IUser, Error>({
     queryKey: ['users', userId],
     queryFn: () => listUserId(userId!),
+    enabled: Boolean(userId),
+  })
+}
+
+export function useCartaHistorico(userId: string | undefined) {
+  return useQuery<ICartaHistoricoResponse, Error>({
+    queryKey: ['users', userId, 'carta-historico'],
+    queryFn: () => listCartaHistorico(userId!),
     enabled: Boolean(userId),
   })
 }
